@@ -1,0 +1,63 @@
+ 
+body {
+    height: 100%;
+    margin: 0;
+    
+   
+}
+
+input[type=text], select {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid rgb(92, 50, 121);
+  border-radius: 4px;
+  box-sizing: border-box;
+  
+}
+
+.Button {
+  
+  background-color:White; /* Fallback color */
+  /* Black w/opacity/see-through */
+  color:Black ;
+  padding: 20px 20px;
+ 
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 10%;
+  position: absolute;
+  bottom:0;
+  font-weight: bold;
+  right:0;
+}
+
+.forms {
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0, 0.8); /* Black w/opacity/see-through */
+  color: white;
+  font-weight: bold;
+  
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  padding: 70px;
+  width: 90%;
+  font-size: 17px;
+  
+  
+}
+.question-main {
+  background-image : url('question-main.png');
+	position: absolute;
+	filter: blur(16px);
+	width: 1903.898px;
+	height: 1015.677px;
+	left: -108.5px;
+	top: -55.677px;
+	overflow: visible;
+} 
