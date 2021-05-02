@@ -52,7 +52,7 @@ input[type=text], select {
   
 }
 .question-main {
-  background-image : url('question-main.png');
+  background-color: antiquewhite;
 	position: absolute;
 	filter: blur(16px);
 	width: 1903.898px;
