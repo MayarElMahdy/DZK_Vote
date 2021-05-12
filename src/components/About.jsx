@@ -1,10 +1,10 @@
 import React, {Component} from "react";
 import {Link} from "react-router-dom";
-import {Web3Context} from "../App";
+import {Web3Context} from "../web3-context";
 
 class About extends Component {
 
-
+    static contextType = Web3Context;
 
     constructor(props) {
         super(props)
@@ -100,15 +100,13 @@ class About extends Component {
         this.setState({fields});
     }
 
-
     render() {
-        let Dapp = this.context;
         return (
 
             <div>
 
                 <div>
-                    <h3>[test] Account 1 address = {Dapp.accounts[0].toString()}</h3>
+                    <h3>[test] Account 1 address = {this.context.account.toString()}</h3>
                     <form onSubmit={this.contactSubmit.bind(this)} className="form">
                         <br></br>
                         <label htmlFor="Contract-name">Ballot Name</label>
@@ -186,8 +184,6 @@ class About extends Component {
         );
     }
 }
-
-About.contextType = Web3Context;
 export default About;
 
 

@@ -1,5 +1,4 @@
 import React from "react";
-import {Web3Context} from "../App";
 import About from "./About";
 
 
@@ -30,5 +29,4 @@ function Home() {
   );
 }
 
-Home.contextType = Web3Context;
 export default Home;

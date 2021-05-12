@@ -1,5 +1,4 @@
 import React from "react";
-import {Web3Context} from "../App";
 import About from "./About";
 
 
@@ -99,5 +98,4 @@ class Contact extends React.Component {
     }
 }
 
-Contact.contextType = Web3Context;
 export default Contact;
