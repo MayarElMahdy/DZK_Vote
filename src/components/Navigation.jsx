@@ -7,7 +7,7 @@ function Navigation(props) {
       <nav class="navbar navbar-expand navbar-dark bg-dark">
         <div class="container">
           <Link class="navbar-brand" to="/">
-            React Multi-Page Website
+            DZK voting system
           </Link>
 
           <div>
@@ -38,6 +38,15 @@ function Navigation(props) {
               >
                 <Link class="nav-link" to="/contact">
                   Vote
+                </Link>
+              </li>
+              <li
+                class={`nav-item  ${
+                  props.location.pathname === "/register" ? "active" : ""
+                }`}
+              >
+                <Link class="nav-link" to="/register">
+                  Register
                 </Link>
               </li>
             </ul>

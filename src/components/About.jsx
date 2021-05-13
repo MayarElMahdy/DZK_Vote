@@ -1,6 +1,7 @@
 import React from "react";
-import ReactDOM from 'react-dom';
+//import ReactDOM from 'react-dom';
 import Web3 from 'web3';
+// eslint-disable-next-line
 import { Link, withRouter } from "react-router-dom";
 
 class About extends React.Component{
