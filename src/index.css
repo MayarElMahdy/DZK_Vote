@@ -1,9 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+/* base styles */
+* {
  
-body {
-    height: 100%;
-    margin: 0;
-    
-   
+  font-family: "Quicksand";
+  color: #333;
+  align-items: center;
+  margin-left: 0px;
+}
+
+.voteform {
+
+  margin-left: 100;
+}
+.body {
+  height: 100%;
+  align-items: center;
 }
 
 input[type=text], select {
@@ -40,7 +51,7 @@ input[type=text], select {
   color: white;
   font-weight: bold;
   
-  position: absolute;
+  position: relative;
   top: 55%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -48,7 +59,8 @@ input[type=text], select {
   padding: 70px;
   width: 90%;
   font-size: 17px;
-  
+  align-items: center;
+  margin-left: 10px;
   
 }
 .question-main {

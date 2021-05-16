@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
-import {About, Contact, Footer, Home, Navigation} from "./components";
+import {About, Vote, Footer, Home, Navigation} from "./components";
 import {Web3Context, loadWeb3} from "./web3-context";
 
 // initialize the global context
@@ -27,7 +27,7 @@ class App extends Component {
                         <Switch>
                             <Route path="/" exact component={() => <Home/>}/>
                             <Route path="/about" exact component={() => <About/>}/>
-                            <Route path="/contact" exact component={() => <Contact/>}/>
+                            <Route path="/vote" exact component={() => <Vote/>}/>
                         </Switch>
                         <Footer/>
                     </Router>

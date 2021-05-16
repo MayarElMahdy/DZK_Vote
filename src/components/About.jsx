@@ -146,8 +146,8 @@ class About extends Component {
                         <span style={{color: "red"}}>{this.state.errors["date_Reg_end"]}</span>
                         <span style={{color: "red"}}>{this.state.errors["Time_Reg_end"]}</span>
 
-                        <label htmlFor="Reg-Time" style={{color: '#db1818'}}>&emsp;Voting phase will start automatically
-                            after registration ends</label>
+                        <label htmlFor="Reg-Time" style={{color: '#db1818'}}>&emsp; <mark><b>Voting phase will start automatically
+                            after registration ends </b></mark> </label>
                         <br/><br/>
                         <label htmlFor="Reg-Time">Voting phase end &emsp;</label>
                         <input id="date_Vote_End" type="date" onChange={this.handleChange.bind(this, "date_vote_end")}
@@ -157,8 +157,8 @@ class About extends Component {
                         <span style={{color: "red"}}>{this.state.errors["date_vote_end"]}</span>
                         <span style={{color: "red"}}>{this.state.errors["Time_vote_end"]}</span>
 
-                        <label htmlFor="Tally" style={{color: '#db1818'}}>&emsp;Tally phase will start automatically
-                            after voting phase is over </label>
+                        <label htmlFor="Tally" style={{color: '#db1818'}}>&emsp; <mark> <b> Tally phase will start automatically
+                            after voting phase is over</b></mark> </label>
                         <br/><br/>
 
                         <label htmlfor="myfile">Select a text file containing the eligible voter's
