@@ -17,7 +17,7 @@ function Home() {
           
           <div class="col-sm icons">
           <Link to="/about">
-              <img src="./question-main.png"></img>
+              <img src="./create-ballot.png"></img>
                <h1 className="text-center">Create-ballot</h1>
             </Link>
           </div>
