@@ -1,31 +1,39 @@
 import React from "react";
-import About from "./About";
+import { Link } from "react-router-dom";
 
 
 function Home() {
   return (
-    <div className="home">
-      <div class="container">
-        <div class="row align-items-center my-5">
-          <div class="col-lg-7">
-            <img
-              class="img-fluid rounded mb-4 mb-lg-0"
-              src="http://placehold.it/900x400"
-              alt=""
-            />
+    <div>
+      <div className="welcome">
+        <br></br>
+         <h1>Welcome 0x2654k....</h1>
+         <br></br>
+         <button type="button" class="btn btn-secondary btn-lg">Change account ?</button>
+      </div>
+
+      <div class="container-fluid text-center">
+        <div class="row">
+          
+          <div class="col-sm icons">
+          <Link to="/about">
+              <img src="./question-main.png"></img>
+               <h1 className="text-center">Create-ballot</h1>
+            </Link>
           </div>
-          <div class="col-lg-5">
-            <h1 class="font-weight-light">Home</h1>
-            <p>
-              Welcome to DZK Vote 
-            </p>
+
+          <div class="col-sm icons">
+            <Link to="/Vote">
+              <img src="./question-main.png"></img>
+              <h1 className="text-center">Vote</h1>
+            </Link>
           </div>
+
         </div>
       </div>
-      
-    </div>
-    
-    
+
+    </div> 
+
   );
 }
 

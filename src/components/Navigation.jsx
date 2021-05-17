@@ -40,15 +40,6 @@ function Navigation(props) {
                   Vote
                 </Link>
               </li>
-              <li
-                class={`nav-item  ${
-                  props.location.pathname === "/register" ? "active" : ""
-                }`}
-              >
-                <Link class="nav-link" to="/register">
-                  Register
-                </Link>
-              </li>
             </ul>
           </div>
         </div>

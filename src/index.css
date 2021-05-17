@@ -64,12 +64,39 @@ input[type=text], select {
   
 }
 .question-main {
-  background-image : url('question-main.png');
-	position: absolute;
-	filter: blur(16px);
-	width: 1903.898px;
-	height: 1015.677px;
-	left: -108.5px;
-	top: -55.677px;
-	overflow: visible;
-} 
+  background-image : url('./question-main.png');
+  filter: blur(2px);
+  max-width: 100%;
+  height: auto;
+  left: -108.5px;
+  top: -55.677px;
+  overflow: visible;
+  z-index: -1;  
+}
+
+img {
+    max-width: 100%;
+    max-height: 100%;
+    display: block;
+}
+
+.icons:hover{
+  box-shadow: 2px 2px 2px 5px gray;
+}
+
+.welcome{
+  background-color: rgba(105, 86, 158, 0.5); 
+  height: 210px;
+  width: auto;
+  padding: 1% 5% 5% 5%;
+  margin: 1%;
+}
+
+.icons{
+  background-color: white;
+  margin: 0px 20px 0px 20px;
+  height: 300px;
+  padding-top: 20px;
+  transform: translate(0%, 10%);
+  border-radius: 10px;
+}
