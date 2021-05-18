@@ -92,9 +92,17 @@ nav{
   color: white;
 }
 
+.nav-logo:hover{
+  color: white;
+}
+
 .nav-links-right {
   color: white;
   margin-left: 35px;
+}
+
+.nav-links-right:hover{
+  color: #9DD49A;
 }
 
 .red-icon{
