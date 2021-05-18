@@ -12,9 +12,9 @@ import blue from "./images/icon blue.png"
 function Home() {
   return (
     <div>
-      <div class="media">
-        <div class="media-body title">
-          <h2 class="mt-0 mb-1 words">DZK Electronic Voting System</h2><br></br><br></br>
+      <div className="media">
+        <div className="media-body title">
+          <h2 className="mt-0 mb-1 words">DZK Electronic Voting System</h2><br></br><br></br>
           <div className="row words">
             <img className="blue-icon" src={blue}></img>
             <h1 className="words">Decentralized</h1>
@@ -36,8 +36,8 @@ function Home() {
         <img className="banner rouned float-right ml-3" src={banner}></img>
       </div>
 
-      <div class="row justify-content-md-center text-center">
-        <div class="col col-lg-2 options options-left icons">
+      <div className="row justify-content-md-center text-center">
+        <div className="col col-lg-2 options options-left icons">
           <Link to="/about">
             <img className="img-fluid" src={Logo}></img><br></br>
             <h4 className="text-center">Create-ballot</h4>
