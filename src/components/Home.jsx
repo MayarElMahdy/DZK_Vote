@@ -1,6 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
+import Logo from "./create-ballot.png";
+import Vote from "./voting.png"
+
 
 function Home() {
   return (
@@ -17,14 +20,18 @@ function Home() {
           
           <div class="col-sm icons">
           <Link to="/about">
-              <img src="./create-ballot.png"></img>
+
+              <img src={Logo}></img>
                <h1 className="text-center">Create-ballot</h1>
             </Link>
           </div>
 
           <div class="col-sm icons">
             <Link to="/Vote">
-              <img src="./question-main.png"></img>
+
+              <img src={Vote}></img>
+
+
               <h1 className="text-center">Vote</h1>
             </Link>
           </div>
