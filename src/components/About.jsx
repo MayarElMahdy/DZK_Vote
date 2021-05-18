@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Link} from "react-router-dom";
+import {Link} from "react-router-dom";                                                              
 import {Web3Context} from "../web3-context";
 
 class About extends Component {
@@ -12,6 +12,8 @@ class About extends Component {
             account: ''
             , fields: {}
             , errors: {}
+            , ballot: true
+            , ballot_confirm: false
 
         }
     }
@@ -20,6 +22,8 @@ class About extends Component {
         let fields = this.state.fields;
         let errors = {};
         let formIsValid = true;
+        let today = new Date();
+        let today_date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
 
         //ballot name
         if (!fields["BallotName"]) {
@@ -61,6 +65,16 @@ class About extends Component {
             errors["Time_Reg_end"] = "Time is empty !";
         }
 
+        //Check the date between the start and end 
+
+        if(fields["date_Reg_start"] >= fields["date_Reg_end"])
+        {
+            formIsValid= false;
+            errors["date_Reg_start"] = "Invalid date selected";
+            errors["date_Reg_end"] = "Invalid date selected";
+        }
+
+
         if (!fields["date_vote_end"]) {
             formIsValid = false;
             errors["date_vote_end"] = "Date is empty !";
@@ -70,6 +84,26 @@ class About extends Component {
         if (!fields["Time_vote_end"]) {
             formIsValid = false;
             errors["Time_vote_end"] = "Time is empty !";
+        }
+        //Check date of the vote to be after both the start of registration and end 
+
+        if(fields["date_vote_end"] <= fields["date_Reg_start"] || fields["date_vote_end"] <= fields["date_Reg_end"])
+        {
+            errors["date_vote_end"] = "Invalid date selected !";
+        }
+
+        // we need to compare with current date 
+        if(fields["date_Reg_start"] <= today_date)
+        {
+            errors["date_Reg_start"] = "This date has already passed !";
+        }
+        if(fields["date_Reg_end"] <= today_date)
+        {
+            errors["date_Reg_end"] = "This date has already passed !";
+        }
+        if(fields["date_vote_end"] <= today_date)
+        {
+            errors["date_vote_end"] = "This date has already passed !" ;
         }
 
 
@@ -87,7 +121,9 @@ class About extends Component {
         e.preventDefault();
 
         if (this.handleValidation()) {
-            alert("Form submitted");
+            
+            this.setState({ ballot: false });
+            this.setState({ballot_confirm: true});
         } else {
             alert("Form has errors.")
         }
@@ -101,12 +137,15 @@ class About extends Component {
     }
 
     render() {
+        const { ballot, ballot_confirm } = this.state;
+        
         return (
 
             <div>
 
+                {ballot && // show when ballot = true 
                 <div>
-                    <h3>[test] Account 1 address = {this.context.account.toString()}</h3>
+                    <h3>[test] Account 1 address = {this.context.account.toString()} </h3>
                     <form onSubmit={this.contactSubmit.bind(this)} className="form">
                         <br></br>
                         <label htmlFor="Contract-name">Ballot Name</label>
@@ -171,11 +210,16 @@ class About extends Component {
                         <br></br>
                         <input type="submit"/>
                         <Link to="/" type="submit" className="Button">Create Ballot</Link>
-
-
                     </form>
 
                 </div>
+                }
+                {ballot_confirm && // when creation is complete
+                    <h2 style={{margin: 60}}>
+                            Ballot {this.state.fields["BallotName"]} is created !! 
+                    </h2>
+
+                }
 
 
             </div>
