@@ -6,7 +6,7 @@ function Navigation(props) {
     <div className="navigation">
       <nav class="navbar navbar-expand">
         <div class="container">
-          <Link class="navbar-brand" to="/">
+          <Link class="navbar-brand nav-logo" to="/">
             DZK
           </Link>
 
@@ -17,7 +17,7 @@ function Navigation(props) {
                   props.location.pathname === "/" ? "active" : ""
                 }`}
               >
-                <Link class="nav-link" to="/">
+                <Link class="nav-link nav-links-right" to="/">
                   Home
                   <span class="sr-only">(current)</span>
                 </Link>
@@ -27,7 +27,7 @@ function Navigation(props) {
                   props.location.pathname === "/about" ? "active" : ""
                 }`}
               >
-                <Link class="nav-link" to="/about">
+                <Link class="nav-link nav-links-right" to="/about">
                   Create Ballot
                 </Link>
               </li>
@@ -36,13 +36,13 @@ function Navigation(props) {
                   props.location.pathname === "/vote" ? "active" : ""
                 }`}
               >
-                <Link class="nav-link" to="/vote">
+                <Link class="nav-link nav-links-right" to="/vote">
                   Vote
                 </Link>
               </li>
 
               <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <a class="nav-link dropdown-toggle nav-links-right" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   Dropdown link
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">

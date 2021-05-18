@@ -63,12 +63,17 @@ input[type=text], select {
   margin-left: 10px;
   
 }
+
 .question-main {
   background-color: antiquewhite;
 	position: absolute;
 	filter: blur(16px);
 	overflow: visible;
   z-index: -1;  
+}
+
+.icons h4{
+  color: #707070;
 }
 
 .icons img {
@@ -79,17 +84,17 @@ input[type=text], select {
   box-shadow: 1px 2px 2px 1px gray;
 }
 
-.welcome{
-  background-color: rgba(105, 86, 158, 0.5); 
-  height: 200px;
-  width: auto;
-  padding: 1% 5% 5% 5%;
-  margin: 1%;
+nav{
+  background-color: #1C437A;
 }
 
-nav{
+.nav-logo{
   color: white;
-  background-color: #1C437A;
+}
+
+.nav-links-right {
+  color: white;
+  margin-left: 35px;
 }
 
 .red-icon{
@@ -109,7 +114,7 @@ nav{
 }
 
 .title{
-  margin-top: 7%;
+  margin-top: 5%;
   margin-left: 10%;
 }
 
@@ -117,7 +122,7 @@ nav{
   height:  45%;
   width: 45%;
   margin-right: 10%;
-  margin-top: 4%;
+  margin-top: 2%;
 }
 
 .banner-container{
