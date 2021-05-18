@@ -23,7 +23,7 @@ class About extends Component {
         let errors = {};
         let formIsValid = true;
         let today = new Date();
-        let today_date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+        
 
         //ballot name
         if (!fields["BallotName"]) {
@@ -93,15 +93,20 @@ class About extends Component {
         }
 
         // we need to compare with current date 
-        if(fields["date_Reg_start"] <= today_date)
+        //first we need to switch the fields to become dates 
+
+        var date1 = new Date(fields["date_Reg_start"]);
+        var date2 = new Date(fields["date_Reg_end"]);
+        var date3 = new Date(fields["date_vote_end"])
+        if(date1.getTime() <= today.getTime())
         {
             errors["date_Reg_start"] = "This date has already passed !";
         }
-        if(fields["date_Reg_end"] <= today_date)
+        if(date2 <= today.getTime())
         {
             errors["date_Reg_end"] = "This date has already passed !";
         }
-        if(fields["date_vote_end"] <= today_date)
+        if(date3 <= today.getTime())
         {
             errors["date_vote_end"] = "This date has already passed !" ;
         }
