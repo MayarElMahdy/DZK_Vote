@@ -1,4 +1,6 @@
 import React from "react";
+import About from "./About";
+
 
 function register() {
   return (
