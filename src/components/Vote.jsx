@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import {Link} from "react-router-dom";
 
 let option1 = "First Option"; // variables for the two options temporarily
@@ -51,8 +51,8 @@ class Vote extends Component {
             <hr />
             <br />
             <hr />
-            <input onClick = {this.handleClickBallot} style={{marginLeft: 100}} type="submit" />
-            <Link to="/" type="submit" className="Button"></Link>
+            <input onClick={this.handleClickBallot} style={{marginLeft: 100}} type="submit"/>
+            <Link to="/" type="submit" className="Button"/>
             
           </div>}
         
@@ -71,8 +71,8 @@ class Vote extends Component {
                   <input onClick = {() => this.setVote(1)} type = "radio" value = "1" name = "vote" /> { option0 }
               </div>
               <hr />
-              <input onClick = {this.handleClickVote} style={{marginLeft: 100}} type="submit" />
-              <Link to="/" type="submit" className="Button"></Link>
+              <input onClick={this.handleClickVote} style={{marginLeft: 100}} type="submit"/>
+              <Link to="/" type="submit" className="Button"/>
             </form>          
           }
 
