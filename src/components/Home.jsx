@@ -12,28 +12,30 @@ import blue from "./images/icon blue.png"
 function Home() {
   return (
     <div>
-      <div className="media">
-        <div className="media-body title">
-          <h2 className="mt-0 mb-1 words">DZK Electronic Voting System</h2><br></br><br></br>
-          <div className="row words">
-            <img className="blue-icon" src={blue}></img>
-            <h1 className="words">Decentralized</h1>
-            <br></br>
-          </div>
+      <div className="container-fluid row">
+        <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 float-right order-last order-md-first order-sm-last">
+          <div className="container">
 
-          <div className="row words">
-            <img className="red-icon" src={red}></img>
-            <h1 className="words">Secure</h1>
-            <br></br>
-          </div>
+            <h2 className="words title">DZK E-Voting System</h2><br></br>
+            <div className="row">
+              <img className="blue-icon" src={blue}></img>
+              <h3 className="words">Decentralized</h3>
+            </div>
 
-          <div className="row words">
-            <img className="green-icon" src={green}></img>
-            <h1 className="words">Trustworthy</h1>
-            <br></br>
+
+            <div className="row">
+              <img className="red-icon" src={red}></img>
+              <h3 className="words">Secure</h3>
+            </div>
+
+            <div className="row">
+              <img className="green-icon" src={green}></img>
+              <h3 className="words">Trustworthy</h3>
+            </div>
+
           </div>
         </div>
-        <img className="banner rouned float-right ml-3" src={banner}></img>
+        <img className="rouned float-right col-xl-8 col-lg-8 col-md-8 col-sm-12 order-first order-md-last order-sm-first" src={banner}></img>
       </div>
 
       <div className="row justify-content-md-center text-center">
@@ -43,15 +45,15 @@ function Home() {
             <h4 className="text-center">Create-ballot</h4>
           </Link>
         </div>
-       <div class="col col-lg-2 options options-right icons">
+        <div class="col col-lg-2 options options-right icons">
           <Link to="/Vote">
             <img src={Vote}></img><br></br>
             <h4 className="text-center">Vote</h4>
-         </Link>
-       </div>
-     </div>
-       
-    </div> 
+          </Link>
+        </div>
+      </div>
+
+    </div>
   );
 }
 
