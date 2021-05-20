@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import { Link, withRouter } from "react-router-dom";
-import account from "./images/account.png"
 import { Web3Context } from "../web3-context";
 
 class Navigation extends Component {

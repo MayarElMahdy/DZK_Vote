@@ -18,36 +18,36 @@ function Home() {
 
             <h2 className="words title">DZK E-Voting System</h2><br></br>
             <div className="row">
-              <img className="blue-icon" src={blue}></img>
+              <img className="blue-icon" src={blue} alt=""></img>
               <h3 className="words">Decentralized</h3>
             </div>
 
 
             <div className="row">
-              <img className="red-icon" src={red}></img>
+              <img className="red-icon" src={red} alt=""></img>
               <h3 className="words">Secure</h3>
             </div>
 
             <div className="row">
-              <img className="green-icon" src={green}></img>
+              <img className="green-icon" src={green} alt=""></img>
               <h3 className="words">Trustworthy</h3>
             </div>
 
           </div>
         </div>
-        <img className="rouned float-right col-xl-8 col-lg-8 col-md-8 col-sm-12 order-first order-md-last order-sm-first" src={banner}></img>
+        <img className="rouned float-right col-xl-8 col-lg-8 col-md-8 col-sm-12 order-first order-md-last order-sm-first" src={banner} alt=""></img>
       </div>
 
       <div className="row justify-content-md-center text-center">
         <div className="col col-lg-2 options options-left icons">
-          <Link to="/about">
-            <img className="img-fluid" src={Logo}></img><br></br>
+          <Link to="/CreateBallot">
+            <img className="img-fluid" src={Logo} alt=""></img><br></br>
             <h4 className="text-center">Create-ballot</h4>
           </Link>
         </div>
         <div class="col col-lg-2 options options-right icons">
           <Link to="/Vote">
-            <img src={Vote}></img><br></br>
+            <img src={Vote} alt=""></img><br></br>
             <h4 className="text-center">Vote</h4>
           </Link>
         </div>

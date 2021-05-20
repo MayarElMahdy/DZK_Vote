@@ -1,8 +1,11 @@
 import getWeb3 from "./getWeb3";
-import SimpleStorageContract from "./contracts/SimpleStorage.json";
+import VotingContract from "./contracts/VotingSys.json";
 import React from "react";
 
-export const Web3Context = React.createContext({web3: null, account: null, contract: null});
+
+export const Web3Context = React.createContext({web3: null, account: null});
+
+export let localCryptoContract = null;
 
 export async function loadWeb3() {
     try {
@@ -14,14 +17,14 @@ export async function loadWeb3() {
 
         // Get the contract instance.
         const networkId = await web3.eth.net.getId();
-        const deployedNetwork = SimpleStorageContract.networks[networkId];
-        const instance = new web3.eth.Contract(
-            SimpleStorageContract.abi,
+        const deployedNetwork = VotingContract.networks[networkId];
+        window.votingContract = new web3.eth.Contract(
+            VotingContract.abi,
             deployedNetwork && deployedNetwork.address,
         );
 
         // Set web3, accounts, and contract to a variable that will be assigned to the global context.
-        return {web3: web3, account: accounts, contract: instance};
+        return {web3: web3, account: accounts};
 
     } catch (error) {
         // Catch any errors for any of the above operations.
@@ -33,5 +36,3 @@ export async function loadWeb3() {
 
 
 }
-
-
