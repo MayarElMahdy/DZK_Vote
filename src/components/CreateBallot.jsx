@@ -252,5 +252,3 @@ class CreateBallot extends Component {
 }
 
 export default CreateBallot;
-
-
