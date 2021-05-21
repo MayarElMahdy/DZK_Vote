@@ -39,9 +39,9 @@ class CreateBallot extends Component {
             1821494110,
             1921495110,
             5435,
-            ["0x71FdB561640298a351180eDdd385BB9eD6f1C2bE",
-                "0x347063ac4EaF85b5c953D523238db1B401046E5C",
-                "0x01036d642512de49f2e72451500EBbF56773B0e6"]);
+            ["0xca36158f9a6e43F5564803F2172bB8f1907f6D74",
+                "0x5EE383FefbB9f05970746720ab19b2B3b52c3935",
+                "0x2263d2b73859265216683afA86c1481c1F615f4B"]);
         console.log(response);
         this.setState({value: await this.BL.getBallotStatement()});
 
