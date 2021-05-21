@@ -103,15 +103,14 @@ class CreateBallot extends Component {
         formIsValid = this.handleEmpty("Time_Reg_start", formIsValid, fields, errors, 3);
         formIsValid = this.handleEmpty("date_Reg_end", formIsValid, fields, errors, 2);
         formIsValid = this.handleEmpty("Time_Reg_end", formIsValid, fields, errors, 3);
-        formIsValid = this.handleEmpty("date_vote_end", formIsValid, fields, errors, 2);
-        formIsValid = this.handleEmpty("Time_vote_end", formIsValid, fields, errors, 3);
+        
 
         //check if txt file is not attached
         formIsValid = this.handleEmpty("txtfile", formIsValid, fields, errors, 4);
 
         var date1 = new Date(fields["date_Reg_start"]);
         var date2 = new Date(fields["date_Reg_end"]);
-        var date3 = new Date(fields["date_vote_end"]);
+        
         // we need to compare with current date 
         //first we need to switch the fields to become dates 
 
@@ -119,14 +118,11 @@ class CreateBallot extends Component {
             formIsValid = false;
             errors["date_Reg_start"] = "This date has already passed !";
         }
-        if (date2 <= today.getTime()) {
+        if (date2.getTime() <= today.getTime()) {
             formIsValid = false;
             errors["date_Reg_end"] = "This date has already passed !";
         }
-        if (date3 <= today.getTime()) {
-            formIsValid = false;
-            errors["date_vote_end"] = "This date has already passed !";
-        }
+        
 
 
         if (fields["date_Reg_start"] >= fields["date_Reg_end"]) {
@@ -136,12 +132,9 @@ class CreateBallot extends Component {
         }
 
 
-        //Check date of the vote to be after both the start of registration and end 
+        
 
-        if (fields["date_vote_end"] <= fields["date_Reg_start"] || fields["date_vote_end"] <= fields["date_Reg_end"]) {
-            formIsValid = false;
-            errors["date_vote_end"] = "Invalid date selected !";
-        }
+        
         this.setState({errors: errors});
         return formIsValid;
     }
@@ -197,7 +190,11 @@ class CreateBallot extends Component {
                         <br/>
                         <label htmlFor="TimeStamps">Enter the timestamp of each phase : <br/> </label>
                         <br/><br/>
-                        <label htmlFor="Reg-Time">Registration phase start &emsp;</label>
+                        <label htmlFor="Reg-Time" style={{color: '#db1818'}}>&emsp;
+                            <mark><b>Registration for the ballot will start as soon as the ballot is created </b></mark>
+                        </label>
+                        <br/><br/>
+                        <label htmlFor="Reg-Time">Voting phase start &emsp;</label>
                         <input id="date_Reg_Start" type="date" onChange={this.handleChange.bind(this, "date_Reg_start")}
                                value={this.state.fields["date_Reg_start"]}/>
 
@@ -206,7 +203,7 @@ class CreateBallot extends Component {
                         <span style={{color: "red"}}>{this.state.errors["date_Reg_start"]}</span>
                         <span style={{color: "red"}}>{this.state.errors["Time_Reg_start"]}</span>
 
-                        <label htmlFor="Reg-Time">&emsp;Registration phase end&emsp;</label>
+                        <label htmlFor="Reg-Time">&emsp;Voting phase end&emsp;</label>
                         <input id="date_Reg_End" type="date" onChange={this.handleChange.bind(this, "date_Reg_end")}
                                value={this.state.fields["date_Reg_end"]}/>
                         <input id="time_Reg_End" type="time" onChange={this.handleChange.bind(this, "Time_Reg_end")}
@@ -214,19 +211,10 @@ class CreateBallot extends Component {
                         <span style={{color: "red"}}>{this.state.errors["date_Reg_end"]}</span>
                         <span style={{color: "red"}}>{this.state.errors["Time_Reg_end"]}</span>
 
-                        <label htmlFor="Reg-Time" style={{color: '#db1818'}}>&emsp;
-                            <mark><b>Voting phase will start automatically
-                                after registration ends </b></mark>
-                        </label>
-                        <br/><br/>
-                        <label htmlFor="Reg-Time">Voting phase end &emsp;</label>
-                        <input id="date_Vote_End" type="date" onChange={this.handleChange.bind(this, "date_vote_end")}
-                               value={this.state.fields["date_vote_end"]}/>
-                        <input id="time_Vote_End" type="time" onChange={this.handleChange.bind(this, "Time_vote_end")}
-                               value={this.state.fields["Time_vote_end"]}/>
-                        <span style={{color: "red"}}>{this.state.errors["date_vote_end"]}</span>
-                        <span style={{color: "red"}}>{this.state.errors["Time_vote_end"]}</span>
-
+                        
+                        
+                        <br></br>
+                        <br></br>
                         <label htmlFor="Tally" style={{color: '#db1818'}}>&emsp;
                             <mark><b> Tally phase will start automatically
                                 after voting phase is over</b></mark>
