@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import { Link, withRouter } from "react-router-dom";
-import account from "./images/account.png"
 import { Web3Context } from "../web3-context";
 
 class Navigation extends Component {
@@ -23,8 +22,8 @@ class Navigation extends Component {
     const { ballot, ballot_confirm } = this.state;
     return (
       <div className="navigation">
-        <nav class="navbar navbar-expand-md navbar-dark">
-          <Link class="navbar-brand nav-logo" to="/">
+        <nav className="navbar navbar-expand-md navbar-dark">
+          <Link className="navbar-brand nav-logo" to="/">
             DZK
         </Link>
           <button className="navbar-toggler" type="button" data-toggle="collapse"
@@ -32,48 +31,48 @@ class Navigation extends Component {
             <span className="navbar-toggler-icon"></span>
           </button>
 
-          <div class="container">
+          <div className="container">
             <div className="collapse navbar-collapse ml-auto" id="navbarSupportedContent">
-              <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
+              <ul className="navbar-nav ml-auto mb-2 mb-lg-0">
                 <li
-                  class={`nav-item  ${this.props.location.pathname === "/" ? "active" : ""
+                  className={`nav-item  ${this.props.location.pathname === "/" ? "active" : ""
                     }`}
                 >
-                  <Link class="nav-link nav-links-right" to="/">
+                  <Link className="nav-link nav-links-right" to="/">
                     Home
-                  <span class="sr-only">(current)</span>
+                  <span className="sr-only">(current)</span>
                   </Link>
                 </li>
                 <li
                   class={`nav-item  ${this.props.location.pathname === "/about" ? "active" : ""
                     }`}
                 >
-                  <Link class="nav-link nav-links-right" to="/about">
+                  <Link className="nav-link nav-links-right" to="/about">
                     Create Ballot
                 </Link>
                 </li>
                 <li
-                  class={`nav-item  ${this.props.location.pathname === "/vote" ? "active" : ""
+                  className={`nav-item  ${this.props.location.pathname === "/vote" ? "active" : ""
                     }`}
                 >
-                  <Link class="nav-link nav-links-right" to="/vote">
+                  <Link className="nav-link nav-links-right" to="/vote">
                     Vote
                 </Link>
                 </li>
 
-                <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle nav-links-right" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img className="account" src={account}></img>
+                <li className="nav-item dropdown">
+                  <a className="nav-link dropdown-toggle nav-links-right" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Account
                   </a>
-                  <ul class="dropdown-menu dropdown-menu-right text-center" aria-labelledby="navbarDropdownMenuLink">
+                  <ul className="dropdown-menu dropdown-menu-right text-center" aria-labelledby="navbarDropdownMenuLink">
                     <br></br>
-                    <p class="address-dropdown">
+                    <p className="address-dropdown">
                       <h5>Account Address</h5>
                       <h6>{this.context.account.toString()}</h6>
                     </p>
 
-                    <div class="dropdown-divider"></div>
-                    <li><a class="dropdown-item" href="#">Sign out</a></li>
+                    <div className="dropdown-divider"></div>
+                    <li><a className="dropdown-item" href="#">Sign out</a></li>
                   </ul>
                 </li>
               </ul>
