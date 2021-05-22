@@ -38,9 +38,9 @@ export default class CreateBallotBL {
 
     // edit as preferred
     async getBallotStatement() {
-        return await this.contract.methods.ballotName().call() + " " +
+        return await  this.contract.methods.ballotName().call() + "\n\nCandidates are :\n \t" +
             await this.contract.methods.options(0).call() + " " +
-            await this.contract.methods.options(1).call();
+            await this.contract.methods.options(1).call() ;
     }
 
     async addEligible(adminAddress, addresses) {

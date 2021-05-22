@@ -11,74 +11,64 @@ class CreateBallot extends Component {
 
     constructor(props) {
         super(props)
+        
         this.state = {
             account: ''
             , fields: {}
             , errors: {}
             , ballot: true
             , ballot_confirm: false
-            , value: "" // for testing -- dont forget to remove
+            , value: "" // Used to show the ballot's confirmation
+            
         }
 
-    }
-
-    // for testing -- dont forget to remove
-    componentDidMount = async () => {
-        // example on how to call the BL of create ballot
-        // Note: the time is in unix timestamp format
-        // Note: the function that calls the BL should be asynchronous
-        //       or call .then() on the BL function -example below-
-        // Note: this can only be successfully called ONCE, to reassign you have to redeploy the contracts
-        //       using [truffle migrate --reset]
-        // the account of the current user is found in this.context.account[0] in all components
-        const response = await this.BL.creatBallot(
-            this.context.account[0],
-            "momkn ad5ol anam?",
-            "ahh",
-            "yareet",
-            1821494110,
-            1921495110,
-            5435,
-            ["0xca36158f9a6e43F5564803F2172bB8f1907f6D74",
-                "0x5EE383FefbB9f05970746720ab19b2B3b52c3935",
-                "0x2263d2b73859265216683afA86c1481c1F615f4B"]);
-        console.log(response);
-        this.setState({value: await this.BL.getBallotStatement()});
-
-        /*
-        * also could be written without the async function:
-        * Note: async is better to allow adding loading animation easily in future
-        *
-        * this.BL.creatBallot(...).then(response => {
-        *       console.log(response);
-        *       this.BL.getBallotStatement().then(returnValue => {
-        *            this.setState({value: returnValue});
-        *       })
-        * })
-        *
-        *
-        * */
+        this.BL.getBallotStatement().then(returnValue => {
+            this.setState({value: returnValue});})
+        
+            
+        
 
     }
+
 
     contactSubmit(e) {
         e.preventDefault();
 
         if (this.handleValidation()) {
-            this.open_web3();
-
+            
+            //turn date,time to unix timestamp 
+            var start_date =  this.state.fields["date_Reg_start"] + "T" + this.state.fields["Time_Reg_start"];
+            var end_date = this.state.fields["date_Reg_end"] + "T" + this.state.fields["Time_Reg_end"];
+            var unix_start_date =  parseInt((new Date(start_date).getTime() / 1000).toFixed(0));
+            var unix_end_date =  parseInt((new Date(end_date).getTime() / 1000).toFixed(0));
+            //call business layer to create ballot 
+            //todo: read file 
+            this.BL.creatBallot(this.context.account[0],
+                this.state.fields["BallotName"],
+                this.state.fields["Cand1"],
+                this.state.fields["Cand2"],
+                unix_start_date,
+                unix_end_date,
+                5435,
+                ["0xca36158f9a6e43F5564803F2172bB8f1907f6D74",
+                "0x5EE383FefbB9f05970746720ab19b2B3b52c3935",
+                "0x2263d2b73859265216683afA86c1481c1F615f4B"]).then(response => {
+                      console.log(response);
+                      this.BL.getBallotStatement().then(returnValue => {
+                      this.setState({value: returnValue});
+                       })
+                    })
             this.setState({ballot: false});
             this.setState({ballot_confirm: true});
+            
+
         } else {
             alert("Form has errors.")
         }
 
     }
 
-    //todo: should be deleted?
-    open_web3() {
-        alert("Success");
-    }
+    
 
     handleChange(field, e) {
         let fields = this.state.fields;
@@ -156,18 +146,28 @@ class CreateBallot extends Component {
 
     }
 
-
+    
     render() {
+        if(this.state.value)  // If you already made a ballot you cannot make a new one 
+        {
+            console.log(this.state.value);
+            this.state.ballot_confirm = true;
+            this.state.ballot = false;
+        } // show only the ballot information 
+        
         const {ballot, ballot_confirm} = this.state;
+        
+        
+        
 
         return (
 
             <div>
 
-                {ballot && // show when ballot = true
+                {this.state.ballot &&  // show when ballot = true
                 <div>
-                    {/* for testing -- dont forget to remove */}
-                    <h3>[test] ballot statement = {this.state.value} </h3>
+                    
+                    
                     <form onSubmit={this.contactSubmit.bind(this)} className="form">
                         <br/>
                         <label htmlFor="Contract-name">Ballot Name</label>
@@ -236,10 +236,12 @@ class CreateBallot extends Component {
                 </div>
                 }
 
-                {ballot_confirm && // when creation is complete
-                <h2 style={{margin: 60}}>
-                    Ballot {this.state.fields["BallotName"]} is created !!
-                </h2>
+                {this.state.ballot_confirm && // when creation is complete
+                <div>
+                <h3 style={{margin: 60}}>Ballot has been created and it's statement is = {this.state.value} </h3>
+                
+
+                </div>
 
                 }
 
