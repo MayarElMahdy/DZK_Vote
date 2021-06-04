@@ -21,8 +21,10 @@ class CreateBallot extends Component {
             , ballot: true
             , ballot_confirm: false
             , value: "" // Used to show the ballot's confirmation
+            , eligible:""
             
         }
+        
         this.fileInput = React.createRef();
 
         this.BL.getBallotStatement().then(returnValue => {
@@ -39,31 +41,7 @@ class CreateBallot extends Component {
 
         if (this.handleValidation()) {
             
-            //turn date,time to unix timestamp 
-            var start_date =  this.state.fields["date_Reg_start"] + "T" + this.state.fields["Time_Reg_start"];
-            var end_date = this.state.fields["date_Reg_end"] + "T" + this.state.fields["Time_Reg_end"];
-            var unix_start_date =  parseInt((new Date(start_date).getTime() / 1000).toFixed(0));
-            var unix_end_date =  parseInt((new Date(end_date).getTime() / 1000).toFixed(0));
-            //call business layer to create ballot 
-            //todo: read file  , there is a problem when reading the file it gives "fakepath"
-           
-            
-            
-            this.BL.creatBallot(this.context.account[0],
-                this.state.fields["BallotName"],
-                this.state.fields["Cand1"],
-                this.state.fields["Cand2"],
-                unix_start_date,
-                unix_end_date,
-                5435,
-                ["0xca36158f9a6e43F5564803F2172bB8f1907f6D74",
-                "0x5EE383FefbB9f05970746720ab19b2B3b52c3935",
-                "0x2263d2b73859265216683afA86c1481c1F615f4B"]).then(response => {
-                      console.log(response);
-                      this.BL.getBallotStatement().then(returnValue => {
-                      this.setState({value: returnValue});
-                       })
-                    })
+
             this.setState({ballot: false});
             this.setState({ballot_confirm: true});
             
@@ -133,7 +111,7 @@ class CreateBallot extends Component {
         }
         
         //check if the uploaded file is txt file 
-        //var reader = new FileReader();
+        
         var textfile = /text.*/;
         
         var file = document.querySelector('input[type=file]').files[0];
@@ -143,10 +121,52 @@ class CreateBallot extends Component {
             formIsValid = false;
             errors["txtfile"] = "The selected file is not text file !";
         }
-        
+        //read whole file
+        //then adding each address to the 'eligible' array
 
         
+        let reader = new FileReader();
+        let content = "";
+        let eligible = this.eligible;
+        reader.onload = function (event) {
+            content = event.target.result;
+            
+            eligible = content.split(" ");  // Addresses are seperated by space 
+            //example in the txt file 
+            //0x4C9888760b55cb7936a00C1Ac2b47884B39eE11C 0xA58CD4f6e5D10e7341D6CdB2Cf3E981d748B561A 0x2263d2b738592652A16683afA86c1481c1F615f4BA
+            
+            
+            this.setState({eligible:eligible});
+            var start_date =  this.state.fields["date_Reg_start"] + "T" + this.state.fields["Time_Reg_start"];
+            var end_date = this.state.fields["date_Reg_end"] + "T" + this.state.fields["Time_Reg_end"];
+            var unix_start_date =  parseInt((new Date(start_date).getTime() / 1000).toFixed(0));
+            var unix_end_date =  parseInt((new Date(end_date).getTime() / 1000).toFixed(0));
+            
+           
+            
+            
+            this.BL.creatBallot(this.context.account[0],
+                this.state.fields["BallotName"],
+                this.state.fields["Cand1"],
+                this.state.fields["Cand2"],
+                unix_start_date,
+                unix_end_date,
+                5435,
+                eligible).then(response => {
+                      console.log(response);
+                      this.BL.getBallotStatement().then(returnValue => {
+                      this.setState({value: returnValue});
+                       })
+                    })
+            
+
+         }.bind(this)
+        reader.readAsText(file);
+        
+        
+        
         this.setState({errors: errors});
+        
         return formIsValid;
     }
 

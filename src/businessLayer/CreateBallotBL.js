@@ -69,4 +69,11 @@ export default class CreateBallotBL {
         return array;
     }
 
+    //Split the content of the file
+    splitArray(array){
+        var splitted = array.split(" "); 
+        return splitted;
+    }
+
+
 }
