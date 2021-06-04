@@ -1,7 +1,9 @@
 import React, {Component} from "react";
+import { render } from 'react-dom';
 import {Link} from "react-router-dom";
 import {Web3Context} from "../web3-context";
 import CreateBallotBL from "../businessLayer/CreateBallotBL";
+import ReactFileReader from 'react-file-reader';
 
 class CreateBallot extends Component {
 
@@ -21,6 +23,7 @@ class CreateBallot extends Component {
             , value: "" // Used to show the ballot's confirmation
             
         }
+        this.fileInput = React.createRef();
 
         this.BL.getBallotStatement().then(returnValue => {
             this.setState({value: returnValue});})
@@ -43,12 +46,8 @@ class CreateBallot extends Component {
             var unix_end_date =  parseInt((new Date(end_date).getTime() / 1000).toFixed(0));
             //call business layer to create ballot 
             //todo: read file  , there is a problem when reading the file it gives "fakepath"
-
-            alert(
-                `Selected file - ${
-                  this.state.fields["txtfile"][0]
-                }`
-              );
+           
+            
             
             this.BL.creatBallot(this.context.account[0],
                 this.state.fields["BallotName"],
@@ -127,8 +126,23 @@ class CreateBallot extends Component {
             errors["date_Reg_start"] = "Invalid date selected";
             errors["date_Reg_end"] = "Invalid date selected";
         }
-
-
+        if(!formIsValid) //if empty fields , then dont continue the validation of txt file 
+        {
+        this.setState({errors: errors});
+        return formIsValid;
+        }
+        
+        //check if the uploaded file is txt file 
+        //var reader = new FileReader();
+        var textfile = /text.*/;
+        
+        var file = document.querySelector('input[type=file]').files[0];
+        
+        if(!file.type.match(textfile))
+        {
+            formIsValid = false;
+            errors["txtfile"] = "The selected file is not text file !";
+        }
         
 
         
@@ -227,7 +241,7 @@ class CreateBallot extends Component {
                             addresses: &emsp;&emsp; </label>
 
                         <input type="file" id="myfile" name="myfile" onChange={this.handleChange.bind(this, "txtfile")}
-                               value={this.state.fields["txtfile"]}/>
+                               value={this.state.fields["txtfile"]} ref={this.fileInput}/>
                         <span style={{color: "red"}}>{this.state.errors["txtfile"]}</span>
                         <br/>
                         <br/>
@@ -241,7 +255,7 @@ class CreateBallot extends Component {
                 {this.state.ballot_confirm && // when creation is complete
                 <div>
                 <h3 style={{margin: 60}}>Ballot has been created and it's statement is = {this.state.value} </h3>
-                <h2>{this.state.fields["txtfile"]}</h2> 
+                
                 
 
                 </div>
