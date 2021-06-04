@@ -3,9 +3,6 @@ pragma solidity >=0.4.21 <0.7.0;
 import "./Owned.sol";
 import "./libraries/Secp256k1_noconflict.sol";
 
-//admin (deploy, ballot name, candidates,start and finish time, allowed addresses)
-//user (check address, compute dzk, cast vote, view results)
-
 contract VotingSys is Owned {
 
     struct Voter {
@@ -20,6 +17,7 @@ contract VotingSys is Owned {
     mapping(address => bool) public eligible; // White list of addresses allowed to vote
     mapping(address => bool) public registered; // Address registered?
     mapping(address => bool) public votecast; // Address voted?
+    mapping (address => uint) public refunds; //amount to be refunded
 
     uint public endRegistrationPhase;
     uint public endVotingPhase;
@@ -50,7 +48,7 @@ contract VotingSys is Owned {
     function setInitialEligible(address[] addr) private inState(State.CREATE) onlyOwner returns (bool){
         if (addr.length >= 3) {
             for (uint i = 0; i < addr.length; i++) {
-                if (!eligible[addr[i]]) {
+                if (!eligible[addr[i]]) { // can't be too careful
                     eligible[addr[i]] = true;
                     addresses.push(addr[i]);
                     totalEligible += 1;
@@ -59,18 +57,6 @@ contract VotingSys is Owned {
             return true;
         } else {
             return false;
-        }
-    }
-
-    //  inState(State.REGISTER) to allow the admin to add more eligible users in the reg phase
-    //  should be after creation of ballot
-    function addEligible(address[] addr) inState(State.REGISTER) onlyOwner {
-        for (uint i = 0; i < addr.length; i++) {
-            if (!eligible[addr[i]]) {
-                eligible[addr[i]] = true;
-                addresses.push(addr[i]);
-                totalEligible += 1;
-            }
         }
     }
 
@@ -105,60 +91,85 @@ contract VotingSys is Owned {
         return true;
     }
 
-    //    todo: find usage for this!!
-    //    function deadlinePassed() returns (bool){
-    //
-    //        uint[2] memory empty;
-    //        if (now > endRegistrationPhase) {
-    //            currentState = State.VOTE;
-    //        }
-    //        if (now > endVotingPhase) {
-    //            currentState = State.FINISH;
-    //        }
-    //        if (currentState == State.FINISH) {
+    //  inState(State.REGISTER) to allow the admin to add more eligible users in the reg phase
+    //  should be after creation of ballot
+    function addEligible(address[] addr) inState(State.REGISTER) onlyOwner {
+        for (uint i = 0; i < addr.length; i++) {
+            if (!eligible[addr[i]]) {
+                eligible[addr[i]] = true;
+                addresses.push(addr[i]);
+                totalEligible += 1;
+            }
+        }
+    }
+
+    // called when someone try to:
+    // regester
+    // vote
+    // in order to set to correct state and reset if finished
+        function deadlinePassed() returns (bool){
+    
+            uint[2] memory empty;
+            if (now > endRegistrationPhase) {
+                currentState = State.VOTE;
+            }
+            if (now > endVotingPhase) {
+                currentState = State.FINISH;
+            }
+            if (currentState == State.FINISH) {
     //    todo: should be separated in private function called resetBallot()
-    //            for (uint i = 0; i < addresses.length; i++) {
-    //                address addr = addresses[i];
-    //                eligible[addr] = false;
-    //                // No longer eligible
-    //                registered[addr] = false;
-    //                // Remove voting registration
-    //                voters[i] = Voter({addr : 0, key : empty, vote : empty});
-    //                addressid[addr] = 0;
-    //                // Remove index
-    //                votecast[addr] = false;
-    //                // Remove that vote was cast
-    //            }
-    //
-    //            // Reset timers.
-    //            endRegistrationPhase = 0;
-    //            endVotingPhase = 0;
-    //            delete addresses;
-    //
-    //            // Keep track of voter activity
-    //            totalRegistered = 0;
-    //            totalEligible = 0;
-    //            totalVoted = 0;
-    //
-    //            // General values that need reset
-    //            ballotName = "";
-    //            options[0] = "";
-    //            options[1] = "";
-    //            finaltally[0] = 0;
-    //            finaltally[1] = 0;
-    //            currentState = State.CREATE;
-    //            return true;
-    //        }
-    //        return false;
-    //    }
+    //    todo: lost deposits
+                for (uint i = 0; i < addresses.length; i++) {
+                    address addr = addresses[i];
+                    eligible[addr] = false;
+                    // No longer eligible
+                    registered[addr] = false;
+                    // Remove voting registration
+                    voters[i] = Voter({addr : 0, key : empty, vote : empty});
+                    addressid[addr] = 0;
+                    // Remove index
+                    votecast[addr] = false;
+                    // Remove that vote was cast
+                    refunds[addr] = 0;
+                    // Remove refunds
+                }
+    
+                // Reset timers.
+                endRegistrationPhase = 0;
+                endVotingPhase = 0;
+                delete addresses;
+    
+                // Keep track of voter activity
+                totalRegistered = 0;
+                totalEligible = 0;
+                totalVoted = 0;
+    
+                // General values that need reset
+                ballotName = "";
+                options[0] = "";
+                options[1] = "";
+                finalTally[0] = 0;
+                finalTally[1] = 0;
+                minDeposit = 0;
+                currentState = State.CREATE;
+                return true;
+            }
+            return false;
+            //false means that current state != FINISH 
+        }
 
 
 
-    function register(uint[2] _key) inState(State.REGISTER) returns (bool) {
-        // Only eligible addresses can vote
+    function register(uint[2] _key) inState(State.REGISTER) payable returns (bool) {
+        
+        if(msg.value != minDeposit) {
+           return false;
+        }
+    // Only eligible addresses can vote
         if (eligible[msg.sender]) {
             if (!registered[msg.sender]) {
                 // Update voter's registration
+                refunds[msg.sender] = msg.value;
                 uint[2] memory empty;
                 addressid[msg.sender] = totalRegistered;
                 voters[totalRegistered] = Voter({addr : msg.sender, key : _key, vote : empty});
@@ -183,6 +194,13 @@ contract VotingSys is Owned {
             voters[c].vote = choice;
             votecast[msg.sender] = true;
             totalVoted += 1;
+            uint refund = refunds[msg.sender];
+            refunds[msg.sender] = 0;
+
+            if (!msg.sender.send(refund)) {//failed to refund
+               refunds[msg.sender] = refund;
+            }
+            return true;
         }
 
         return false;
