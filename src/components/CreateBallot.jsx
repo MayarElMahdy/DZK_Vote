@@ -42,7 +42,14 @@ class CreateBallot extends Component {
             var unix_start_date =  parseInt((new Date(start_date).getTime() / 1000).toFixed(0));
             var unix_end_date =  parseInt((new Date(end_date).getTime() / 1000).toFixed(0));
             //call business layer to create ballot 
-            //todo: read file 
+            //todo: read file  , there is a problem when reading the file it gives "fakepath"
+
+            alert(
+                `Selected file - ${
+                  this.state.fields["txtfile"][0]
+                }`
+              );
+            
             this.BL.creatBallot(this.context.account[0],
                 this.state.fields["BallotName"],
                 this.state.fields["Cand1"],
@@ -148,12 +155,7 @@ class CreateBallot extends Component {
 
     
     render() {
-        if(this.state.value)  // If you already made a ballot you cannot make a new one 
-        {
-            console.log(this.state.value);
-            this.state.ballot_confirm = true;
-            this.state.ballot = false;
-        } // show only the ballot information 
+        
         
         const {ballot, ballot_confirm} = this.state;
         
@@ -239,6 +241,7 @@ class CreateBallot extends Component {
                 {this.state.ballot_confirm && // when creation is complete
                 <div>
                 <h3 style={{margin: 60}}>Ballot has been created and it's statement is = {this.state.value} </h3>
+                <h2>{this.state.fields["txtfile"]}</h2> 
                 
 
                 </div>
