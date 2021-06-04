@@ -134,7 +134,8 @@ class CreateBallot extends Component {
             eligible = content.split(" ");  // Addresses are seperated by space 
             //example in the txt file 
             //0x4C9888760b55cb7936a00C1Ac2b47884B39eE11C 0xA58CD4f6e5D10e7341D6CdB2Cf3E981d748B561A 0x2263d2b738592652A16683afA86c1481c1F615f4BA
-            
+
+            //first change the date and time to unix 
             
             this.setState({eligible:eligible});
             var start_date =  this.state.fields["date_Reg_start"] + "T" + this.state.fields["Time_Reg_start"];
@@ -144,7 +145,7 @@ class CreateBallot extends Component {
             
            
             
-            
+            //call the create ballot 
             this.BL.creatBallot(this.context.account[0],
                 this.state.fields["BallotName"],
                 this.state.fields["Cand1"],
