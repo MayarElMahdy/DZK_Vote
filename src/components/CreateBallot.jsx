@@ -22,6 +22,7 @@ class CreateBallot extends Component {
             , ballot_confirm: false
             , value: "" // Used to show the ballot's confirmation
             , eligible:""
+            , transaction:""
             
         }
         
@@ -154,11 +155,15 @@ class CreateBallot extends Component {
                 unix_end_date,
                 5435,
                 eligible).then(response => {
+                      this.setState({transaction: response});  
                       console.log(response);
+                      
                       this.BL.getBallotStatement().then(returnValue => {
                       this.setState({value: returnValue});
                        })
                     })
+
+                   
             
 
          }.bind(this)
@@ -275,7 +280,9 @@ class CreateBallot extends Component {
 
                 {this.state.ballot_confirm && // when creation is complete
                 <div>
-                <h3 style={{margin: 60}}>Ballot has been created and it's statement is = {this.state.value} </h3>
+                <h3 style={{margin: 60}}> {this.state.transaction} </h3>
+                <h2> Statement is {this.state.value}</h2>
+                
                 
                 
 

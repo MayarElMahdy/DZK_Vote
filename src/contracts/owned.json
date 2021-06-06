@@ -39,11 +39,11 @@
       "signature": "0xf2fde38b"
     }
   ],
-  "bytecode": "0x608060405234801561001057600080fd5b50336000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055506101da806100606000396000f30060806040526004361061004c576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680638da5cb5b14610051578063f2fde38b146100a8575b600080fd5b34801561005d57600080fd5b506100666100eb565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b3480156100b457600080fd5b506100e9600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610110565b005b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b3373ffffffffffffffffffffffffffffffffffffffff166000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1614151561016b57600080fd5b806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550505600a165627a7a72305820f011ce446b8d4d5e00a622e8fd4226f98b7bbc01e460770f41fa91f2c2d7b4400029",
-  "deployedBytecode": "0x60806040526004361061004c576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680638da5cb5b14610051578063f2fde38b146100a8575b600080fd5b34801561005d57600080fd5b506100666100eb565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b3480156100b457600080fd5b506100e9600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610110565b005b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b3373ffffffffffffffffffffffffffffffffffffffff166000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1614151561016b57600080fd5b806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550505600a165627a7a72305820f011ce446b8d4d5e00a622e8fd4226f98b7bbc01e460770f41fa91f2c2d7b4400029",
+  "bytecode": "0x608060405234801561001057600080fd5b50336000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055506101da806100606000396000f30060806040526004361061004c576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680638da5cb5b14610051578063f2fde38b146100a8575b600080fd5b34801561005d57600080fd5b506100666100eb565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b3480156100b457600080fd5b506100e9600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610110565b005b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b3373ffffffffffffffffffffffffffffffffffffffff166000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1614151561016b57600080fd5b806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550505600a165627a7a72305820c27a58c05674bb308793997dd0090119a0ae55d42df428f7f3dcc3c7e5cb72080029",
+  "deployedBytecode": "0x60806040526004361061004c576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680638da5cb5b14610051578063f2fde38b146100a8575b600080fd5b34801561005d57600080fd5b506100666100eb565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b3480156100b457600080fd5b506100e9600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610110565b005b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b3373ffffffffffffffffffffffffffffffffffffffff166000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1614151561016b57600080fd5b806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550505600a165627a7a72305820c27a58c05674bb308793997dd0090119a0ae55d42df428f7f3dcc3c7e5cb72080029",
   "sourceMap": "36:292:1:-;;;87:54;8:9:-1;5:2;;;30:1;27;20:12;5:2;87:54:1;123:10;115:5;;:18;;;;;;;;;;;;;;;;;;36:292;;;;;;",
   "deployedSourceMap": "36:292:1:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;58:20;;8:9:-1;5:2;;;30:1;27;20:12;5:2;58:20:1;;;;;;;;;;;;;;;;;;;;;;;;;;;233:92;;8:9:-1;5:2;;;30:1;27;20:12;5:2;233:92:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;58:20;;;;;;;;;;;;;:::o;233:92::-;190:10;181:19;;:5;;;;;;;;;;;:19;;;;177:30;;;202:5;;;177:30;309:8;301:5;;:16;;;;;;;;;;;;;;;;;;233:92;:::o",
-  "source": "pragma solidity >=0.4.22 <0.7.0;\r\n\r\ncontract Owned {\r\n    address public owner;\r\n\r\n    function Owned() {\r\n        owner = msg.sender;\r\n    }\r\n    modifier onlyOwner {\r\n        if (owner != msg.sender) throw;\r\n        _;\r\n    }\r\n    function transferOwnership(address newOwner) onlyOwner() {\r\n        owner = newOwner;\r\n    }\r\n}",
+  "source": "pragma solidity >=0.4.21 <0.7.0;\r\n\r\ncontract Owned {\r\n    address public owner;\r\n\r\n    function Owned() {\r\n        owner = msg.sender;\r\n    }\r\n    modifier onlyOwner {\r\n        if (owner != msg.sender) throw;\r\n        _;\r\n    }\r\n    function transferOwnership(address newOwner) onlyOwner() {\r\n        owner = newOwner;\r\n    }\r\n}",
   "sourcePath": "C:\\Users\\Mayar's Laptop\\react_test\\DZK_Vote\\Dapp\\contracts\\Owned.sol",
   "ast": {
     "absolutePath": "/C/Users/Mayar's Laptop/react_test/DZK_Vote/Dapp/contracts/Owned.sol",
@@ -61,7 +61,7 @@
           "solidity",
           ">=",
           "0.4",
-          ".22",
+          ".21",
           "<",
           "0.7",
           ".0"
@@ -454,7 +454,7 @@
           "solidity",
           ">=",
           "0.4",
-          ".22",
+          ".21",
           "<",
           "0.7",
           ".0"
@@ -839,12 +839,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x9372853Dc1499b6467dA95a34d334a5e88781Df6",
-      "transactionHash": "0x6bb3f3bbf17637734d31c1b4a3ce29fba3558098bed994409737ffbce17c34e7"
+      "address": "0x0E9AF84f9500F016F34D40E264e842A5828E72C3",
+      "transactionHash": "0xfa94103bdc623c0a48ec86386d4fc9408de3c5f8cdf639fe0bc89c00a701ce6f"
     }
   },
   "schemaVersion": "3.0.2",
-  "updatedAt": "2021-06-04T17:39:53.156Z",
+  "updatedAt": "2021-06-06T10:43:25.395Z",
   "devdoc": {
     "methods": {}
   },

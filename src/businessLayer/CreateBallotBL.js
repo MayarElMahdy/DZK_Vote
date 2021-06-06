@@ -26,13 +26,13 @@ export default class CreateBallotBL {
                     depositRequired,
                     addresses
                 ).send({from: adminAddress});
-                return true;
+                return "Transaction Confirmed";
             } else {
-                return false;
+                return "Transaction Failed";
             }
         } catch (e) {
             console.log(e.message);
-            return false;
+            return "Transaction Failed";
         }
     }
 
