@@ -272,7 +272,7 @@ class CreateBallot extends Component {
                         <br/>
                         <br/>
                         <input type="submit"/>
-                        <Link to="/" type="submit" className="Button">Create Ballot</Link>
+                        
                     </form>
 
                 </div>
