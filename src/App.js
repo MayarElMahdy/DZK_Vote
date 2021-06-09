@@ -3,7 +3,8 @@ import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import {CreateBallot, Home, Navigation, Vote} from "./components";
 import {loadWeb3, Web3Context} from "./web3-context";
 
-// initialize the global context
+
+export const PHASE = Object.freeze({"CREATE": 0, "REGISTER": 1, "VOTE": 2, "FINISH": 3})
 
 class App extends Component {
 
