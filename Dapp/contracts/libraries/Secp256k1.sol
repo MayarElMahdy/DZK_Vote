@@ -1,7 +1,8 @@
 pragma solidity ^0.4.0;
-import "./ECCMath_noconflict.sol";
 
-library Secp256k1_noconflict {
+import "./ECCMath.sol";
+
+library Secp256k1 {
 
     // Field size
     uint constant pp = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F;
@@ -51,12 +52,12 @@ library Secp256k1_noconflict {
     function validateSignature(bytes32 message, uint[2] rs, uint[2] Q) internal constant returns (bool) {
         uint n = nn;
         uint p = pp;
-        if(rs[0] == 0 || rs[0] >= n || rs[1] == 0 || rs[1] > lowSmax)
+        if (rs[0] == 0 || rs[0] >= n || rs[1] == 0 || rs[1] > lowSmax)
             return false;
         if (!isPubKey(Q))
             return false;
 
-        uint sInv = ECCMath_noconflict.invmod(rs[1], n);
+        uint sInv = ECCMath.invmod(rs[1], n);
         uint[3] memory u1G = _mul(mulmod(uint(message), sInv, n), [Gx, Gy]);
         uint[3] memory u2Q = _mul(mulmod(rs[0], sInv, n), Q);
         uint[3] memory P = _add(u1G, u2Q);
@@ -64,7 +65,8 @@ library Secp256k1_noconflict {
         if (P[2] == 0)
             return false;
 
-        uint Px = ECCMath_noconflict.invmod(P[2], p); // need Px/Pz^2
+        uint Px = ECCMath.invmod(P[2], p);
+        // need Px/Pz^2
         Px = mulmod(P[0], mulmod(Px, Px, p), p);
         return Px % n == rs[0];
     }
@@ -79,7 +81,7 @@ library Secp256k1_noconflict {
     function decompress(uint8 yBit, uint x) internal constant returns (uint[2] P) {
         uint p = pp;
         var y2 = addmod(mulmod(x, mulmod(x, x, p), p), 7, p);
-        var y_ = ECCMath_noconflict.expmod(y2, (p + 1) / 4, p);
+        var y_ = ECCMath.expmod(y2, (p + 1) / 4, p);
         uint cmp = yBit ^ y_ & 1;
         P[0] = x;
         P[1] = (cmp == 0) ? y_ : p - y_;
@@ -89,12 +91,13 @@ library Secp256k1_noconflict {
     // inData: Px, Py, Pz, Qx, Qy, Qz
     // outData: Rx, Ry, Rz
     function _add(uint[3] memory P, uint[3] memory Q) internal constant returns (uint[3] memory R) {
-        if(P[2] == 0)
+        if (P[2] == 0)
             return Q;
-        if(Q[2] == 0)
+        if (Q[2] == 0)
             return P;
         uint p = pp;
-        uint[4] memory zs; // Pz^2, Pz^3, Qz^2, Qz^3
+        uint[4] memory zs;
+        // Pz^2, Pz^3, Qz^2, Qz^3
         zs[0] = mulmod(P[2], P[2], p);
         zs[1] = mulmod(P[2], zs[0], p);
         zs[2] = mulmod(Q[2], Q[2], p);
@@ -104,7 +107,8 @@ library Secp256k1_noconflict {
         mulmod(P[1], zs[3], p),
         mulmod(Q[0], zs[0], p),
         mulmod(Q[1], zs[1], p)
-        ]; // Pu, Ps, Qu, Qs
+        ];
+        // Pu, Ps, Qu, Qs
         if (us[0] == us[2]) {
             if (us[1] != us[3])
                 return;
@@ -128,12 +132,13 @@ library Secp256k1_noconflict {
     // inData: Px, Py, Pz, Qx, Qy
     // outData: Rx, Ry, Rz
     function _addMixed(uint[3] memory P, uint[2] memory Q) internal constant returns (uint[3] memory R) {
-        if(P[2] == 0)
+        if (P[2] == 0)
             return [Q[0], Q[1], 1];
-        if(Q[1] == 0)
+        if (Q[1] == 0)
             return P;
         uint p = pp;
-        uint[2] memory zs; // Pz^2, Pz^3, Qz^2, Qz^3
+        uint[2] memory zs;
+        // Pz^2, Pz^3, Qz^2, Qz^3
         zs[0] = mulmod(P[2], P[2], p);
         zs[1] = mulmod(P[2], zs[0], p);
         uint[4] memory us = [
@@ -141,7 +146,8 @@ library Secp256k1_noconflict {
         P[1],
         mulmod(Q[0], zs[0], p),
         mulmod(Q[1], zs[1], p)
-        ]; // Pu, Ps, Qu, Qs
+        ];
+        // Pu, Ps, Qu, Qs
         if (us[0] == us[2]) {
             if (us[1] != us[3]) {
                 P[0] = 0;
@@ -168,16 +174,17 @@ library Secp256k1_noconflict {
 
     // Same as addMixed but params are different and mutates P.
     function _addMixedM(uint[3] memory P, uint[2] memory Q) internal constant {
-        if(P[1] == 0) {
+        if (P[1] == 0) {
             P[0] = Q[0];
             P[1] = Q[1];
             P[2] = 1;
             return;
         }
-        if(Q[1] == 0)
+        if (Q[1] == 0)
             return;
         uint p = pp;
-        uint[2] memory zs; // Pz^2, Pz^3, Qz^2, Qz^3
+        uint[2] memory zs;
+        // Pz^2, Pz^3, Qz^2, Qz^3
         zs[0] = mulmod(P[2], P[2], p);
         zs[1] = mulmod(P[2], zs[0], p);
         uint[4] memory us = [
@@ -185,7 +192,8 @@ library Secp256k1_noconflict {
         P[1],
         mulmod(Q[0], zs[0], p),
         mulmod(Q[1], zs[1], p)
-        ]; // Pu, Ps, Qu, Qs
+        ];
+        // Pu, Ps, Qu, Qs
         if (us[0] == us[2]) {
             if (us[1] != us[3]) {
                 P[0] = 0;
@@ -251,7 +259,8 @@ library Secp256k1_noconflict {
         uint p = pp;
         if (d == 0) // TODO
             return;
-        uint dwPtr; // points to array of NAF coefficients.
+        uint dwPtr;
+        // points to array of NAF coefficients.
         uint i;
 
         // wNAF
@@ -260,23 +269,24 @@ library Secp256k1_noconflict {
             let dm := 0
             dwPtr := mload(0x40)
             mstore(0x40, add(dwPtr, 512)) // Should lower this.
-            loop:
+            loop :
             jumpi(loop_end, iszero(d))
             jumpi(even, iszero(and(d, 1)))
             dm := mod(d, 32)
             mstore8(add(dwPtr, i), dm) // Don"t store as signed - convert when reading.
             d := add(sub(d, dm), mul(gt(dm, 16), 32))
-            even:
+            even :
             d := div(d, 2)
             i := add(i, 1)
             jump(loop)
-            loop_end:
+            loop_end :
         }
 
         dwPtr = dwPtr;
 
         // Pre calculation
-        uint[3][8] memory PREC; // P, 3P, 5P, 7P, 9P, 11P, 13P, 15P
+        uint[3][8] memory PREC;
+        // P, 3P, 5P, 7P, 9P, 11P, 13P, 15P
         PREC[0] = [P[0], P[1], 1];
         var X = _double(PREC[0]);
         PREC[1] = _addMixed(X, P);
@@ -288,29 +298,40 @@ library Secp256k1_noconflict {
         PREC[7] = _add(X, PREC[6]);
 
         uint[16] memory INV;
-        INV[0] = PREC[1][2];                            // a1
-        INV[1] = mulmod(PREC[2][2], INV[0], p);         // a2
-        INV[2] = mulmod(PREC[3][2], INV[1], p);         // a3
-        INV[3] = mulmod(PREC[4][2], INV[2], p);         // a4
-        INV[4] = mulmod(PREC[5][2], INV[3], p);         // a5
-        INV[5] = mulmod(PREC[6][2], INV[4], p);         // a6
-        INV[6] = mulmod(PREC[7][2], INV[5], p);         // a7
+        INV[0] = PREC[1][2];
+        // a1
+        INV[1] = mulmod(PREC[2][2], INV[0], p);
+        // a2
+        INV[2] = mulmod(PREC[3][2], INV[1], p);
+        // a3
+        INV[3] = mulmod(PREC[4][2], INV[2], p);
+        // a4
+        INV[4] = mulmod(PREC[5][2], INV[3], p);
+        // a5
+        INV[5] = mulmod(PREC[6][2], INV[4], p);
+        // a6
+        INV[6] = mulmod(PREC[7][2], INV[5], p);
+        // a7
 
-        INV[7] = ECCMath_noconflict.invmod(INV[6], p);             // a7inv
-        INV[8] = INV[7];                                // aNinv (a7inv)
+        INV[7] = ECCMath.invmod(INV[6], p);
+        // a7inv
+        INV[8] = INV[7];
+        // aNinv (a7inv)
 
-        INV[15] = mulmod(INV[5], INV[8], p);            // z7inv
-        for(uint k = 6; k >= 2; k--) {                  // z6inv to z2inv
+        INV[15] = mulmod(INV[5], INV[8], p);
+        // z7inv
+        for (uint k = 6; k >= 2; k--) {// z6inv to z2inv
             INV[8] = mulmod(PREC[k + 1][2], INV[8], p);
             INV[8 + k] = mulmod(INV[k - 2], INV[8], p);
         }
-        INV[9] = mulmod(PREC[2][2], INV[8], p);         // z1Inv
-        for(k = 0; k < 7; k++) {
-            ECCMath_noconflict.toZ1(PREC[k + 1], INV[k + 9], mulmod(INV[k + 9], INV[k + 9], p), p);
+        INV[9] = mulmod(PREC[2][2], INV[8], p);
+        // z1Inv
+        for (k = 0; k < 7; k++) {
+            ECCMath.toZ1(PREC[k + 1], INV[k + 9], mulmod(INV[k + 9], INV[k + 9], p), p);
         }
 
         // Mult loop
-        while(i > 0) {
+        while (i > 0) {
             uint dj;
             uint pIdx;
             i--;
@@ -319,7 +340,8 @@ library Secp256k1_noconflict {
             }
             _doubleM(Q);
             if (dj > 16) {
-                pIdx = (31 - dj) / 2; // These are the "negative ones", so invert y.
+                pIdx = (31 - dj) / 2;
+                // These are the "negative ones", so invert y.
                 _addMixedM(Q, [PREC[pIdx][0], p - PREC[pIdx][1]]);
             }
             else if (dj > 0) {

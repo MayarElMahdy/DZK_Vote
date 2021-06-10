@@ -1,23 +1,24 @@
 pragma solidity >=0.4.21 <0.7.0;
 
 import "./Owned.sol";
-import "./libraries/Secp256k1_noconflict.sol";
+import "./libraries/Secp256k1.sol";
 
 contract VotingSys is Owned {
 
     struct Voter {
         address addr;
-        uint[2] key;
+        uint[2] registeredKey;
+        uint[2] reconstructedKey;
         uint[2] vote;
     }
 
     address[] public addresses;
-    mapping(address => uint) public addressid; // Address to Counter
+    mapping(address => uint) public addressID; // Address to Counter
     mapping(uint => Voter) public voters;
     mapping(address => bool) public eligible; // White list of addresses allowed to vote
     mapping(address => bool) public registered; // Address registered?
     mapping(address => bool) public votecast; // Address voted?
-    mapping (address => uint) public refunds; //amount to be refunded
+    mapping(address => uint) public refunds; //amount to be refunded
 
     uint public endRegistrationPhase;
     uint public endVotingPhase;
@@ -27,6 +28,7 @@ contract VotingSys is Owned {
     string public ballotName; // Ballot Name
     string[2] public options;
     uint[2] public finalTally; // Final tally
+    uint[2] public prevFinalTally; // Final tally before last reset (not sure will be used)
 
     enum State {CREATE, REGISTER, VOTE, FINISH}
     State public currentState;
@@ -35,7 +37,7 @@ contract VotingSys is Owned {
 
     modifier inState(State s) {
         if (currentState != s) {
-            throw;
+            revert();
         }
         _;
     }
@@ -48,7 +50,7 @@ contract VotingSys is Owned {
     function setInitialEligible(address[] addr) private inState(State.CREATE) onlyOwner returns (bool){
         if (addr.length >= 3) {
             for (uint i = 0; i < addr.length; i++) {
-                if (!eligible[addr[i]]) { // can't be too careful
+                if (!eligible[addr[i]]) {// avoid duplicates
                     eligible[addr[i]] = true;
                     addresses.push(addr[i]);
                     totalEligible += 1;
@@ -107,75 +109,89 @@ contract VotingSys is Owned {
     // regester
     // vote
     // in order to set to correct state and reset if finished
-        function deadlinePassed() returns (bool){
-    
-            uint[2] memory empty;
-            if (now > endRegistrationPhase) {
-                currentState = State.VOTE;
+    function deadlinePassed() returns (bool){
+        uint[2] memory empty;
+        if (now > endRegistrationPhase) {
+            currentState = State.VOTE;
+        }
+        if (now > endVotingPhase) {
+            currentState = State.FINISH;
+        }
+        if (currentState == State.FINISH) {
+            //    todo: should be separated in private function called resetBallot()
+            //    todo: lost deposits
+            for (uint i = 0; i < addresses.length; i++) {
+                address addr = addresses[i];
+                eligible[addr] = false;
+                // No longer eligible
+                registered[addr] = false;
+                // Remove voting registration
+                voters[i] = Voter({
+                addr : 0,
+                registeredKey : empty,
+                reconstructedKey : empty,
+                vote : empty
+                });
+                addressID[addr] = 0;
+                // Remove index
+                votecast[addr] = false;
+                // Remove that vote was cast
+                refunds[addr] = 0;
+                // Remove refunds
             }
-            if (now > endVotingPhase) {
-                currentState = State.FINISH;
-            }
-            if (currentState == State.FINISH) {
-    //    todo: should be separated in private function called resetBallot()
-    //    todo: lost deposits
-                for (uint i = 0; i < addresses.length; i++) {
-                    address addr = addresses[i];
-                    eligible[addr] = false;
-                    // No longer eligible
-                    registered[addr] = false;
-                    // Remove voting registration
-                    voters[i] = Voter({addr : 0, key : empty, vote : empty});
-                    addressid[addr] = 0;
-                    // Remove index
-                    votecast[addr] = false;
-                    // Remove that vote was cast
-                    refunds[addr] = 0;
-                    // Remove refunds
-                }
-    
-                // Reset timers.
-                endRegistrationPhase = 0;
-                endVotingPhase = 0;
-                delete addresses;
-    
-                // Keep track of voter activity
-                totalRegistered = 0;
-                totalEligible = 0;
-                totalVoted = 0;
-    
-                // General values that need reset
-                ballotName = "";
-                options[0] = "";
-                options[1] = "";
-                finalTally[0] = 0;
-                finalTally[1] = 0;
-                minDeposit = 0;
-                currentState = State.CREATE;
-                return true;
-            }
+
+            // Reset timers.
+            endRegistrationPhase = 0;
+            endVotingPhase = 0;
+            delete addresses;
+
+            // reset voters activity
+            totalRegistered = 0;
+            totalEligible = 0;
+            totalVoted = 0;
+
+            // General values that need reset
+            ballotName = "";
+            options[0] = "";
+            options[1] = "";
+            finalTally[0] = 0;
+            finalTally[1] = 0;
+            minDeposit = 0;
+            currentState = State.CREATE;
+            return true;
+        }
+        return false;
+        //false means that current state != FINISH
+    }
+
+    function register(uint[2] xG, uint[3] vG, uint r) inState(State.REGISTER) payable returns (bool) {
+
+        if (deadlinePassed()) {
             return false;
-            //false means that current state != FINISH 
         }
 
-
-
-    function register(uint[2] _key) inState(State.REGISTER) payable returns (bool) {
-        
-        if(msg.value != minDeposit) {
-           return false;
+        if (currentState != State.REGISTER) {
+            return false;
         }
-    // Only eligible addresses can vote
+
+        if (msg.value < minDeposit) {
+            return false;
+        }
+        // Only eligible addresses can vote
         if (eligible[msg.sender]) {
-            if (!registered[msg.sender]) {
+            if (verifyKey(xG, r, vG) && !registered[msg.sender]) {
                 // Update voter's registration
                 refunds[msg.sender] = msg.value;
                 uint[2] memory empty;
-                addressid[msg.sender] = totalRegistered;
-                voters[totalRegistered] = Voter({addr : msg.sender, key : _key, vote : empty});
+                addressID[msg.sender] = totalRegistered;
+                voters[totalRegistered] = Voter({
+                addr : msg.sender,
+                registeredKey : xG,
+                reconstructedKey : empty,
+                vote : empty
+                });
                 registered[msg.sender] = true;
                 totalRegistered += 1;
-
                 return true;
             }
         }
@@ -187,7 +203,7 @@ contract VotingSys is Owned {
             return;
         }
 
-        uint c = addressid[msg.sender];
+        uint c = addressID[msg.sender];
 
         // Make sure the sender can vote, and hasn't already voted.
         if (registered[msg.sender] && !votecast[msg.sender]) {
@@ -198,11 +214,69 @@ contract VotingSys is Owned {
             refunds[msg.sender] = 0;
 
             if (!msg.sender.send(refund)) {//failed to refund
-               refunds[msg.sender] = refund;
+                refunds[msg.sender] = refund;
             }
             return true;
         }
 
         return false;
+    }
+
+
+    // todo: fix EL SHEEE2 DA!!!!!!!!!!!!!!!!!!!!!!
+    //____________________________________________________________________________
+    //_________________should be separated in another contract____________________
+    //___________________________gives stupid error!!!____________________________
+    //____________________________________________________________________________
+
+    // Modulus for public keys
+    uint constant pp = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F;
+
+    // Base point (generator) G
+    uint constant Gx = 0x79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798;
+    uint constant Gy = 0x483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8;
+
+    // New  point (generator) Y
+    uint constant Yx = 98038005178408974007512590727651089955354106077095278304532603697039577112780;
+    uint constant Yy = 1801119347122147381158502909947365828020117721497557484744596940174906898953;
+
+    // Modulus for private keys (sub-group)
+    uint constant nn = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141;
+
+    uint[2] G;
+    uint[2] Y;
+    // Parameters xG, r where r = v - xc, and vG.
+    // Verify that vG = rG + xcG!
+    function verifyKey(uint[2] xG, uint r, uint[3] vG) returns (bool){
+        uint[2] memory G;
+        G[0] = Gx;
+        G[1] = Gy;
+
+        // Check both keys are on the curve.
+        if (!Secp256k1.isPubKey(xG) || !Secp256k1.isPubKey(vG)) {
+            return false;
+            //Must be on the curve!
+        }
+
+        // Get c = H(g, g^{x}, g^{v});
+        bytes32 b_c = sha256(abi.encodePacked(msg.sender, Gx, Gy, xG, vG));
+        uint c = uint(b_c);
+
+        // Get g^{r}, and g^{xc}
+        uint[3] memory rG = Secp256k1._mul(r, G);
+        uint[3] memory xcG = Secp256k1._mul(c, xG);
+
+        // Add both points together
+        uint[3] memory rGxcG = Secp256k1._add(rG, xcG);
+
+        // Convert to Affine Co-ordinates
+        ECCMath.toZ1(rGxcG, pp);
+
+        // Verify. Do they match?
+        if (rGxcG[0] == vG[0] && rGxcG[1] == vG[1]) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

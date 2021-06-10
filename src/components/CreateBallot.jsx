@@ -1,9 +1,6 @@
 import React, {Component} from "react";
-import { render } from 'react-dom';
-import {Link} from "react-router-dom";
 import {Web3Context} from "../web3-context";
 import CreateBallotBL from "../businessLayer/CreateBallotBL";
-import ReactFileReader from 'react-file-reader';
 
 class CreateBallot extends Component {
 
@@ -13,7 +10,6 @@ class CreateBallot extends Component {
 
     constructor(props) {
         super(props)
-        
         this.state = {
             account: ''
             , fields: {}
@@ -21,18 +17,17 @@ class CreateBallot extends Component {
             , ballot: true
             , ballot_confirm: false
             , value: "" // Used to show the ballot's confirmation
-            , eligible:""
-            , transaction:""
-            
+            , eligible: ""
+            , transaction: ""
+
         }
-        
+
         this.fileInput = React.createRef();
 
         this.BL.getBallotStatement().then(returnValue => {
-            this.setState({value: returnValue});})
-        
-            
-        
+            this.setState({value: returnValue});
+        })
+
 
     }
 
@@ -41,11 +36,10 @@ class CreateBallot extends Component {
         e.preventDefault();
 
         if (this.handleValidation()) {
-            
 
             this.setState({ballot: false});
             this.setState({ballot_confirm: true});
-            
+
 
         } else {
             alert("Form has errors.")
@@ -53,7 +47,6 @@ class CreateBallot extends Component {
 
     }
 
-    
 
     handleChange(field, e) {
         let fields = this.state.fields;
@@ -78,14 +71,14 @@ class CreateBallot extends Component {
         formIsValid = this.handleEmpty("Time_Reg_start", formIsValid, fields, errors, 3);
         formIsValid = this.handleEmpty("date_Reg_end", formIsValid, fields, errors, 2);
         formIsValid = this.handleEmpty("Time_Reg_end", formIsValid, fields, errors, 3);
-        
+
 
         //check if txt file is not attached
         formIsValid = this.handleEmpty("txtfile", formIsValid, fields, errors, 4);
 
         var date1 = new Date(fields["date_Reg_start"]);
         var date2 = new Date(fields["date_Reg_end"]);
-        
+
         // we need to compare with current date 
         //first we need to switch the fields to become dates 
 
@@ -97,7 +90,6 @@ class CreateBallot extends Component {
             formIsValid = false;
             errors["date_Reg_end"] = "This date has already passed !";
         }
-        
 
 
         if (fields["date_Reg_start"] >= fields["date_Reg_end"]) {
@@ -105,47 +97,45 @@ class CreateBallot extends Component {
             errors["date_Reg_start"] = "Invalid date selected";
             errors["date_Reg_end"] = "Invalid date selected";
         }
-        if(!formIsValid) //if empty fields , then dont continue the validation of txt file 
+        if (!formIsValid) //if empty fields , then dont continue the validation of txt file
         {
-        this.setState({errors: errors});
-        return formIsValid;
+            this.setState({errors: errors});
+            return formIsValid;
         }
-        
+
         //check if the uploaded file is txt file 
-        
+
         var textfile = /text.*/;
-        
+
         var file = document.querySelector('input[type=file]').files[0];
-        
-        if(!file.type.match(textfile))
-        {
+
+        if (!file.type.match(textfile)) {
             formIsValid = false;
             errors["txtfile"] = "The selected file is not text file !";
         }
         //read whole file
         //then adding each address to the 'eligible' array
 
-        
+
         let reader = new FileReader();
         let content = "";
         let eligible = this.eligible;
         reader.onload = function (event) {
             content = event.target.result;
-            
+
             eligible = content.split(" ");  // Addresses are seperated by space 
             //example in the txt file 
             //0x4C9888760b55cb7936a00C1Ac2b47884B39eE11C 0xA58CD4f6e5D10e7341D6CdB2Cf3E981d748B561A 0x2263d2b738592652A16683afA86c1481c1F615f4BA
 
             //first change the date and time to unix 
-            
-            this.setState({eligible:eligible});
-            var start_date =  this.state.fields["date_Reg_start"] + "T" + this.state.fields["Time_Reg_start"];
+
+            this.setState({eligible: eligible});
+            var start_date = this.state.fields["date_Reg_start"] + "T" + this.state.fields["Time_Reg_start"];
             var end_date = this.state.fields["date_Reg_end"] + "T" + this.state.fields["Time_Reg_end"];
-            var unix_start_date =  parseInt((new Date(start_date).getTime() / 1000).toFixed(0));
-            var unix_end_date =  parseInt((new Date(end_date).getTime() / 1000).toFixed(0));
-            
-           
-            
+            var unix_start_date = parseInt((new Date(start_date).getTime() / 1000).toFixed(0));
+            var unix_end_date = parseInt((new Date(end_date).getTime() / 1000).toFixed(0));
+
+
             //call the create ballot 
             this.BL.creatBallot(this.context.account[0],
                 this.state.fields["BallotName"],
@@ -153,26 +143,23 @@ class CreateBallot extends Component {
                 this.state.fields["Cand2"],
                 unix_start_date,
                 unix_end_date,
-                5435,
+                12,
                 eligible).then(response => {
-                      this.setState({transaction: response});  
-                      console.log(response);
-                      
-                      this.BL.getBallotStatement().then(returnValue => {
-                      this.setState({value: returnValue});
-                       })
-                    })
+                this.setState({transaction: response});
+                console.log(response);
 
-                   
-            
+                this.BL.getBallotStatement().then(returnValue => {
+                    this.setState({value: returnValue});
+                })
+            })
 
-         }.bind(this)
+
+        }.bind(this)
         reader.readAsText(file);
-        
-        
-        
+
+
         this.setState({errors: errors});
-        
+
         return formIsValid;
     }
 
@@ -193,14 +180,12 @@ class CreateBallot extends Component {
 
     }
 
-    
+
     render() {
-        
-        
+
+
         const {ballot, ballot_confirm} = this.state;
-        
-        
-        
+
 
         return (
 
@@ -208,8 +193,8 @@ class CreateBallot extends Component {
 
                 {this.state.ballot &&  // show when ballot = true
                 <div>
-                    
-                    
+
+
                     <form onSubmit={this.contactSubmit.bind(this)} className="form">
                         <br/>
                         <label htmlFor="Contract-name">Ballot Name</label>
@@ -253,10 +238,9 @@ class CreateBallot extends Component {
                         <span style={{color: "red"}}>{this.state.errors["date_Reg_end"]}</span>
                         <span style={{color: "red"}}>{this.state.errors["Time_Reg_end"]}</span>
 
-                        
-                        
-                        <br></br>
-                        <br></br>
+
+                        <br/>
+                        <br/>
                         <label htmlFor="Tally" style={{color: '#db1818'}}>&emsp;
                             <mark><b> Tally phase will start automatically
                                 after voting phase is over</b></mark>
@@ -272,7 +256,7 @@ class CreateBallot extends Component {
                         <br/>
                         <br/>
                         <input type="submit"/>
-                        
+
                     </form>
 
                 </div>
@@ -280,11 +264,9 @@ class CreateBallot extends Component {
 
                 {this.state.ballot_confirm && // when creation is complete
                 <div>
-                <h3 style={{margin: 60}}> {this.state.transaction} </h3>
-                <h2> Statement is {this.state.value}</h2>
-                
-                
-                
+                    <h3 style={{margin: 60}}> {this.state.transaction} </h3>
+                    <h2> Statement is {this.state.value}</h2>
+
 
                 </div>
 
