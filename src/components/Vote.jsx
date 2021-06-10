@@ -3,6 +3,7 @@ import {Web3Context} from "../web3-context";
 import RegistrationBL from "../businessLayer/RegistrationBL";
 import votebutton from "./images/vote-icon.png";
 import './Vote.css';
+import CreateBallotBL from "../businessLayer/CreateBallotBL";
 
 let option0 = "First Option"; // variables for the two options temporarily
 let option1 = "Second Option";
@@ -11,17 +12,21 @@ let vote = null;
 class Vote extends Component {
     static contextType = Web3Context;
     BL = new RegistrationBL();
-
+    ballotBL = new CreateBallotBL();
+    
     constructor(props) {
         super(props);
 
         this.state = {
             name: "React",
-            flagBallot: false,
             flagVote: false,
+            ballotValue: "",
 
             registered: "1"
-        };
+        }
+        this.ballotBL.getBallotStatement().then(returnValue => {
+            this.setState({ballotValue: returnValue});
+        });
         this.handleClickVote = this.handleClickVote.bind(this);
 
     }
@@ -47,21 +52,27 @@ class Vote extends Component {
     }
 
     render() {
-        const {flagBallot, flagVote} = this.state;
+        const {flagVote} = this.state;
         return (
 
             <div>
                 <h2>{this.state.registered ? "yess" : "noo"}</h2>
+                
+                {!this.state.ballotValue &&     // shows when there is no ballot created
+                <div>
+                    <h2 className = "head">No ballots available.</h2>
+                </div>
+                }
 
-                {!this.state.registered &&    // shows when address is not registered
+                {!this.state.registered && this.state.ballotValue &&    // shows when address is not registered
                 <div>
                     <h2 className = "head">You are not registered to vote yet.</h2>
                     <hr/>
                     <br/>
 
-                </div>}
+                </div>} 
 
-                {!flagVote && this.state.registered &&  // shows when address is registered
+                {!flagVote && this.state.ballotValue && this.state.registered &&  // shows when address is registered
                 <form id="voteform">
                     <h2 className = "head">
                         Please cast your vote: </h2>
