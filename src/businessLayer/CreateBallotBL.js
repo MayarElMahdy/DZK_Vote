@@ -37,8 +37,12 @@ export default class CreateBallotBL {
     }
 
     // edit as preferred
-    async getBallotStatement() {
-        return await  this.contract.methods.ballotName().call() + "\n\nCandidates are :\n \t" +
+    async getBallotStatement() { 
+        let ballot = await this.contract.methods.ballotName().call();
+        if(!ballot) // empty
+        return "";
+        else
+        return ballot + "Candidates are " + 
             await this.contract.methods.options(0).call() + " " +
             await this.contract.methods.options(1).call() ;
     }
@@ -58,16 +62,7 @@ export default class CreateBallotBL {
         }
     }
 
-    // todo: not tested!!
-    readAddressesFromFile(filePath) {
-        const liner = new lineByLine(filePath);
-        let line;
-        const array = [];
-        while (line = liner.next()) {
-            array.push(line);
-        }
-        return array;
-    }
+    
 
     //Split the content of the file
     splitArray(array){

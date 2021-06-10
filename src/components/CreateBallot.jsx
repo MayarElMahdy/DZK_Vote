@@ -14,19 +14,18 @@ class CreateBallot extends Component {
             account: ''
             , fields: {}
             , errors: {}
-            , ballot: true
-            , ballot_confirm: false
             , value: "" // Used to show the ballot's confirmation
             , eligible: ""
             , transaction: ""
 
         }
-
-        this.fileInput = React.createRef();
-
         this.BL.getBallotStatement().then(returnValue => {
             this.setState({value: returnValue});
         })
+
+        this.fileInput = React.createRef();
+
+        
 
 
     }
@@ -184,14 +183,15 @@ class CreateBallot extends Component {
     render() {
 
 
-        const {ballot, ballot_confirm} = this.state;
+        
+        
 
 
         return (
 
             <div>
 
-                {this.state.ballot &&  // show when ballot = true
+                {!this.state.value &&  // show when ballot is not yet created
                 <div>
 
 
@@ -262,7 +262,7 @@ class CreateBallot extends Component {
                 </div>
                 }
 
-                {this.state.ballot_confirm && // when creation is complete
+                {this.state.value && // when creation is complete
                 <div>
                     <h3 style={{margin: 60}}> {this.state.transaction} </h3>
                     <h2> Statement is {this.state.value}</h2>

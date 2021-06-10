@@ -201,6 +201,7 @@ contract VotingSys is Owned {
     function submitVote(uint[2] choice) inState(State.VOTE) returns (bool) {
         if (now > endVotingPhase) {
             return;
+            
         }
 
         uint c = addressID[msg.sender];
@@ -220,6 +221,7 @@ contract VotingSys is Owned {
         }
 
         return false;
+
     }
 
 
