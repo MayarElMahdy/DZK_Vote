@@ -122,9 +122,8 @@ class CreateBallot extends Component {
         reader.onload = function (event) {
             content = event.target.result;
 
-            eligible = content.split(" ");  // Addresses are seperated by space 
-            //example in the txt file 
-            //0x4C9888760b55cb7936a00C1Ac2b47884B39eE11C 0xA58CD4f6e5D10e7341D6CdB2Cf3E981d748B561A 0x2263d2b738592652A16683afA86c1481c1F615f4BA
+            eligible = content.split("\r\n");  // Addresses are seperated by newline
+            
 
             //first change the date and time to unix 
 
