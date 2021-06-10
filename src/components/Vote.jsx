@@ -19,24 +19,16 @@ class Vote extends Component {
             flagBallot: false,
             flagVote: true,
 
-            test: "1"
+            registered: "1"
         };
-        this.handleClickBallot = this.handleClickBallot.bind(this);
         this.handleClickVote = this.handleClickVote.bind(this);
 
     }
 
     componentDidMount = async () => {
-        this.setState({test: await this.BL.isRegistered(this.context.account[0])})
+        this.setState({registered: await this.BL.isRegistered(this.context.account[0])})
     }
 
-
-    handleClickBallot(event) {  // submit vote button handler
-        event.preventDefault();
-        this.setState({flagBallot: true});
-        this.setState({flagVote: false});
-        console.log("Ballot selected");
-    }
 
     handleClickVote(event) {  // submit vote button handler
         event.preventDefault();
@@ -58,20 +50,17 @@ class Vote extends Component {
         return (
 
             <div>
-                <h2>{this.state.test ? "yess" : "noo"}</h2>
+                <h2>{this.state.registered ? "yess" : "noo"}</h2>
 
-                {!flagBallot &&    // shows ballot screen only when flagBallot = false
+                {!this.state.registered &&    // shows when address is not registered
                 <div>
-                    <h2 style={{margin: 60}}>Select ballot:</h2>
+                    <h3 style={{margin: 60}}>You are not registered to vote yet.</h3>
                     <hr/>
                     <br/>
-                    <hr/>
-                    <input onClick={this.handleClickBallot} style={{marginLeft: 100}} type="submit"/>
-                    <Link to="/" type="submit" className="Button"/>
 
                 </div>}
 
-                {!flagVote &&  // shows vote form after submitting ballot, if the flagVote = false
+                {!flagVote && this.state.registered &&  // shows when address is registered
                 <form id="voteform">
                     <h2 style={{margin: 60}}>
                         Please cast your vote:

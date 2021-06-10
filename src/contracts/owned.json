@@ -36,27 +36,15 @@
       "type": "function"
     }
   ],
-<<<<<<< HEAD
-  "metadata": "{\"compiler\":{\"version\":\"0.4.26+commit.4563c3fc\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":true,\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/C/Users/hp pavilion/Desktop/Senior Project/DZK_Vote/Dapp/contracts/Owned.sol\":\"Owned\"},\"evmVersion\":\"byzantium\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/hp pavilion/Desktop/Senior Project/DZK_Vote/Dapp/contracts/Owned.sol\":{\"keccak256\":\"0x640da9146389b9b191a82b83804093b66ebbd02ccd6b2fe9c671fad00a3f5803\",\"urls\":[\"bzzr://a6a3dd4088c7b62f0ed3f842c672dfe81d7f0182c45f0631b1c6a0ae957724c3\"]}},\"version\":1}",
-  "bytecode": "0x608060405234801561001057600080fd5b50336000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055506101da806100606000396000f30060806040526004361061004c576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680638da5cb5b14610051578063f2fde38b146100a8575b600080fd5b34801561005d57600080fd5b506100666100eb565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b3480156100b457600080fd5b506100e9600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610110565b005b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b3373ffffffffffffffffffffffffffffffffffffffff166000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1614151561016b57600080fd5b806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550505600a165627a7a72305820d6720680a0600af62599558a2c350d80854ec5d83c01455cefc31229525efd5b0029",
-  "deployedBytecode": "0x60806040526004361061004c576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680638da5cb5b14610051578063f2fde38b146100a8575b600080fd5b34801561005d57600080fd5b506100666100eb565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b3480156100b457600080fd5b506100e9600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610110565b005b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b3373ffffffffffffffffffffffffffffffffffffffff166000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1614151561016b57600080fd5b806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550505600a165627a7a72305820d6720680a0600af62599558a2c350d80854ec5d83c01455cefc31229525efd5b0029",
-  "sourceMap": "36:295:2:-;;;87:54;8:9:-1;5:2;;;30:1;27;20:12;5:2;87:54:2;123:10;115:5;;:18;;;;;;;;;;;;;;;;;;36:295;;;;;;",
-  "deployedSourceMap": "36:295:2:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;58:20;;8:9:-1;5:2;;;30:1;27;20:12;5:2;58:20:2;;;;;;;;;;;;;;;;;;;;;;;;;;;236:92;;8:9:-1;5:2;;;30:1;27;20:12;5:2;236:92:2;;;;;;;;;;;;;;;;;;;;;;;;;;;;58:20;;;;;;;;;;;;;:::o;236:92::-;190:10;181:19;;:5;;;;;;;;;;;:19;;;;177:33;;;202:8;;;177:33;312:8;304:5;;:16;;;;;;;;;;;;;;;;;;236:92;:::o",
-  "source": "pragma solidity >=0.4.21 <0.7.0;\r\n\r\ncontract Owned {\r\n    address public owner;\r\n\r\n    function Owned() {\r\n        owner = msg.sender;\r\n    }\r\n    modifier onlyOwner {\r\n        if (owner != msg.sender) revert();\r\n        _;\r\n    }\r\n    function transferOwnership(address newOwner) onlyOwner() {\r\n        owner = newOwner;\r\n    }\r\n}",
+  "metadata": "{\"compiler\":{\"version\":\"0.4.26+commit.4563c3fc\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":true,\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/C/Users/hp pavilion/Desktop/Senior Project/DZK_Vote/Dapp/contracts/Owned.sol\":\"Owned\"},\"evmVersion\":\"byzantium\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/hp pavilion/Desktop/Senior Project/DZK_Vote/Dapp/contracts/Owned.sol\":{\"keccak256\":\"0x5ed5244511ff6ccd53dd131376a8e7b78fea878bb765daa08cda57ecac0c6329\",\"urls\":[\"bzzr://1cd805b34b6f1267accfb7094b2944632ec66c9bfe04528a0389c121889dae1c\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b50336000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055506101da806100606000396000f30060806040526004361061004c576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680638da5cb5b14610051578063f2fde38b146100a8575b600080fd5b34801561005d57600080fd5b506100666100eb565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b3480156100b457600080fd5b506100e9600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610110565b005b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b3373ffffffffffffffffffffffffffffffffffffffff166000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1614151561016b57600080fd5b806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550505600a165627a7a72305820f085c6ef580f71898809764b2ea38dd0d4b8d99354cbf06e8d7d6c91680d1fac0029",
+  "deployedBytecode": "0x60806040526004361061004c576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680638da5cb5b14610051578063f2fde38b146100a8575b600080fd5b34801561005d57600080fd5b506100666100eb565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b3480156100b457600080fd5b506100e9600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610110565b005b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b3373ffffffffffffffffffffffffffffffffffffffff166000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1614151561016b57600080fd5b806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550505600a165627a7a72305820f085c6ef580f71898809764b2ea38dd0d4b8d99354cbf06e8d7d6c91680d1fac0029",
+  "sourceMap": "36:301:2:-;;;87:54;8:9:-1;5:2;;;30:1;27;20:12;5:2;87:54:2;123:10;115:5;;:18;;;;;;;;;;;;;;;;;;36:301;;;;;;",
+  "deployedSourceMap": "36:301:2:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;58:20;;8:9:-1;5:2;;;30:1;27;20:12;5:2;58:20:2;;;;;;;;;;;;;;;;;;;;;;;;;;;236:92;;8:9:-1;5:2;;;30:1;27;20:12;5:2;236:92:2;;;;;;;;;;;;;;;;;;;;;;;;;;;;58:20;;;;;;;;;;;;;:::o;236:92::-;190:10;181:19;;:5;;;;;;;;;;;:19;;;;177:33;;;202:8;;;177:33;312:8;304:5;;:16;;;;;;;;;;;;;;;;;;236:92;:::o",
+  "source": "pragma solidity >=0.4.21 <0.7.0;\r\n\r\ncontract Owned {\r\n    address public owner;\r\n\r\n    function Owned() {\r\n        owner = msg.sender;\r\n    }\r\n    modifier onlyOwner {\r\n        if (owner != msg.sender) revert();\r\n        _;\r\n    }\r\n    function transferOwnership(address newOwner) onlyOwner() {\r\n        owner = newOwner;\r\n    }\r\n    \r\n}",
   "sourcePath": "C:\\Users\\hp pavilion\\Desktop\\Senior Project\\DZK_Vote\\Dapp\\contracts\\Owned.sol",
   "ast": {
     "absolutePath": "/C/Users/hp pavilion/Desktop/Senior Project/DZK_Vote/Dapp/contracts/Owned.sol",
-=======
-  "metadata": "{\"compiler\":{\"version\":\"0.4.26+commit.4563c3fc\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":true,\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/C/Users/Jarvis/DZK_Vote/Dapp/contracts/Owned.sol\":\"Owned\"},\"evmVersion\":\"byzantium\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/Jarvis/DZK_Vote/Dapp/contracts/Owned.sol\":{\"keccak256\":\"0x5ed5244511ff6ccd53dd131376a8e7b78fea878bb765daa08cda57ecac0c6329\",\"urls\":[\"bzzr://1cd805b34b6f1267accfb7094b2944632ec66c9bfe04528a0389c121889dae1c\"]}},\"version\":1}",
-  "bytecode": "0x608060405234801561001057600080fd5b50336000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055506101da806100606000396000f30060806040526004361061004c576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680638da5cb5b14610051578063f2fde38b146100a8575b600080fd5b34801561005d57600080fd5b506100666100eb565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b3480156100b457600080fd5b506100e9600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610110565b005b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b3373ffffffffffffffffffffffffffffffffffffffff166000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1614151561016b57600080fd5b806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550505600a165627a7a723058209c66b4454b0568c999040ae1f4ff4f18d8a2392b26bbb94f460fd236889463040029",
-  "deployedBytecode": "0x60806040526004361061004c576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680638da5cb5b14610051578063f2fde38b146100a8575b600080fd5b34801561005d57600080fd5b506100666100eb565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b3480156100b457600080fd5b506100e9600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610110565b005b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b3373ffffffffffffffffffffffffffffffffffffffff166000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1614151561016b57600080fd5b806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550505600a165627a7a723058209c66b4454b0568c999040ae1f4ff4f18d8a2392b26bbb94f460fd236889463040029",
-  "sourceMap": "36:301:0:-;;;87:54;8:9:-1;5:2;;;30:1;27;20:12;5:2;87:54:0;123:10;115:5;;:18;;;;;;;;;;;;;;;;;;36:301;;;;;;",
-  "deployedSourceMap": "36:301:0:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;58:20;;8:9:-1;5:2;;;30:1;27;20:12;5:2;58:20:0;;;;;;;;;;;;;;;;;;;;;;;;;;;236:92;;8:9:-1;5:2;;;30:1;27;20:12;5:2;236:92:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;58:20;;;;;;;;;;;;;:::o;236:92::-;190:10;181:19;;:5;;;;;;;;;;;:19;;;;177:33;;;202:8;;;177:33;312:8;304:5;;:16;;;;;;;;;;;;;;;;;;236:92;:::o",
-  "source": "pragma solidity >=0.4.21 <0.7.0;\r\n\r\ncontract Owned {\r\n    address public owner;\r\n\r\n    function Owned() {\r\n        owner = msg.sender;\r\n    }\r\n    modifier onlyOwner {\r\n        if (owner != msg.sender) revert();\r\n        _;\r\n    }\r\n    function transferOwnership(address newOwner) onlyOwner() {\r\n        owner = newOwner;\r\n    }\r\n    \r\n}",
-  "sourcePath": "C:/Users/Jarvis/DZK_Vote/Dapp/contracts/Owned.sol",
-  "ast": {
-    "absolutePath": "/C/Users/Jarvis/DZK_Vote/Dapp/contracts/Owned.sol",
->>>>>>> d65a1fca1fb2f32fc75457fd08720612411819c2
     "exportedSymbols": {
       "Owned": [
         2354
@@ -475,27 +463,15 @@
             "visibility": "public"
           }
         ],
-<<<<<<< HEAD
         "scope": 2355,
-        "src": "36:295:2"
+        "src": "36:301:2"
       }
     ],
-    "src": "0:331:2"
+    "src": "0:337:2"
   },
   "legacyAST": {
     "attributes": {
       "absolutePath": "/C/Users/hp pavilion/Desktop/Senior Project/DZK_Vote/Dapp/contracts/Owned.sol",
-=======
-        "scope": 38,
-        "src": "36:301:0"
-      }
-    ],
-    "src": "0:337:0"
-  },
-  "legacyAST": {
-    "attributes": {
-      "absolutePath": "/C/Users/Jarvis/DZK_Vote/Dapp/contracts/Owned.sol",
->>>>>>> d65a1fca1fb2f32fc75457fd08720612411819c2
       "exportedSymbols": {
         "Owned": [
           2354
@@ -989,20 +965,12 @@
         ],
         "id": 2354,
         "name": "ContractDefinition",
-<<<<<<< HEAD
-        "src": "36:295:2"
-=======
-        "src": "36:301:0"
->>>>>>> d65a1fca1fb2f32fc75457fd08720612411819c2
+        "src": "36:301:2"
       }
     ],
     "id": 2355,
     "name": "SourceUnit",
-<<<<<<< HEAD
-    "src": "0:331:2"
-=======
-    "src": "0:337:0"
->>>>>>> d65a1fca1fb2f32fc75457fd08720612411819c2
+    "src": "0:337:2"
   },
   "compiler": {
     "name": "solc",
@@ -1012,17 +980,13 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x677B8E4A9dCF7a35710AB7F09e84257f07Bdb479",
-      "transactionHash": "0x8056a6d2603c8f3bdedb1f957ed811e7ba184f96cfeac88c1916f39df9b1fd72"
+      "address": "0x2A01507Dc62FeAE7DD9EB1EC0E7010b1d2fdba5F",
+      "transactionHash": "0x6bdfa0689a79ef8c4619f792456358dc4ac6afe3d73a4129875058ab5ba76c36"
     }
   },
   "schemaVersion": "3.3.4",
-<<<<<<< HEAD
-  "updatedAt": "2021-06-10T10:37:00.056Z",
-=======
-  "updatedAt": "2021-06-09T17:44:10.348Z",
+  "updatedAt": "2021-06-10T11:18:43.404Z",
   "networkType": "ethereum",
->>>>>>> d65a1fca1fb2f32fc75457fd08720612411819c2
   "devdoc": {
     "methods": {}
   },
