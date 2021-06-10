@@ -42,9 +42,15 @@ export default class CreateBallotBL {
         if(!ballot) // empty
         return "";
         else
-        return ballot + "Candidates are " + 
+        return ballot + " " + "Candidates are " + 
             await this.contract.methods.options(0).call() + " " +
             await this.contract.methods.options(1).call() ;
+    }
+    async getOption1() {
+        return await this.contract.methods.options(0).call();
+    }
+    async getOption2() {
+        return await this.contract.methods.options(1).call();
     }
 
     async addEligible(adminAddress, addresses) {

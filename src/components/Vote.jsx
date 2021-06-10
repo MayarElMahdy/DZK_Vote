@@ -5,10 +5,7 @@ import votebutton from "./images/vote-icon.png";
 import './Vote.css';
 import CreateBallotBL from "../businessLayer/CreateBallotBL";
 
-let option0 = "First Option"; // variables for the two options temporarily
-let option1 = "Second Option";
 let vote = null;
-
 class Vote extends Component {
     static contextType = Web3Context;
     BL = new RegistrationBL();
@@ -21,11 +18,18 @@ class Vote extends Component {
             name: "React",
             flagVote: false,
             ballotValue: "",
-
+            option0: "First Option",
+            option1: "Second Option",
             registered: "1"
         }
         this.ballotBL.getBallotStatement().then(returnValue => {
             this.setState({ballotValue: returnValue});
+        })
+        this.ballotBL.getOption1().then(returnValue => {
+            this.setState({option0: returnValue});
+        })
+        this.ballotBL.getOption2().then(returnValue => {
+            this.setState({option1: returnValue});
         });
         this.handleClickVote = this.handleClickVote.bind(this);
 
@@ -72,20 +76,21 @@ class Vote extends Component {
 
                 </div>} 
 
-                {!flagVote && this.state.ballotValue && this.state.registered &&  // shows when address is registered
+                {!flagVote && this.state.ballotValue && this.state.registered &&  
+                // shows when address is registered and there is a running ballot
                 <form id="voteform">
                     <h2 className = "head">
                         Please cast your vote: </h2>
                     <hr/>
                     <div>
-                        <label class="container"> {option0}
+                        <label class="container"> {this.state.option0}
                             <input onClick={() => this.setVote(0)} type="radio" value="0" name="vote"/> 
                             <span class="checkmark"></span>
                         </label>
                     </div>
                     <br/>
                     <div>
-                        <label class="container"> {option1}
+                        <label class="container"> {this.state.option1}
                             <input onClick={() => this.setVote(1)} type="radio" value="1" name="vote"/>
                             <span class="checkmark"></span>
                         </label>
@@ -99,7 +104,7 @@ class Vote extends Component {
                 }
 
                 {flagVote &&
-                <h2 style={{margin: 60}}>
+                <h2 className = "head">
                     Thank you for voting!
                 </h2>
                 }
