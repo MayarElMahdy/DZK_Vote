@@ -1,7 +1,8 @@
 import React, {Component} from "react";
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
-import {CreateBallot, Home, Navigation, Vote} from "./components";
+import {CreateBallot, Home, Navigation, Vote, Tally} from "./components";
 import {loadWeb3, Web3Context} from "./web3-context";
+import banner from "./components/images/4448.jpg"
 
 
 export const PHASE = Object.freeze({"CREATE": 0, "REGISTER": 1, "VOTE": 2, "FINISH": 3})
@@ -18,7 +19,14 @@ class App extends Component {
 
     render() {
         if (!this.state.web3) {
-            return <h2>Loading Web3, accounts, and contract...</h2>;
+            return (
+                <div>
+                    <div className="container text-center">
+                        <img className="rounded mx-auto d-block img-fluid question-main" src={banner} alt=""></img>
+                    </div>
+                    <div className="p-5 text-center loading-banner"><h1 style={{ color: 'white' }}>Connecting ...</h1></div>
+                </div>
+            );
         }
         return (
             <div className="App">
@@ -29,6 +37,7 @@ class App extends Component {
                             <Route path="/" exact component={() => <Home/>}/>
                             <Route path="/CreateBallot" exact component={() => <CreateBallot/>}/>
                             <Route path="/vote" exact component={() => <Vote/>}/>
+                            <Route path="/Tally" exact component={() => <Tally/>}/>
                         </Switch>
                     </Router>
                 </Web3Context.Provider>

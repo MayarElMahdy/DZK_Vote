@@ -44,10 +44,10 @@ class Navigation extends Component {
                   </Link>
                 </li>
                 <li
-                  class={`nav-item  ${this.props.location.pathname === "/about" ? "active" : ""
+                  className={`nav-item  ${this.props.location.pathname === "/CreateBallot" ? "active" : ""
                     }`}
                 >
-                  <Link className="nav-link nav-links-right" to="/about">
+                  <Link className="nav-link nav-links-right" to="/CreateBallot">
                     Create Ballot
                 </Link>
                 </li>
