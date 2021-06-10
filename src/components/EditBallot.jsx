@@ -32,7 +32,8 @@ class EditBallot extends Component {
 
         if (this.handleValidation()) {
 
-            alert("Sucess")
+            
+            this.setState({txtfile: ""});
 
 
         } else {
@@ -58,6 +59,30 @@ class EditBallot extends Component {
             errorsTxtfile = "Please attach a text file !";
             formIsValid=false;
         }
+        //make sure txt file is actually .txt
+        var textfile = /text.*/;
+
+        var file = document.querySelector('input[type=file]').files[0];
+
+        if (!file.type.match(textfile)) {
+            formIsValid = false;
+            errorsTxtfile = "The selected file is not text file !";
+        }
+
+        //read the file and add the addresses 
+        let reader = new FileReader();
+        let content = "";
+        let eligible = this.eligible;
+        reader.onload = function (event) {
+            content = event.target.result;
+
+            eligible = content.split("\r\n");  // Addresses are seperated by space 
+            console.log(eligible);
+            this.BL.addEligible(this.context.account[0],eligible).then(response=> alert(response));
+            
+
+        }.bind(this)
+        reader.readAsText(file);
         this.setState({errorsTxtfile: errorsTxtfile});
         
         return formIsValid
@@ -71,25 +96,24 @@ class EditBallot extends Component {
         <div>
         {this.state.value &&
            <div>
-               <h3>Your Ballot Statement is {this.state.value}</h3>
-               <form onSubmit={this.contactSubmit.bind(this)} className="form">
-
-                    <label htmlFor="myfile">Select a text file containing the eligible voter's
-                            addresses: &emsp;&emsp; </label>
+               <h3 style={{margin: 60}}>Your current ballot statement is {this.state.value}</h3>
+               <form onSubmit={this.contactSubmit.bind(this)}  style={{margin: 100 }}  className="form">
+                    <br></br>
+                    <label htmlFor="myfile">Select a text file containing the addresses of elligible voter  you want to add :  &emsp;&emsp; </label>
 
                     <input type="file" id="myfile" name="myfile" onChange={this.handleChange.bind(this, "txtfile")}
                         value={this.state.txtfile} ref={this.fileInput}/>
                     <span style={{color: "red"}}>{this.state.errorsTxtfile}</span>
                     
-                    <br></br>
-                    <input type="submit"/>
+                    <br></br> <br></br>
+                    <input type="submit" value="Add Voters"/>
                 </form>
            </div> 
            
         }
         {!this.state.value &&
             <div>
-                <h3>No Ballot was Created .. </h3>
+                <h4 style={{margin: 100 }}  >No Ballot was Created .. </h4>
             </div>
 
         }

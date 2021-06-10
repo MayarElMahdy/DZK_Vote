@@ -52,13 +52,13 @@ export default class CreateBallotBL {
             const success = await this.contract.methods.addEligible(addresses).call({from: adminAddress});
             if (success) {
                 await this.contract.methods.addEligible(addresses).send({from: adminAddress});
-                return true;
+                return "Transaction Successful , All addresses inserted are now elligible to vote ! ";
             } else {
-                return false;
+                return "Transaction Failed , Please try again";
             }
         } catch (e) {
             console.log(e.message);
-            return false;
+            return "Error , Cannot add addresses ";
         }
     }
 
