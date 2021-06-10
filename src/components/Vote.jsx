@@ -1,10 +1,11 @@
 import React, {Component} from "react";
-import {Link} from "react-router-dom";
 import {Web3Context} from "../web3-context";
 import RegistrationBL from "../businessLayer/RegistrationBL";
+import votebutton from "./images/vote-icon.png";
+import './Vote.css';
 
-let option1 = "First Option"; // variables for the two options temporarily
-let option0 = "Second Option";
+let option0 = "First Option"; // variables for the two options temporarily
+let option1 = "Second Option";
 let vote = null;
 
 class Vote extends Component {
@@ -17,7 +18,7 @@ class Vote extends Component {
         this.state = {
             name: "React",
             flagBallot: false,
-            flagVote: true,
+            flagVote: false,
 
             registered: "1"
         };
@@ -52,35 +53,44 @@ class Vote extends Component {
             <div>
                 <h2>{this.state.registered ? "yess" : "noo"}</h2>
 
-                {!this.state.registered &&    // shows when address is not registered
+                {this.state.registered &&    // shows when address is not registered
+                // note: will reverse later registered flag later
+                // should be !this.state.registered
                 <div>
-                    <h3 style={{margin: 60}}>You are not registered to vote yet.</h3>
+                    <h2 className = "head">You are not registered to vote yet.</h2>
                     <hr/>
                     <br/>
 
                 </div>}
 
-                {!flagVote && this.state.registered &&  // shows when address is registered
+                {!flagVote && !this.state.registered &&  // shows when address is registered
+                // note: will reverse later registered flag later
                 <form id="voteform">
-                    <h2 style={{margin: 60}}>
-                        Please cast your vote:
-                    </h2>
-
+                    <h2 className = "head">
+                        Please cast your vote: </h2>
                     <hr/>
-                    <div style={{marginLeft: 100}}>
-                        <input onClick={() => this.setVote(0)} type="radio" value="0" name="vote"/> {option1}
+                    <div>
+                        <label class="container"> {option0}
+                            <input onClick={() => this.setVote(0)} type="radio" value="0" name="vote"/> 
+                            <span class="checkmark"></span>
+                        </label>
                     </div>
                     <br/>
-                    <div style={{marginLeft: 100}}>
-                        <input onClick={() => this.setVote(1)} type="radio" value="1" name="vote"/> {option0}
+                    <div>
+                        <label class="container"> {option1}
+                            <input onClick={() => this.setVote(1)} type="radio" value="1" name="vote"/>
+                            <span class="checkmark"></span>
+                        </label>
                     </div>
                     <hr/>
-                    <input onClick={this.handleClickVote} style={{marginLeft: 100}} type="submit"/>
-                    <Link to="/" type="submit" className="Button"/>
+                    <input onClick={this.handleClickVote} className = "votebutton" type = "image" alt = "Vote"
+                    src= {votebutton} > 
+                    </input>
+                    
                 </form>
                 }
 
-                {flagVote && flagBallot &&
+                {flagVote &&
                 <h2 style={{margin: 60}}>
                     Thank you for voting!
                 </h2>
