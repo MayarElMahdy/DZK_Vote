@@ -53,9 +53,7 @@ class Vote extends Component {
             <div>
                 <h2>{this.state.registered ? "yess" : "noo"}</h2>
 
-                {this.state.registered &&    // shows when address is not registered
-                // note: will reverse later registered flag later
-                // should be !this.state.registered
+                {!this.state.registered &&    // shows when address is not registered
                 <div>
                     <h2 className = "head">You are not registered to vote yet.</h2>
                     <hr/>
@@ -63,8 +61,7 @@ class Vote extends Component {
 
                 </div>}
 
-                {!flagVote && !this.state.registered &&  // shows when address is registered
-                // note: will reverse later registered flag later
+                {!flagVote && this.state.registered &&  // shows when address is registered
                 <form id="voteform">
                     <h2 className = "head">
                         Please cast your vote: </h2>
