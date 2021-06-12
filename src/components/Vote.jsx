@@ -1,42 +1,44 @@
 import React, {Component} from "react";
-import {Link} from "react-router-dom";
 import {Web3Context} from "../web3-context";
 import RegistrationBL from "../businessLayer/RegistrationBL";
+import votebutton from "./images/vote-icon.png";
+import './Vote.css';
+import CreateBallotBL from "../businessLayer/CreateBallotBL";
 
-let option1 = "First Option"; // variables for the two options temporarily
-let option0 = "Second Option";
 let vote = null;
-
 class Vote extends Component {
     static contextType = Web3Context;
     BL = new RegistrationBL();
-
+    ballotBL = new CreateBallotBL();
+    
     constructor(props) {
         super(props);
 
         this.state = {
             name: "React",
-            flagBallot: false,
-            flagVote: true,
-
-            test: "1"
-        };
-        this.handleClickBallot = this.handleClickBallot.bind(this);
+            flagVote: false,
+            ballotValue: "",
+            option0: "First Option",
+            option1: "Second Option",
+            registered: "1"
+        }
+        this.ballotBL.getBallotStatement().then(returnValue => {
+            this.setState({ballotValue: returnValue});
+        })
+        this.ballotBL.getOption1().then(returnValue => {
+            this.setState({option0: returnValue});
+        })
+        this.ballotBL.getOption2().then(returnValue => {
+            this.setState({option1: returnValue});
+        });
         this.handleClickVote = this.handleClickVote.bind(this);
 
     }
 
     componentDidMount = async () => {
-        this.setState({test: await this.BL.isRegistered(this.context.account[0])})
+        this.setState({registered: await this.BL.isRegistered(this.context.account[0])})
     }
 
-
-    handleClickBallot(event) {  // submit vote button handler
-        event.preventDefault();
-        this.setState({flagBallot: true});
-        this.setState({flagVote: false});
-        console.log("Ballot selected");
-    }
 
     handleClickVote(event) {  // submit vote button handler
         event.preventDefault();
@@ -54,45 +56,55 @@ class Vote extends Component {
     }
 
     render() {
-        const {flagBallot, flagVote} = this.state;
+        const {flagVote} = this.state;
         return (
 
             <div>
-                <h2>{this.state.test ? "yess" : "noo"}</h2>
-
-                {!flagBallot &&    // shows ballot screen only when flagBallot = false
+                <h2>{this.state.registered ? "yess" : "noo"}</h2>
+                
+                {!this.state.ballotValue &&     // shows when there is no ballot created
                 <div>
-                    <h2 style={{margin: 60}}>Select ballot:</h2>
+                    <h2 className = "head">No ballots available.</h2>
+                </div>
+                }
+
+                {!this.state.registered && this.state.ballotValue &&    // shows when address is not registered
+                <div>
+                    <h2 className = "head">You are not registered to vote yet.</h2>
                     <hr/>
                     <br/>
-                    <hr/>
-                    <input onClick={this.handleClickBallot} style={{marginLeft: 100}} type="submit"/>
-                    <Link to="/" type="submit" className="Button"/>
 
-                </div>}
+                </div>} 
 
-                {!flagVote &&  // shows vote form after submitting ballot, if the flagVote = false
+                {!flagVote && this.state.ballotValue && this.state.registered &&  
+                // shows when address is registered and there is a running ballot
                 <form id="voteform">
-                    <h2 style={{margin: 60}}>
-                        Please cast your vote:
-                    </h2>
-
+                    <h2 className = "head">
+                        Please cast your vote: </h2>
                     <hr/>
-                    <div style={{marginLeft: 100}}>
-                        <input onClick={() => this.setVote(0)} type="radio" value="0" name="vote"/> {option1}
+                    <div>
+                        <label class="container"> {this.state.option0}
+                            <input onClick={() => this.setVote(0)} type="radio" value="0" name="vote"/> 
+                            <span class="checkmark"></span>
+                        </label>
                     </div>
                     <br/>
-                    <div style={{marginLeft: 100}}>
-                        <input onClick={() => this.setVote(1)} type="radio" value="1" name="vote"/> {option0}
+                    <div>
+                        <label class="container"> {this.state.option1}
+                            <input onClick={() => this.setVote(1)} type="radio" value="1" name="vote"/>
+                            <span class="checkmark"></span>
+                        </label>
                     </div>
                     <hr/>
-                    <input onClick={this.handleClickVote} style={{marginLeft: 100}} type="submit"/>
-                    <Link to="/" type="submit" className="Button"/>
+                    <input onClick={this.handleClickVote} className = "votebutton" type = "image" alt = "Vote"
+                    src= {votebutton} > 
+                    </input>
+                    
                 </form>
                 }
 
-                {flagVote && flagBallot &&
-                <h2 style={{margin: 60}}>
+                {flagVote &&
+                <h2 className = "head">
                     Thank you for voting!
                 </h2>
                 }

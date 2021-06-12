@@ -1,8 +1,9 @@
 import React, {Component} from "react";
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
-import {CreateBallot, Home, Navigation, Vote, Tally} from "./components";
+import {CreateBallot,EditBallot, Home, Navigation, Vote, Tally} from "./components";
 import {loadWeb3, Web3Context} from "./web3-context";
 import banner from "./components/images/4448.jpg"
+
 
 
 export const PHASE = Object.freeze({"CREATE": 0, "REGISTER": 1, "VOTE": 2, "FINISH": 3})
@@ -36,8 +37,10 @@ class App extends Component {
                         <Switch>
                             <Route path="/" exact component={() => <Home/>}/>
                             <Route path="/CreateBallot" exact component={() => <CreateBallot/>}/>
+                            <Route path="/EditBallot" exact component={() => <EditBallot/>}/>
                             <Route path="/vote" exact component={() => <Vote/>}/>
                             <Route path="/Tally" exact component={() => <Tally/>}/>
+                            
                         </Switch>
                     </Router>
                 </Web3Context.Provider>

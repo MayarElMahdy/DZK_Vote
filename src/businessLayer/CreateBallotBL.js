@@ -37,10 +37,20 @@ export default class CreateBallotBL {
     }
 
     // edit as preferred
-    async getBallotStatement() {
-        return await  this.contract.methods.ballotName().call() + "\n\nCandidates are :\n \t" +
+    async getBallotStatement() { 
+        let ballot = await this.contract.methods.ballotName().call();
+        if(!ballot) // empty
+        return "";
+        else
+        return ballot + " " + "Candidates are " + 
             await this.contract.methods.options(0).call() + " " +
             await this.contract.methods.options(1).call() ;
+    }
+    async getOption1() {
+        return await this.contract.methods.options(0).call();
+    }
+    async getOption2() {
+        return await this.contract.methods.options(1).call();
     }
 
     async addEligible(adminAddress, addresses) {
@@ -48,26 +58,17 @@ export default class CreateBallotBL {
             const success = await this.contract.methods.addEligible(addresses).call({from: adminAddress});
             if (success) {
                 await this.contract.methods.addEligible(addresses).send({from: adminAddress});
-                return true;
+                return "Transaction Successful , All addresses inserted are now elligible to vote ! ";
             } else {
-                return false;
+                return "Transaction Failed , Please try again";
             }
         } catch (e) {
             console.log(e.message);
-            return false;
+            return "Error , Cannot add addresses ";
         }
     }
 
-    // todo: not tested!!
-    readAddressesFromFile(filePath) {
-        const liner = new lineByLine(filePath);
-        let line;
-        const array = [];
-        while (line = liner.next()) {
-            array.push(line);
-        }
-        return array;
-    }
+    
 
     //Split the content of the file
     splitArray(array){
