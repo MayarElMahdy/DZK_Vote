@@ -189,7 +189,7 @@ class CreateBallot extends Component {
 
         return (
 
-            <div>
+            <div className="mx-2">
 
                 {this.state.ballot &&  // show when ballot = true
                 <div>

@@ -21,8 +21,8 @@ class App extends Component {
         if (!this.state.web3) {
             return (
                 <div>
-                    <div className="container text-center">
-                        <img className="rounded mx-auto d-block img-fluid question-main" src={banner} alt=""></img>
+                    <div className="text-center question-main" style={{ height:'100%', width:'100%'}}>
+                        <img className="rounded mx-auto my-auto d-block img-fluid" src={banner} alt=""></img>
                     </div>
                     <div className="p-5 text-center loading-banner"><h1 style={{ color: 'white' }}>Connecting ...</h1></div>
                 </div>
