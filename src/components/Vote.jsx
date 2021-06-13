@@ -21,6 +21,7 @@ class Vote extends Component {
             option0: "First Option",
             option1: "Second Option",
             registered: "1"
+            ,eligible:"1"
         }
         this.ballotBL.getBallotStatement().then(returnValue => {
             this.setState({ballotValue: returnValue});
@@ -32,12 +33,15 @@ class Vote extends Component {
             this.setState({option1: returnValue});
         });
         this.handleClickVote = this.handleClickVote.bind(this);
+        
 
     }
 
     componentDidMount = async () => {
         this.setState({registered: await this.BL.isRegistered(this.context.account[0])})
+        this.setState({eligible: await this.BL.isEligible(this.context.account[0])}) 
     }
+    
 
 
     handleClickVote(event) {  // submit vote button handler
@@ -60,23 +64,44 @@ class Vote extends Component {
         return (
 
             <div>
-                <h2>{this.state.registered ? "yess" : "noo"}</h2>
+                
                 
                 {!this.state.ballotValue &&     // shows when there is no ballot created
-                <div>
+                <div style={{margin: 60}}>
                     <h2 className = "head">No ballots available.</h2>
                 </div>
                 }
-
-                {!this.state.registered && this.state.ballotValue &&    // shows when address is not registered
+                {!this.state.eligible && this.state.ballotValue && //not eligible to vote 
+                <div style={{margin: 60}}>
+                <h2 className = "head">You are not eligible to cast your vote nor register. </h2>
+                <hr/>
+                <br/>
+                </div>
+                }
+                {this.state.eligible && this.state.ballotValue && //You are eligible to vote so please register 
+                <div style={{margin: 60}}>
+                <h2 className = "head">You are eligible to vote please register first if you haven't </h2>
+                <hr/>
+                <br/>
                 <div>
-                    <h2 className = "head">You are not registered to vote yet.</h2>
-                    <hr/>
-                    <br/>
+                <input type ="submit" />
+                </div>
+                <br></br>
+                </div>
+                }
 
-                </div>} 
+                
+                {this.state.registered && this.state.ballotValue && this.state.eligible && //shown if registered but the voting phase has not begun
+                   <div style={{margin: 60}}>
+                   <h2 className = "head">The voting phase has not yet begun please come again later</h2>
+                   <hr/>
+                   <br/>
 
-                {!flagVote && this.state.ballotValue && this.state.registered &&  
+               </div> 
+                }
+
+
+                {!flagVote && this.state.ballotValue && this.state.registered && this.state.eligible && 
                 // shows when address is registered and there is a running ballot
                 <form id="voteform">
                     <h2 className = "head">
