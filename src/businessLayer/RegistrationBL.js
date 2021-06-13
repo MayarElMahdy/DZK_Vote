@@ -1,3 +1,5 @@
+import web3 from "web3";
+
 const EC = require('elliptic').ec;
 
 export default class RegistrationBL {
@@ -21,6 +23,64 @@ export default class RegistrationBL {
 
     // takes: address:String , deposit:Integer
     async register(address, deposit) {
+        const ec = new EC('secp256k1')
+        // Generate voting keys
+        const key = ec.genKeyPair()
+        const pubPoint = key.getPublic()
+        const x = pubPoint.getX()
+        const y = pubPoint.getY()
+        const pubKey = [web3.utils.numberToHex(x), web3.utils.numberToHex(y)]
+        const privKey = web3.utils.numberToHex(key.priv)
+        this.setCookie(address, privKey, {secure: true});
+        // generate random key for proving
+        const rand = ec.genKeyPair()
+        const privRand = web3.utils.numberToHex(rand.priv)
+        // you should NEVER send transaction using .send() to this contract only use it locally .call()
+        const proof = await this.ZkpContract.methods.createZKP(privKey, privRand, pubKey).call();
+        const reconProof = proof.map(function (e) {
+            e = web3.utils.numberToHex(e);
+            return e;
+        });
+        const r = reconProof[0]
+        const vG = reconProof.slice(1, 4);
+        try {
+            const success = await this.votingContract.methods.register(pubKey, vG, r).call({
+                from: address,
+                value: deposit
+            });
+            if (success) {
+                await this.votingContract.methods.register(pubKey, vG, r).send({from: address, value: deposit});
+                return true;
+            } else {
+                return false;
+            }
+        } catch (e) {
+            console.log(e);
+            return false;
+        }
+    }
 
+    setCookie(name, value, options = {}) {
+        options = {
+            path: '/',
+            // add other defaults here if necessary
+            ...options
+        };
+
+        if (options.expires instanceof Date) {
+            options.expires = options.expires.toUTCString();
+        }
+
+        let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+
+        for (let optionKey in options) {
+            updatedCookie += "; " + optionKey;
+            let optionValue = options[optionKey];
+            if (optionValue !== true) {
+                updatedCookie += "=" + optionValue;
+            }
+        }
+
+        document.cookie = updatedCookie;
     }
 }

@@ -261,7 +261,7 @@ contract VotingSys is Owned {
         }
 
         // Get c = H(g, g^{x}, g^{v});
-        bytes32 b_c = sha256(abi.encodePacked(msg.sender, Gx, Gy, xG, vG));
+        bytes32 b_c = sha256(abi.encode(msg.sender, Gx, Gy, xG, vG));
         uint c = uint(b_c);
 
         // Get g^{r}, and g^{xc}
