@@ -4,6 +4,8 @@ import RegistrationBL from "../businessLayer/RegistrationBL";
 import votebutton from "./images/vote-icon.png";
 import './Vote.css';
 import CreateBallotBL from "../businessLayer/CreateBallotBL";
+import GlobalStatesBL from "../businessLayer/GlobalStatesBL";
+import {PHASE} from "../App";
 
 let vote = null;
 
@@ -11,6 +13,7 @@ class Vote extends Component {
     static contextType = Web3Context;
     BL = new RegistrationBL();
     ballotBL = new CreateBallotBL();
+    globalBL = new GlobalStatesBL();
 
     constructor(props) {
         super(props);
@@ -21,9 +24,10 @@ class Vote extends Component {
             ballotValue: "",
             option0: "First Option",
             option1: "Second Option",
-            registered: false
-            , eligible: false,
-            registered2: false
+            registered: false,
+            eligible: false,
+            registered2: false,
+            currState: ''
         }
         this.ballotBL.getBallotStatement().then(returnValue => {
             this.setState({ballotValue: returnValue});
@@ -40,10 +44,11 @@ class Vote extends Component {
     }
 
     componentDidMount = async () => {
-        let deposit = await this.BL.getMinimumDeposit()
+        let deposit = await this.BL.getMinimumDeposit() + 50
         this.setState({registered: await this.BL.register(this.context.account[0], deposit)})
         this.setState({registered2: await this.BL.isRegistered(this.context.account[0])})
         this.setState({eligible: await this.BL.isEligible(this.context.account[0])})
+        this.setState({currState: await this.globalBL.inPhase(PHASE.REGISTER)})
     }
 
 
@@ -70,6 +75,7 @@ class Vote extends Component {
                 <h6>{'eligible to vote: ' + (this.state.eligible ? 'yess' : 'noo')}</h6>
                 <h6>{'did register : ' + (this.state.registered ? 'yess' : 'noo')}</h6>
                 <h6>{'already registered: ' + (this.state.registered2 ? 'yess' : 'noo')}</h6>
+                <h6>{' register state: ' + (this.state.currState ? 'yess' : 'noo')}</h6>
 
                 {!this.state.ballotValue &&     // shows when there is no ballot created
                 <div style={{margin: 60}}>
