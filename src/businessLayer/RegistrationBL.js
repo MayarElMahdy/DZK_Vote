@@ -36,7 +36,7 @@ export default class RegistrationBL {
         const rand = ec.genKeyPair()
         const privRand = web3.utils.numberToHex(rand.priv)
         // you should NEVER send transaction using .send() to this contract only use it locally .call()
-        const proof = await this.ZkpContract.methods.createZKP(privKey, privRand, pubKey).call();
+        const proof = await this.ZkpContract.methods.createZKP(privKey, privRand, pubKey).call({from: address});
         const reconProof = proof.map(function (e) {
             e = web3.utils.numberToHex(e);
             return e;
@@ -49,11 +49,17 @@ export default class RegistrationBL {
             console.log(verify)
             const success = await this.votingContract.methods.register(pubKey, vG, r).call({
                 from: address,
-                value: deposit
+                value: deposit,
+                gasLimit: 1865390
             });
             if (success) {
-                await this.votingContract.methods.register(pubKey, vG, r).send({from: address, value: deposit});
-                
+
+                await this.votingContract.methods.register(pubKey, vG, r).send({
+                    from: address,
+                    value: deposit,
+                    gasLimit: 1865390
+                });
+
                 return true;
             } else {
                 console.log(success);

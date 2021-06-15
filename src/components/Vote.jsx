@@ -13,7 +13,9 @@ class Vote extends Component {
     static contextType = Web3Context;
     BL = new RegistrationBL();
     ballotBL = new CreateBallotBL();
+
     GL = new GlobalStatesBL();
+
 
     constructor(props) {
         super(props);
@@ -24,11 +26,13 @@ class Vote extends Component {
             ballotValue: "",
             option0: "First Option",
             option1: "Second Option",
+
             registered: false
             , eligible: false,
             timeToVote : false //If time for registration finished , Voting phase started
             ,timeToReg: false
             
+
         }
         this.ballotBL.getBallotStatement().then(returnValue => {
             this.setState({ballotValue: returnValue});
@@ -45,6 +49,7 @@ class Vote extends Component {
     }
 
     componentDidMount = async () => {
+
         //let deposit = await this.BL.getMinimumDeposit()
        //this.setState({registered: await this.BL.register(this.context.account[0], deposit)})
        this.setState({registered: await this.BL.isRegistered(this.context.account[0])})
@@ -86,9 +91,11 @@ class Vote extends Component {
             <div>
                 <h6>{'eligible to vote: ' + (this.state.eligible ? 'yess' : 'noo')}</h6>
                 <h6>{'did register : ' + (this.state.registered ? 'yess' : 'noo')}</h6>
+
                 <h6>{'Voting Phase begun? : ' + (this.state.timeToVote ? 'yess' : 'noo')}</h6>
                 <h6>{'Register Phase begun? : ' + (this.state.timeToReg ? 'yess' : 'noo')}</h6>
                 
+
 
                 {!this.state.ballotValue &&     // shows when there is no ballot created
                 <div style={{margin: 60}}>
