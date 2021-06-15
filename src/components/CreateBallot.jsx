@@ -1,12 +1,13 @@
 import React, {Component} from "react";
 import {Web3Context} from "../web3-context";
 import CreateBallotBL from "../businessLayer/CreateBallotBL";
-
+import GlobalStatesBL from "../businessLayer/GlobalStatesBL";
 class CreateBallot extends Component {
 
     static contextType = Web3Context;
     // create the businessLayer class
     BL = new CreateBallotBL();
+    GS = new GlobalStatesBL();
 
     constructor(props) {
         super(props)
@@ -17,6 +18,7 @@ class CreateBallot extends Component {
             , value: "" // Used to show the ballot's confirmation
             , eligible: ""
             , transaction: ""
+            , owner: true
 
         }
         this.BL.getBallotStatement().then(returnValue => {
@@ -24,12 +26,10 @@ class CreateBallot extends Component {
         })
 
         this.fileInput = React.createRef();
-
-        
-
-
     }
-
+    componentDidMount = async () => {
+        this.setState({owner: await this.GS.isOwner(this.context.account[0])});
+    }
 
     contactSubmit(e) {
         e.preventDefault();
@@ -189,8 +189,13 @@ class CreateBallot extends Component {
         return (
 
             <div>
+                {!this.state.owner &&
+                    <div style={{margin:60}}>
+                        <h2>You cannot create ballot as you're not the admin ! </h2>
+                    </div>
+                }
 
-                {!this.state.value &&  // show when ballot is not yet created
+                {!this.state.value &&  this.state.owner &&// show when ballot is not yet created
                 <div>
 
 
@@ -261,7 +266,7 @@ class CreateBallot extends Component {
                 </div>
                 }
 
-                {this.state.value && // when creation is complete
+                {this.state.value && this.state.owner &&// when creation is complete
                 <div>
                     <h3 style={{margin: 60}}> {this.state.transaction} </h3>
                     <h2> Statement is {this.state.value}</h2>

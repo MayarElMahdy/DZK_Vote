@@ -44,14 +44,19 @@ export default class RegistrationBL {
         const r = reconProof[0]
         const vG = reconProof.slice(1, 4);
         try {
+            
+            const verify = await this.votingContract.methods.verifyKey(pubKey,r,vG).call({from:address , gas:3000000});
+            console.log(verify)
             const success = await this.votingContract.methods.register(pubKey, vG, r).call({
                 from: address,
                 value: deposit
             });
             if (success) {
                 await this.votingContract.methods.register(pubKey, vG, r).send({from: address, value: deposit});
+                
                 return true;
             } else {
+                console.log(success);
                 return false;
             }
         } catch (e) {

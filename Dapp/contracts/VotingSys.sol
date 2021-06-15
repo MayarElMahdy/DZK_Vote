@@ -177,9 +177,10 @@ contract VotingSys is Owned {
         if (msg.value < minDeposit) {
             return false;
         }
+        
         // Only eligible addresses can vote
         if (eligible[msg.sender]) {
-            if (verifyKey(xG, r, vG) && !registered[msg.sender]) {
+            if(verifyKey(xG,r,vG)){
                 // Update voter's registration
                 refunds[msg.sender] = msg.value;
                 uint[2] memory empty;
@@ -194,6 +195,7 @@ contract VotingSys is Owned {
                 totalRegistered += 1;
                 return true;
             }
+            
         }
         return false;
     }
@@ -249,7 +251,7 @@ contract VotingSys is Owned {
     uint[2] Y;
     // Parameters xG, r where r = v - xc, and vG.
     // Verify that vG = rG + xcG!
-    function verifyKey(uint[2] xG, uint r, uint[3] vG) returns (bool){
+    function verifyKey(uint[2] xG, uint r, uint[3] vG) public returns (bool) {
         uint[2] memory G;
         G[0] = Gx;
         G[1] = Gy;
