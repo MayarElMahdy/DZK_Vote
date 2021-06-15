@@ -99,12 +99,12 @@ class Vote extends Component {
 
                 {!this.state.ballotValue &&     // shows when there is no ballot created
                 <div style={{margin: 60}}>
-                    <h2 className="head">No ballots available.</h2>
+                    <h2 className="head text-center">No ballots have been created yet!</h2>
                 </div>
                 }
                 {!this.state.eligible && this.state.ballotValue && //not eligible to vote
                 <div style={{margin: 60}}>
-                    <h2 className="head">You are not eligible to cast your vote nor register. </h2>
+                    <h2 className="head text-center">Sorry! Ineligible members cannot register or vote.</h2>
                     <hr/>
                     <br/>
                 </div>
@@ -112,12 +112,11 @@ class Vote extends Component {
                 {this.state.eligible && this.state.ballotValue && !this.state.registered &&//You are eligible to vote so please register
                 <div style={{margin: 60}} >
                     <form onSubmit={this.register.bind(this)}>
-                    <h2 className="head">You are eligible to vote please register first if you haven't </h2>
+                    <h2 className="head text-center">You cannot vote! Please register first.</h2>
                     <hr/>
                     <br/>
-                    <div>
-                        <input type="submit"/> 
-
+                    <div className="text-center">
+                        <input className="btn submit-button btn-lg ml-5" type="submit" value="Register"/> 
                     </div>
                     </form>
                     <br></br>
@@ -127,7 +126,7 @@ class Vote extends Component {
 
                 {this.state.registered && this.state.ballotValue && this.state.eligible && !this.state.timeToVote &&//shown if registered but the voting phase has not begun
                 <div style={{margin: 60}}>
-                    <h2 className="head">The voting phase has not yet begun please come again later</h2>
+                    <h2 className="head text-center">Voting Starts Soon<br></br>Please come again later</h2>
                     <hr/>
                     <br/>
 
@@ -163,7 +162,7 @@ class Vote extends Component {
                 }
 
                 {flagVote && //everything finished 
-                <h2 className="head">
+                <h2 className="head text-center">
                     Thank you for voting!
                 </h2>
                 }

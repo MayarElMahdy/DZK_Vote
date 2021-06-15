@@ -1,5 +1,5 @@
-import React, {Component} from "react";
-import {Web3Context} from "../web3-context";
+import React, { Component } from "react";
+import { Web3Context } from "../web3-context";
 import CreateBallotBL from "../businessLayer/CreateBallotBL";
 import GlobalStatesBL from "../businessLayer/GlobalStatesBL";
 //This is available only after the admin has created the ballot 
@@ -12,24 +12,24 @@ class EditBallot extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            txtfile:""
-            , errorsTxtfile:""
-            , value :""
-            , owner : true
-            
+            txtfile: ""
+            , errorsTxtfile: ""
+            , value: ""
+            , owner: true
+
         }
         this.BL.getBallotStatement().then(returnValue => {
-            this.setState({value: returnValue});
+            this.setState({ value: returnValue });
         })
-        
-        
+
+
 
         this.fileInput = React.createRef();
-       
+
     }
 
     componentDidMount = async () => {
-        this.setState({owner: await this.GS.isOwner(this.context.account[0])});
+        this.setState({ owner: await this.GS.isOwner(this.context.account[0]) });
     }
 
 
@@ -39,8 +39,8 @@ class EditBallot extends Component {
 
         if (this.handleValidation()) {
 
-            
-            this.setState({txtfile: ""});
+
+            this.setState({ txtfile: "" });
 
 
         } else {
@@ -53,7 +53,7 @@ class EditBallot extends Component {
     handleChange(field, e) {
         let txtfile = this.state.txtfile;
         txtfile = e.target.value;
-        this.setState({txtfile});
+        this.setState({ txtfile });
     }
 
     handleValidation() {
@@ -62,9 +62,9 @@ class EditBallot extends Component {
         let errorsTxtfile = "";
         let formIsValid = true;
 
-        if(!txtfile){
+        if (!txtfile) {
             errorsTxtfile = "Please attach a text file !";
-            formIsValid=false;
+            formIsValid = false;
         }
         //make sure txt file is actually .txt
         var textfile = /text.*/;
@@ -85,52 +85,53 @@ class EditBallot extends Component {
 
             eligible = content.split("\r\n");  // Addresses are seperated by space 
             console.log(eligible);
-            this.BL.addEligible(this.context.account[0],eligible).then(response=> alert(response));
-            
+            this.BL.addEligible(this.context.account[0], eligible).then(response => alert(response));
+
 
         }.bind(this)
         reader.readAsText(file);
-        this.setState({errorsTxtfile: errorsTxtfile});
-        
+        this.setState({ errorsTxtfile: errorsTxtfile });
+
         return formIsValid
     }
 
 
-    render(){
-        
-        
-        return(
-        <div>
+    render() {
 
-        {!this.state.owner &&
-        <div style={{margin:60}}>
-            <h2>Only admin can edit the ballot.</h2>
-            </div>
 
-        }
-        {this.state.value && this.state.owner &&
-           <div>
-               <h3 style={{margin: 60}}>Your current ballot statement is {this.state.value}</h3>
-               <form onSubmit={this.contactSubmit.bind(this)}  style={{margin: 100 }}  className="form">
-                    <br></br>
-                    <label htmlFor="myfile">Select a text file containing the addresses of elligible voter  you want to add :  &emsp;&emsp; </label>
-
-                    <input type="file" id="myfile" name="myfile" onChange={this.handleChange.bind(this, "txtfile")}
-                        value={this.state.txtfile} ref={this.fileInput}/>
-                    <span style={{color: "red"}}>{this.state.errorsTxtfile}</span>
-                    
-                    <br></br> <br></br>
-                    <input type="submit" value="Add Voters"/>
-                </form>
-           </div> 
-           
-        }
-        {!this.state.value && this.state.owner &&
+        return (
             <div>
-                <h4 style={{margin: 100 }}  >No Ballot was Created .. </h4>
-            </div>
 
-        }
+                {!this.state.owner &&
+                    <div style={{ margin: 60 }}>
+                        <h2>Only the admin can edit a ballot.</h2>
+                    </div>
+
+                }
+                {this.state.value && this.state.owner &&
+                    <div>
+                        <h3 className="head text-center" style={{ margin: 60 }}>Your current ballot statement is: {this.state.value}</h3>
+                        <hr></hr>
+                        <form onSubmit={this.contactSubmit.bind(this)} style={{ margin: 100 }} className="form">
+                            <div className="head" style={{ fontSize: "18px" }}>
+                                <label htmlFor="myfile">Please insert the text file of elligible voters :  &emsp;&emsp; </label>
+
+                                <input type="file" id="myfile" name="myfile" onChange={this.handleChange.bind(this, "txtfile")}
+                                    value={this.state.txtfile} ref={this.fileInput} />
+                                <span style={{ color: "red" }}>{this.state.errorsTxtfile}</span>
+                            </div>
+                            <br></br> <br></br>
+                            <input className="btn submit-button" type="submit" value="Add Voters" />
+                        </form>
+                    </div>
+
+                }
+                {!this.state.value && this.state.owner &&
+                    <div>
+                        <h4 style={{ margin: 100 }}  >No Ballot was Created .. </h4>
+                    </div>
+
+                }
             </div>
 
         );

@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
-import {CreateBallot, EditBallot, Home, Navigation, Tally, Vote} from "./components";
+import {CreateBallot, EditBallot, Home, Navigation, Tally, Vote, Footer} from "./components";
 import {loadWeb3, Web3Context} from "./web3-context";
 import banner from "./components/images/4448.jpg"
 
@@ -40,11 +40,9 @@ class App extends Component {
                             <Route path="/EditBallot" exact component={() => <EditBallot/>}/>
                             <Route path="/vote" exact component={() => <Vote/>}/>
                             <Route path="/Tally" exact component={() => <Tally/>}/>
-
                         </Switch>
                     </Router>
                 </Web3Context.Provider>
-
             </div>
         );
     }

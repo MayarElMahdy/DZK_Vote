@@ -188,10 +188,10 @@ class CreateBallot extends Component {
 
         return (
 
-            <div>
+            <div className="m-3">
                 {!this.state.owner &&
                     <div style={{margin:60}}>
-                        <h2>You cannot create ballot as you're not the admin ! </h2>
+                        <h2>Sorry! Only the Admin can create ballots.</h2>
                     </div>
                 }
 
@@ -222,10 +222,10 @@ class CreateBallot extends Component {
                         <label htmlFor="TimeStamps">Enter the timestamp of each phase : <br/> </label>
                         <br/><br/>
                         <label htmlFor="Reg-Time" style={{color: '#db1818'}}>&emsp;
-                            <mark><b>Registration for the ballot will start as soon as the ballot is created </b></mark>
+                            <mark><b>Registration phase starts right after the ballot is created </b></mark>
                         </label>
                         <br/><br/>
-                        <label htmlFor="Reg-Time">Voting phase start &emsp;</label>
+                        <label htmlFor="Reg-Time">Voting phase starts in: &emsp;</label>
                         <input id="date_Reg_Start" type="date" onChange={this.handleChange.bind(this, "date_Reg_start")}
                                value={this.state.fields["date_Reg_start"]}/>
 
@@ -234,7 +234,7 @@ class CreateBallot extends Component {
                         <span style={{color: "red"}}>{this.state.errors["date_Reg_start"]}</span>
                         <span style={{color: "red"}}>{this.state.errors["Time_Reg_start"]}</span>
 
-                        <label htmlFor="Reg-Time">&emsp;Voting phase end&emsp;</label>
+                        <label htmlFor="Reg-Time">&emsp;Voting phase ends in:&emsp;</label>
                         <input id="date_Reg_End" type="date" onChange={this.handleChange.bind(this, "date_Reg_end")}
                                value={this.state.fields["date_Reg_end"]}/>
                         <input id="time_Reg_End" type="time" onChange={this.handleChange.bind(this, "Time_Reg_end")}
@@ -246,8 +246,8 @@ class CreateBallot extends Component {
                         <br/>
                         <br/>
                         <label htmlFor="Tally" style={{color: '#db1818'}}>&emsp;
-                            <mark><b> Tally phase will start automatically
-                                after voting phase is over</b></mark>
+                            <mark><b>Tally phase starts automatically
+                                after the voting phase is over</b></mark>
                         </label>
                         <br/><br/>
 
@@ -259,7 +259,7 @@ class CreateBallot extends Component {
                         <span style={{color: "red"}}>{this.state.errors["txtfile"]}</span>
                         <br/>
                         <br/>
-                        <input type="submit"/>
+                        <input className="btn submit-button btn-lg ml-4" type="submit" value="Submit"/>
 
                     </form>
 

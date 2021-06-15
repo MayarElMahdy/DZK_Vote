@@ -200,3 +200,12 @@ nav{
 .address-dropdown{
   margin: 10px;
 }
+
+.submit-button{
+  background-color: #1C437A;
+  color: white;
+}
+
+.submit-button:hover{
+  color: rgb(206, 205, 205);
+}

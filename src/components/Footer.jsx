@@ -3,12 +3,10 @@ import React from "react";
 function Footer() {
   return (
     <div className="footer">
-      <footer class="py-4 bg-dark fixed-bottom">
-        <div class="container">
-          <p class="m-0 text-center text-white">
-            Copyright &copy; DZK Vote 2021
+      <footer class="mt-5 submit-button py-1 text-center">
+          <p class="m-2 text-white">
+            &copy; 2021 Copyright: DZK Vote
           </p>
-        </div>
       </footer>
     </div>
   );
