@@ -1,13 +1,13 @@
 import React, {Component} from "react";
 import {Web3Context} from "../web3-context";
 import CreateBallotBL from "../businessLayer/CreateBallotBL";
-
+import GlobalStatesBL from "../businessLayer/GlobalStatesBL";
 //This is available only after the admin has created the ballot 
 class EditBallot extends Component {
     static contextType = Web3Context;
     // create the businessLayer class
     BL = new CreateBallotBL();
-    
+    GS = new GlobalStatesBL();
 
     constructor(props) {
         super(props);
@@ -15,6 +15,7 @@ class EditBallot extends Component {
             txtfile:""
             , errorsTxtfile:""
             , value :""
+            , owner : true
             
         }
         this.BL.getBallotStatement().then(returnValue => {
@@ -26,6 +27,12 @@ class EditBallot extends Component {
         this.fileInput = React.createRef();
        
     }
+
+    componentDidMount = async () => {
+        this.setState({owner: await this.GS.isOwner(this.context.account[0])});
+    }
+
+
 
     contactSubmit(e) {
         e.preventDefault();
@@ -94,7 +101,14 @@ class EditBallot extends Component {
         
         return(
         <div>
-        {this.state.value &&
+
+        {!this.state.owner &&
+        <div style={{margin:60}}>
+            <h2>Only admin can edit the ballot.</h2>
+            </div>
+
+        }
+        {this.state.value && this.state.owner &&
            <div>
                <h3 style={{margin: 60}}>Your current ballot statement is {this.state.value}</h3>
                <form onSubmit={this.contactSubmit.bind(this)}  style={{margin: 100 }}  className="form">
@@ -111,7 +125,7 @@ class EditBallot extends Component {
            </div> 
            
         }
-        {!this.state.value &&
+        {!this.state.value && this.state.owner &&
             <div>
                 <h4 style={{margin: 100 }}  >No Ballot was Created .. </h4>
             </div>

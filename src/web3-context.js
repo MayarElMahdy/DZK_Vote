@@ -23,7 +23,10 @@ export async function loadWeb3() {
             VotingContract.abi,
             deployedNetwork && deployedNetwork.address,
         );
-        window.localZkpContract = new web3.eth.Contract(localZkpContract.abi)
+        const deployedLocalNetwork = localZkpContract.networks[networkId];
+        window.localZkpContract = new web3.eth.Contract(localZkpContract.abi,
+            deployedLocalNetwork && deployedLocalNetwork.address,
+        );
         // Set web3, accounts, and contract to a variable that will be assigned to the global context.
         return {web3: web3, account: accounts};
 

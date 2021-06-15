@@ -7,6 +7,10 @@ export default class GlobalStatesBL {
         return address === await this.contract.methods.owner().call({from: address});
     }
 
+    async transferOwnership(from, to) {
+        await this.contract.methods.transferOwnership(to).send({from: from})
+    }
+
     // checks if provided phase is the current phase
     // returns: boolean
     // usage: inPhase(PHASE.CREATE)
@@ -14,4 +18,9 @@ export default class GlobalStatesBL {
     async inPhase(phase) {
         return phase === parseInt(await this.contract.methods.currentState().call());
     }
+
+    async getCurrPhase() {
+        return parseInt(await this.contract.methods.currentState().call());
+    }
+
 };

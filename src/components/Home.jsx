@@ -49,7 +49,7 @@ function Home() {
           </Link>
         </div>
 
-        <div className="m-2 p-3 btn btn-link disabled icons">
+        <div className="m-2 p-3 icons">
           <Link to="/EditBallot" style={{ textDecoration: 'none' }}>
             <img className="m-2" src={Edit} alt=""></img>
             <h4 className="text-center">Edit Ballot</h4>
