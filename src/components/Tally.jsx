@@ -19,8 +19,8 @@ class Tally extends Component {
                 <div className="text-center mt-5">
                     <h1>Vote Result</h1>
                 </div>
-                <div className="d-flex flex-row justify-content-center">
-                    <div>
+                <div className="d-flex flex-sm-column flex-row justify-content-center">
+                    <div className="order-1">
                         <Chart
                             width={'700px'}
                             height={'500px'}
@@ -37,7 +37,7 @@ class Tally extends Component {
                             rootProps={{ 'data-testid': '2' }}
                         />
                     </div>
-                    <div>
+                    <div className="order-2">
                         <Chart
                             width={'600px'}
                             height={'400px'}
