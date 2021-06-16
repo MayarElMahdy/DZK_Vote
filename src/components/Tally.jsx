@@ -1,10 +1,44 @@
 import React, { Component } from "react";
 import { Chart } from "react-google-charts";
 
+const pieOptions = {
+    title: "",
+    pieHole: 0.6,
+    is3D: true,
+    slices: [
+        {
+            color: "#2BB673"
+        },
+        {
+            color: "#d91e48"
+        }
+    ],
+    legend: {
+        position: "bottom",
+        alignment: "center",
+        textStyle: {
+            color: "233238",
+            fontSize: 15
+        }
+    },
+    tooltip: {
+        showColorCode: true
+    },
+    chartArea: {
+        width: "100%",
+        height: "80%"
+    },
+    fontName: "Roboto"
+};
+
 class Tally extends Component {
 
     result1 = ['zahraa', 536];
     result2 = ['zahraa', 245];
+
+    state = {
+        chartImageURI: ""
+    };
 
     constructor(props, r1, r2) {
         super(props);
@@ -22,7 +56,7 @@ class Tally extends Component {
                 <div className="d-flex flex-sm-column flex-row justify-content-center">
                     <div className="order-1">
                         <Chart
-                            width={'700px'}
+                            width={'auto'}
                             height={'500px'}
                             chartType="PieChart"
                             loader={<div>Loading Chart</div>}
@@ -31,24 +65,8 @@ class Tally extends Component {
                                 this.result1,
                                 this.result2
                             ]}
-                            options={{
-                                is3D: true,
-                            }}
-                            rootProps={{ 'data-testid': '2' }}
-                        />
-                    </div>
-                    <div className="order-2">
-                        <Chart
-                            width={'600px'}
-                            height={'400px'}
-                            chartType="Bar"
-                            loader={<div>Loading Chart</div>}
-                            data={[
-                                ['Candidate', 'Number of votes'],
-                                this.result1,
-                                this.result2
-                            ]}
-                            // For tests
+                            options={pieOptions}
+                            legend_toggle
                             rootProps={{ 'data-testid': '2' }}
                         />
                     </div>
