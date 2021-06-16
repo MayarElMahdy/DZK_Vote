@@ -41,6 +41,7 @@ class App extends Component {
                             <Route path="/vote" exact component={() => <Vote/>}/>
                             <Route path="/Tally" exact component={() => <Tally/>}/>
                         </Switch>
+                        <Footer/>
                     </Router>
                 </Web3Context.Provider>
             </div>

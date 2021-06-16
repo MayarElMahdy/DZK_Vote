@@ -33,7 +33,7 @@ class Navigation extends Component {
 
           <div className="container">
             <div className="collapse navbar-collapse ml-auto" id="navbarSupportedContent">
-              <ul className="navbar-nav ml-auto mb-2 mb-lg-0">
+              <ul className="navbar-nav ml-auto mb-1 mb-lg-0">
                 <li
                   className={`nav-item  ${this.props.location.pathname === "/" ? "active" : ""
                     }`}
