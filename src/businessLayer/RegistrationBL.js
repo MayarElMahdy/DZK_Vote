@@ -41,7 +41,7 @@ export default class RegistrationBL {
             e = web3.utils.numberToHex(e);
             return e;
         });
-        const r = reconProof[0]
+        const r = reconProof[0];
         const vG = reconProof.slice(1, 4);
         try {
             const success = await this.votingContract.methods.register(pubKey, vG, r).call({
@@ -61,6 +61,21 @@ export default class RegistrationBL {
             }
         } catch (e) {
             console.log(e);
+            return false;
+        }
+    }
+
+    // called by admin to finish registration phase
+    // may take some time to calculate so please inform the user
+    async finishRegistrationPhase(address) {
+        try {
+            const success = await this.votingContract.methods.finishRegistrationPhase().call({from: address});
+            if (success) {
+                await this.votingContract.methods.finishRegistrationPhase().send({from: address});
+            }
+            return success;
+        } catch (e) {
+            console.error(e);
             return false;
         }
     }

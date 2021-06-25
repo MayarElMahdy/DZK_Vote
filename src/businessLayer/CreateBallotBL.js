@@ -14,7 +14,10 @@ export default class CreateBallotBL {
                 endVotingPhase,
                 depositRequired,
                 addresses
-            ).call({from: adminAddress});
+            ).call({
+                from: adminAddress,
+                gasLimit: 598716
+            });
 
             if (success) {
                 await this.contract.methods.creatBallot(
@@ -25,7 +28,7 @@ export default class CreateBallotBL {
                     endVotingPhase,
                     depositRequired,
                     addresses
-                ).send({from: adminAddress});
+                ).send({from: adminAddress, gasLimit: 598716});
                 return "Transaction Confirmed";
             } else {
                 return "Transaction Failed";

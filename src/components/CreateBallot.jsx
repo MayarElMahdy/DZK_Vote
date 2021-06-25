@@ -17,16 +17,12 @@ class CreateBallot extends Component {
             , value: "" // Used to show the ballot's confirmation
             , eligible: ""
             , transaction: ""
-
         }
         this.BL.getBallotStatement().then(returnValue => {
             this.setState({value: returnValue});
         })
 
         this.fileInput = React.createRef();
-
-        
-
 
     }
 

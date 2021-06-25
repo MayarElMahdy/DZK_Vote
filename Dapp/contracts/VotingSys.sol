@@ -111,9 +111,7 @@ contract VotingSys is Owned {
     // in order to set to correct state and reset if finished
     function deadlinePassed() returns (bool){
         uint[2] memory empty;
-        if (now > endRegistrationPhase) {
-            currentState = State.VOTE;
-        }
+
         if (now > endVotingPhase) {
             currentState = State.FINISH;
         }
@@ -198,10 +196,89 @@ contract VotingSys is Owned {
         return false;
     }
 
+
+    // Timer has expired - we want to start computing the reconstructed keys
+    function finishRegistrationPhase() inState(State.REGISTER) onlyOwner returns (bool) {
+
+        // Make sure at least 3 people have signed up...
+        if (totalRegistered < 3) {
+            return;
+        }
+        // We can only compute the public keys once participants
+        // have been given an opportunity to register their
+        // voting public key.
+        //        todo: comment this to bypass time while testing
+        //        if (block.timestamp < endRegistrationPhase) {
+        //            return false;
+        //        }
+
+        uint[2] memory temp;
+        uint[3] memory yG;
+        uint[3] memory before_i;
+        uint[3] memory after_i;
+
+        // Step 1 is to compute the index 1 reconstructed key
+        after_i[0] = voters[1].registeredKey[0];
+        after_i[1] = voters[1].registeredKey[1];
+        after_i[2] = 1;
+
+        for (uint i = 2; i < totalRegistered; i++) {
+            Secp256k1._addMixedM(after_i, voters[i].registeredKey);
+        }
+
+        ECCMath.toZ1(after_i, pp);
+        voters[0].reconstructedKey[0] = after_i[0];
+        voters[0].reconstructedKey[1] = pp - after_i[1];
+
+        // Step 2 is to add to before_i, and subtract from after_i.
+        for (i = 1; i < totalRegistered; i++) {
+
+            if (i == 1) {
+                before_i[0] = voters[0].registeredKey[0];
+                before_i[1] = voters[0].registeredKey[1];
+                before_i[2] = 1;
+            } else {
+                Secp256k1._addMixedM(before_i, voters[i - 1].registeredKey);
+            }
+
+            // If we have reached the end... just store before_i
+            // Otherwise, we need to compute a key.
+            // Counting from 0 to n-1...
+            if (i == (totalRegistered - 1)) {
+                ECCMath.toZ1(before_i, pp);
+                voters[i].reconstructedKey[0] = before_i[0];
+                voters[i].reconstructedKey[1] = before_i[1];
+
+            } else {
+
+                // Subtract 'i' from after_i
+                temp[0] = voters[i].registeredKey[0];
+                temp[1] = pp - voters[i].registeredKey[1];
+
+                // Grab negation of after_i (did not seem to work with Jacob co-ordinates)
+                Secp256k1._addMixedM(after_i, temp);
+                ECCMath.toZ1(after_i, pp);
+
+                temp[0] = after_i[0];
+                temp[1] = pp - after_i[1];
+
+                // Now we do before_i - after_i...
+                yG = Secp256k1._addMixed(before_i, temp);
+
+                ECCMath.toZ1(yG, pp);
+
+                voters[i].reconstructedKey[0] = yG[0];
+                voters[i].reconstructedKey[1] = yG[1];
+            }
+        }
+        currentState = State.VOTE;
+        return true;
+    }
+
     function submitVote(uint[2] choice) inState(State.VOTE) returns (bool) {
         if (now > endVotingPhase) {
             return;
-            
+
         }
 
         uint c = addressID[msg.sender];

@@ -1,8 +1,10 @@
-import React, { Component } from "react";
-import { Chart } from "react-google-charts";
+import React, {Component} from "react";
+import {Chart} from "react-google-charts";
+import {Web3Context} from "../web3-context";
 
 class Tally extends Component {
 
+    static contextType = Web3Context;
     result1 = ['zahraa', 536];
     result2 = ['zahraa', 245];
 
@@ -11,11 +13,14 @@ class Tally extends Component {
         /*
         this.result1 = r1;
         this.result2 = r2;*/
+
     }
+
 
     render() {
         return (
             <div className="container-fluid column">
+
                 <div className="text-center mt-5">
                     <h1>Vote Result</h1>
                 </div>
@@ -34,7 +39,7 @@ class Tally extends Component {
                             options={{
                                 is3D: true,
                             }}
-                            rootProps={{ 'data-testid': '2' }}
+                            rootProps={{'data-testid': '2'}}
                         />
                     </div>
                     <div>
@@ -49,7 +54,7 @@ class Tally extends Component {
                                 this.result2
                             ]}
                             // For tests
-                            rootProps={{ 'data-testid': '2' }}
+                            rootProps={{'data-testid': '2'}}
                         />
                     </div>
                 </div>
