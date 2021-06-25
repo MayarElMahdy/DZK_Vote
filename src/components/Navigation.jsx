@@ -68,11 +68,8 @@ class Navigation extends Component {
                     <br></br>
                     <p className="address-dropdown">
                       <h5>Account Address</h5>
-                      <h6>{this.context.account.toString()}</h6>
+                      <h6 className="mb-4">{this.context.account.toString()}</h6>
                     </p>
-
-                    <div className="dropdown-divider"></div>
-                    <li><a className="dropdown-item" href="#">Sign out</a></li>
                   </ul>
                 </li>
               </ul>

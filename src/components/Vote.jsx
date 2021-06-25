@@ -13,7 +13,9 @@ class Vote extends Component {
     static contextType = Web3Context;
     BL = new RegistrationBL();
     ballotBL = new CreateBallotBL();
-    globalBL = new GlobalStatesBL();
+
+    GL = new GlobalStatesBL();
+
 
     constructor(props) {
         super(props);
@@ -24,10 +26,13 @@ class Vote extends Component {
             ballotValue: "",
             option0: "First Option",
             option1: "Second Option",
-            registered: false,
-            eligible: false,
-            registered2: false,
-            currState: ''
+
+            registered: false
+            , eligible: false,
+            timeToVote : false //If time for registration finished , Voting phase started
+            ,timeToReg: false
+            
+
         }
         this.ballotBL.getBallotStatement().then(returnValue => {
             this.setState({ballotValue: returnValue});
@@ -44,14 +49,26 @@ class Vote extends Component {
     }
 
     componentDidMount = async () => {
-        let deposit = await this.BL.getMinimumDeposit() + 50
-        this.setState({registered: await this.BL.register(this.context.account[0], deposit)})
-        this.setState({registered2: await this.BL.isRegistered(this.context.account[0])})
+
+        //let deposit = await this.BL.getMinimumDeposit()
+       //this.setState({registered: await this.BL.register(this.context.account[0], deposit)})
+       this.setState({registered: await this.BL.isRegistered(this.context.account[0])})
         this.setState({eligible: await this.BL.isEligible(this.context.account[0])})
-        this.setState({currState: await this.globalBL.inPhase(PHASE.REGISTER)})
+        this.setState({timeToReg: await this.GL.inPhase(PHASE.REGISTER)})
+        this.setState({timeToVote: await this.GL.inPhase(PHASE.VOTE)})
     }
 
+    register = async(e) =>  //Function to register 
+    {
+        e.preventDefault();
+        let deposit = await this.BL.getMinimumDeposit()
+        this.setState({registered: await this.BL.register(this.context.account[0], deposit)})
+        alert((this.state.registered? 'Successful registration' : 'Unsuccessful registration' ));
+        
+        //this.setState({registered:true});
+        
 
+    }
     handleClickVote(event) {  // submit vote button handler
         event.preventDefault();
         if (vote == null) {  // if no option was selected
@@ -74,37 +91,42 @@ class Vote extends Component {
             <div>
                 <h6>{'eligible to vote: ' + (this.state.eligible ? 'yess' : 'noo')}</h6>
                 <h6>{'did register : ' + (this.state.registered ? 'yess' : 'noo')}</h6>
-                <h6>{'already registered: ' + (this.state.registered2 ? 'yess' : 'noo')}</h6>
-                <h6>{' register state: ' + (this.state.currState ? 'yess' : 'noo')}</h6>
+
+                <h6>{'Voting Phase begun? : ' + (this.state.timeToVote ? 'yess' : 'noo')}</h6>
+                <h6>{'Register Phase begun? : ' + (this.state.timeToReg ? 'yess' : 'noo')}</h6>
+                
+
 
                 {!this.state.ballotValue &&     // shows when there is no ballot created
                 <div style={{margin: 60}}>
-                    <h2 className="head">No ballots available.</h2>
+                    <h2 className="head text-center">No ballots have been created yet!</h2>
                 </div>
                 }
                 {!this.state.eligible && this.state.ballotValue && //not eligible to vote
                 <div style={{margin: 60}}>
-                    <h2 className="head">You are not eligible to cast your vote nor register. </h2>
+                    <h2 className="head text-center">Sorry! Ineligible members cannot register or vote.</h2>
                     <hr/>
                     <br/>
                 </div>
                 }
-                {this.state.eligible && this.state.ballotValue && //You are eligible to vote so please register
-                <div style={{margin: 60}}>
-                    <h2 className="head">You are eligible to vote please register first if you haven't </h2>
+                {this.state.eligible && this.state.ballotValue && !this.state.registered &&//You are eligible to vote so please register
+                <div style={{margin: 60}} >
+                    <form onSubmit={this.register.bind(this)}>
+                    <h2 className="head text-center">You cannot vote! Please register first.</h2>
                     <hr/>
                     <br/>
-                    <div>
-                        <input type="submit"/>
+                    <div className="text-center">
+                        <input className="btn submit-button btn-lg ml-5" type="submit" value="Register"/> 
                     </div>
+                    </form>
                     <br></br>
                 </div>
                 }
 
 
-                {this.state.registered && this.state.ballotValue && this.state.eligible && //shown if registered but the voting phase has not begun
+                {this.state.registered && this.state.ballotValue && this.state.eligible && !this.state.timeToVote &&//shown if registered but the voting phase has not begun
                 <div style={{margin: 60}}>
-                    <h2 className="head">The voting phase has not yet begun please come again later</h2>
+                    <h2 className="head text-center">Voting Starts Soon<br></br>Please come again later</h2>
                     <hr/>
                     <br/>
 
@@ -112,7 +134,7 @@ class Vote extends Component {
                 }
 
 
-                {!flagVote && this.state.ballotValue && this.state.registered && this.state.eligible &&
+                {!flagVote && this.state.ballotValue && this.state.registered && this.state.eligible && this.state.timeToVote&& //if time has begun --BUG--
                 // shows when address is registered and there is a running ballot
                 <form id="voteform">
                     <h2 className="head">
@@ -139,8 +161,8 @@ class Vote extends Component {
                 </form>
                 }
 
-                {flagVote &&
-                <h2 className="head">
+                {flagVote && //everything finished 
+                <h2 className="head text-center">
                     Thank you for voting!
                 </h2>
                 }
