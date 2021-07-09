@@ -33,20 +33,17 @@ export default class RegistrationBL {
         const privKey = web3.utils.numberToHex(key.priv)
         this.setCookie(address, privKey, {secure: true});
         // generate random key for proving
-        const rand = ec.genKeyPair()
-        const privRand = web3.utils.numberToHex(rand.priv)
+        const privRand = web3.utils.numberToHex(ec.genKeyPair().priv)
         // you should NEVER send transaction using .send() to this contract only use it locally .call()
         const proof = await this.ZkpContract.methods.createZKP(privKey, privRand, pubKey).call({from: address});
-        const reconProof = proof.map(function (e) {
+        const reconProof = proof.map((e) => {
             e = web3.utils.numberToHex(e);
             return e;
         });
         const r = reconProof[0];
         const vG = reconProof.slice(1, 4);
         try {
-            
-            const verify = await this.votingContract.methods.verifyKey(pubKey,r,vG).call({from:address , gas:3000000});
-            console.log(verify)
+
             const success = await this.votingContract.methods.register(pubKey, vG, r).call({
                 from: address,
                 value: deposit,

@@ -17,7 +17,7 @@ contract VotingSys is Owned {
     mapping(uint => Voter) public voters;
     mapping(address => bool) public eligible; // White list of addresses allowed to vote
     mapping(address => bool) public registered; // Address registered?
-    mapping(address => bool) public votecast; // Address voted?
+    mapping(address => bool) public voteCast; // Address voted?
     mapping(address => uint) public refunds; //amount to be refunded
 
     uint public endRegistrationPhase;
@@ -42,8 +42,14 @@ contract VotingSys is Owned {
         _;
     }
 
-    function VotingSys() {
+    constructor() public {
         currentState = State.CREATE;
+    }
+
+    function getVoter() public returns (uint[2] _registeredKey, uint[2] _reconstructedKey) {
+        uint index = addressID[msg.sender];
+        _registeredKey = voters[index].registeredKey;
+        _reconstructedKey = voters[index].reconstructedKey;
     }
 
     //  must be more that 3 voters in the beginning (called by create ballot only)
@@ -71,6 +77,7 @@ contract VotingSys is Owned {
         uint _depositRequired,
         address[] addr
     )
+    public
     inState(State.CREATE)
     onlyOwner
     returns (bool){
@@ -95,7 +102,7 @@ contract VotingSys is Owned {
 
     //  inState(State.REGISTER) to allow the admin to add more eligible users in the reg phase
     //  should be after creation of ballot
-    function addEligible(address[] addr) inState(State.REGISTER) onlyOwner {
+    function addEligible(address[] addr) public inState(State.REGISTER) onlyOwner {
         for (uint i = 0; i < addr.length; i++) {
             if (!eligible[addr[i]]) {
                 eligible[addr[i]] = true;
@@ -109,7 +116,7 @@ contract VotingSys is Owned {
     // regester
     // vote
     // in order to set to correct state and reset if finished
-    function deadlinePassed() returns (bool){
+    function deadlinePassed() public returns (bool){
         uint[2] memory empty;
 
         if (now > endVotingPhase) {
@@ -132,7 +139,7 @@ contract VotingSys is Owned {
                 });
                 addressID[addr] = 0;
                 // Remove index
-                votecast[addr] = false;
+                voteCast[addr] = false;
                 // Remove that vote was cast
                 refunds[addr] = 0;
                 // Remove refunds
@@ -162,7 +169,7 @@ contract VotingSys is Owned {
         //false means that current state != FINISH
     }
 
-    function register(uint[2] xG, uint[3] vG, uint r) inState(State.REGISTER) payable returns (bool) {
+    function register(uint[2] xG, uint[3] vG, uint r) public inState(State.REGISTER) payable returns (bool) {
 
         if (deadlinePassed()) {
             return false;
@@ -190,6 +197,7 @@ contract VotingSys is Owned {
                 vote : empty
                 });
                 registered[msg.sender] = true;
+                voteCast[msg.sender] = false;
                 totalRegistered += 1;
                 return true;
             }
@@ -200,7 +208,7 @@ contract VotingSys is Owned {
 
 
     // Timer has expired - we want to start computing the reconstructed keys
-    function finishRegistrationPhase() inState(State.REGISTER) onlyOwner returns (bool) {
+    function finishRegistrationPhase() public inState(State.REGISTER) onlyOwner returns (bool) {
 
         // Make sure at least 3 people have signed up...
         if (totalRegistered < 3) {
@@ -277,30 +285,50 @@ contract VotingSys is Owned {
         return true;
     }
 
-    function submitVote(uint[2] choice) inState(State.VOTE) returns (bool) {
-        if (now > endVotingPhase) {
-            return;
+    // Given the 1 out of 2 ZKP - record the users vote! // todo: add inState(State.VOTE) after development
+    function submitVote(uint[4] params, uint[2] y, uint[2] a1, uint[2] b1, uint[2] a2, uint[2] b2) returns (bool) {
 
-        }
+        // HARD DEADLINE
+        //        todo: commented for development purpose
+        //        if(now > endVotingPhase) {
+        //            return;
+        //        }
 
-        uint c = addressID[msg.sender];
+        uint i = addressID[msg.sender];
+
+        uint[2] memory yG = voters[i].reconstructedKey;
+        uint[2] memory xG = voters[i].registeredKey;
 
         // Make sure the sender can vote, and hasn't already voted.
-        if (registered[msg.sender] && !votecast[msg.sender]) {
-            voters[c].vote = choice;
-            votecast[msg.sender] = true;
-            totalVoted += 1;
-            uint refund = refunds[msg.sender];
-            refunds[msg.sender] = 0;
+        if (registered[msg.sender] && !voteCast[msg.sender]) {
+            // Verify the ZKP for the vote being cast
+            if (verify1outof2ZKP(params, xG, yG, y, a1, b1, a2, b2)) {
 
-            if (!msg.sender.send(refund)) {//failed to refund
-                refunds[msg.sender] = refund;
+                voters[i].vote[0] = y[0];
+                voters[i].vote[1] = y[1];
+
+                voteCast[msg.sender] = true;
+
+                totalVoted += 1;
+
+                // Refund the sender their ether..
+                // Voter has finished their part of the protocol...
+                uint refund = refunds[msg.sender];
+                refunds[msg.sender] = 0;
+
+                // We can still fail... Safety first.
+                // If failed... voter can call withdrawRefund()
+                // to collect their money once the election has finished.
+                if (!msg.sender.send(refund)) {
+                    refunds[msg.sender] = refund;
+                }
+
+                return true;
             }
-            return true;
         }
 
+        // Either vote has already been cast, or ZKP verification failed.
         return false;
-
     }
 
 
@@ -324,8 +352,8 @@ contract VotingSys is Owned {
     // Modulus for private keys (sub-group)
     uint constant nn = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141;
 
-    uint[2] G;
-    uint[2] Y;
+
+
     // Parameters xG, r where r = v - xc, and vG.
     // Verify that vG = rG + xcG!
     function verifyKey(uint[2] xG, uint r, uint[3] vG) public returns (bool) {
@@ -359,5 +387,91 @@ contract VotingSys is Owned {
         } else {
             return false;
         }
+    }
+
+    // We verify that the ZKP is of 0 or 1.
+    // params[4] input is res2[4] from the creator
+
+    // We verify that the ZKP is of 0 or 1.
+    function verify1outof2ZKP(uint[4] params, uint[2] xG, uint[2] yG, uint[2] y, uint[2] a1, uint[2] b1, uint[2] a2, uint[2] b2) returns (bool) {
+        uint[2] memory temp1;
+        uint[3] memory temp2;
+        uint[3] memory temp3;
+
+        uint[2] memory G;
+        G[0] = Gx;
+        G[1] = Gy;
+
+
+        // Make sure we are only dealing with valid public keys!
+        if (!Secp256k1.isPubKey(xG) || !Secp256k1.isPubKey(yG) || !Secp256k1.isPubKey(y) || !Secp256k1.isPubKey(a1) ||
+        !Secp256k1.isPubKey(b1) || !Secp256k1.isPubKey(a2) || !Secp256k1.isPubKey(b2)) {
+            return false;
+        }
+
+        // Does c =? d1 + d2 (mod n)
+        if (uint(sha256(abi.encode(msg.sender, xG, y, a1, b1, a2, b2))) != addmod(params[0], params[1], nn)) {
+            return false;
+        }
+
+        // a1 =? g^{r1} * x^{d1}
+        temp2 = Secp256k1._mul(params[2], G);
+        temp3 = Secp256k1._add(temp2, Secp256k1._mul(params[0], xG));
+        ECCMath.toZ1(temp3, pp);
+
+        if (a1[0] != temp3[0] || a1[1] != temp3[1]) {
+            return false;
+        }
+
+        //b1 =? h^{r1} * y^{d1} (temp = affine 'y')
+        temp2 = Secp256k1._mul(params[2], yG);
+        temp3 = Secp256k1._add(temp2, Secp256k1._mul(params[0], y));
+        ECCMath.toZ1(temp3, pp);
+
+        if (b1[0] != temp3[0] || b1[1] != temp3[1]) {
+            return false;
+        }
+
+        //a2 =? g^{r2} * x^{d2}
+        temp2 = Secp256k1._mul(params[3], G);
+        temp3 = Secp256k1._add(temp2, Secp256k1._mul(params[1], xG));
+        ECCMath.toZ1(temp3, pp);
+
+        if (a2[0] != temp3[0] || a2[1] != temp3[1]) {
+            return false;
+        }
+
+        // Negate the 'y' co-ordinate of g
+        temp1[0] = G[0];
+        temp1[1] = pp - G[1];
+
+        // get 'y'
+        temp3[0] = y[0];
+        temp3[1] = y[1];
+        temp3[2] = 1;
+
+        // y-g
+        temp2 = Secp256k1._addMixed(temp3, temp1);
+
+        // Return to affine co-ordinates
+        ECCMath.toZ1(temp2, pp);
+        temp1[0] = temp2[0];
+        temp1[1] = temp2[1];
+
+        // (y-g)^{d2}
+        temp2 = Secp256k1._mul(params[1], temp1);
+
+        // Now... it is h^{r2} + temp2..
+        temp3 = Secp256k1._add(Secp256k1._mul(params[3], yG), temp2);
+
+        // Convert to Affine Co-ordinates
+        ECCMath.toZ1(temp3, pp);
+
+        // Should all match up.
+        if (b2[0] != temp3[0] || b2[1] != temp3[1]) {
+            return false;
+        }
+
+        return true;
     }
 }

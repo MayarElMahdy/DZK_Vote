@@ -96,7 +96,7 @@ contract ProofZKP_Local {
         return c;
     }
 
-    // random 'w', 'r1', 'd1'
+    // random 'w', 'r2', 'd2'
     function create1outof2ZKPNoVote(uint[2] xG, uint[2] yG, uint w, uint r2, uint d2, uint x) returns (uint[10] res, uint[4] res2){
         uint[2] memory temp_affine1;
         uint[2] memory temp_affine2;
@@ -172,10 +172,10 @@ contract ProofZKP_Local {
         * res[7] = a2_y;
         * res[8] = b2_x;
         * res[9] = b2_y;
-        * res[10] = d1;
-        * res[11] = d2;
-        * res[12] = r1;
-        * res[13] = r2;
+        * res2[0] = d1;
+        * res2[1] = d2;
+        * res2[2] = r1;
+        * res2[3] = r2;
         */
         res2[0] = temp1[0];
         res2[1] = d2;
@@ -259,82 +259,5 @@ contract ProofZKP_Local {
         res2[3] = temp[1];
     }
 
-    // We verify that the ZKP is of 0 or 1.
-    function verify1outof2ZKP(uint[4] params, uint[2] xG, uint[2] yG, uint[2] y, uint[2] a1, uint[2] b1, uint[2] a2, uint[2] b2) returns (bool) {
-        uint[2] memory temp1;
-        uint[3] memory temp2;
-        uint[3] memory temp3;
-
-        // Make sure we are only dealing with valid public keys!
-        if (!Secp256k1.isPubKey(xG) || !Secp256k1.isPubKey(yG) || !Secp256k1.isPubKey(y) || !Secp256k1.isPubKey(a1) ||
-        !Secp256k1.isPubKey(b1) || !Secp256k1.isPubKey(a2) || !Secp256k1.isPubKey(b2)) {
-            return false;
-        }
-
-        // Does c =? d1 + d2 (mod n)
-        if (uint(sha256(abi.encode(msg.sender, xG, y, a1, b1, a2, b2))) != addmod(params[0], params[1], nn)) {
-            return false;
-        }
-
-        // a1 =? g^{r1} * x^{d1}
-        temp2 = Secp256k1._mul(params[2], G);
-        temp3 = Secp256k1._add(temp2, Secp256k1._mul(params[0], xG));
-        ECCMath.toZ1(temp3, pp);
-
-        if (a1[0] != temp3[0] || a1[1] != temp3[1]) {
-            return false;
-        }
-
-        //b1 =? h^{r1} * y^{d1} (temp = affine 'y')
-        temp2 = Secp256k1._mul(params[2], yG);
-        temp3 = Secp256k1._add(temp2, Secp256k1._mul(params[0], y));
-        ECCMath.toZ1(temp3, pp);
-
-        if (b1[0] != temp3[0] || b1[1] != temp3[1]) {
-            return false;
-        }
-
-        //a2 =? g^{r2} * x^{d2}
-        temp2 = Secp256k1._mul(params[3], G);
-        temp3 = Secp256k1._add(temp2, Secp256k1._mul(params[1], xG));
-        ECCMath.toZ1(temp3, pp);
-
-        if (a2[0] != temp3[0] || a2[1] != temp3[1]) {
-            return false;
-        }
-
-        // Negate the 'y' co-ordinate of g
-        temp1[0] = G[0];
-        temp1[1] = pp - G[1];
-
-        // get 'y'
-        temp3[0] = y[0];
-        temp3[1] = y[1];
-        temp3[2] = 1;
-
-        // y-g
-        temp2 = Secp256k1._addMixed(temp3, temp1);
-
-        // Return to affine co-ordinates
-        ECCMath.toZ1(temp2, pp);
-        temp1[0] = temp2[0];
-        temp1[1] = temp2[1];
-
-        // (y-g)^{d2}
-        temp2 = Secp256k1._mul(params[1], temp1);
-
-        // Now... it is h^{r2} + temp2..
-        temp3 = Secp256k1._add(Secp256k1._mul(params[3], yG), temp2);
-
-        // Convert to Affine Co-ordinates
-        ECCMath.toZ1(temp3, pp);
-
-        // Should all match up.
-        if (b2[0] != temp3[0] || b2[1] != temp3[1]) {
-            return false;
-        }
-
-        return true;
-    }
 
 }

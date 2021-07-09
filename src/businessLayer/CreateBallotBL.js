@@ -1,4 +1,3 @@
-const lineByLine = require('n-readlines');
 
 export default class CreateBallotBL {
     contract = window.votingContract;

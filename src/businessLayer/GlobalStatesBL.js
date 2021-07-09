@@ -7,8 +7,8 @@ export default class GlobalStatesBL {
         return address === await this.contract.methods.owner().call({from: address});
     }
 
-    async transferOwnership(from, to) {
-        await this.contract.methods.transferOwnership(to).send({from: from})
+    async transferOwnership(fromAddress, toAddress) {
+        await this.contract.methods.transferOwnership(toAddress).send({from: fromAddress})
     }
 
     // checks if provided phase is the current phase
