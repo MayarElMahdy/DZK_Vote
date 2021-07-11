@@ -1,13 +1,16 @@
-import React, { Component } from "react";
-import { Web3Context } from "../web3-context";
+import React, {Component} from "react";
+import {Web3Context} from "../web3-context";
 import CreateBallotBL from "../businessLayer/CreateBallotBL";
 import GlobalStatesBL from "../businessLayer/GlobalStatesBL";
-//This is available only after the admin has created the ballot 
+import RegistrationBL from "../businessLayer/RegistrationBL";
+
+//This is available only after the admin has created the ballot
 class EditBallot extends Component {
     static contextType = Web3Context;
     // create the businessLayer class
     BL = new CreateBallotBL();
     GS = new GlobalStatesBL();
+    RegBL = new RegistrationBL();
 
     constructor(props) {
         super(props);
@@ -29,7 +32,9 @@ class EditBallot extends Component {
     }
 
     componentDidMount = async () => {
-        this.setState({ owner: await this.GS.isOwner(this.context.account[0]) });
+        this.setState({owner: await this.GS.isOwner(this.context.account[0])});
+
+        await this.RegBL.finishRegistrationPhase(this.context.account[0]);
     }
 
 

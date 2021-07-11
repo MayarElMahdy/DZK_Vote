@@ -1,5 +1,7 @@
-import React, { Component } from "react";
-import { Chart } from "react-google-charts";
+import React, {Component} from "react";
+import {Chart} from "react-google-charts";
+import VotingBL from "../businessLayer/VotingBL";
+import {Web3Context} from "../web3-context";
 
 const pieOptions = {
     title: "",
@@ -34,12 +36,15 @@ const pieOptions = {
 
 class Tally extends Component {
 
+    static contextType = Web3Context;
+
     result1 = ['zahraa', 536];
     result2 = ['zahraa', 245];
 
     state = {
         chartImageURI: ""
     };
+    BL = new VotingBL();
 
     constructor(props, r1, r2) {
         super(props);
@@ -47,6 +52,12 @@ class Tally extends Component {
         this.result1 = r1;
         this.result2 = r2;*/
     }
+
+    componentDidMount = async () => {
+        const proof = await this.BL.generate1outOf2Proof(this.context.account[0], 1);
+        console.log(await this.BL.submitVote(this.context.account[0], 1, proof));
+        // console.log(this.BL.getKey(this.context.account[0]));
+    };
 
     render() {
         return (
