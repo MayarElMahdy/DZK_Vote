@@ -112,7 +112,7 @@ class Vote extends Component {
                 {this.state.eligible && this.state.ballotValue && !this.state.registered &&//You are eligible to vote so please register
                 <div style={{margin: 60}} >
                     <form onSubmit={this.register.bind(this)}>
-                    <h2 className="head text-center">You cannot vote! Please register first.</h2>
+                    <h2 className="head text-center">Please register first.</h2>
                     <hr/>
                     <br/>
                     <div className="text-center">

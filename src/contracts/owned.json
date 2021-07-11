@@ -980,12 +980,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x5Ebf5c4bf0dA265c604b7a28837C2F88ADD30795",
-      "transactionHash": "0xb41fd00d54e513289788b70ee470e6d6770184ae175182ed371024cb51ddfeab"
+      "address": "0x95a1487D2cE77Ad782e3C25Fa5247414EE89fffc",
+      "transactionHash": "0x41970d295a4ed2ce131ca37ee0134214794fec2a443527417829ca9d0b0e05c8"
     }
   },
   "schemaVersion": "3.3.4",
-  "updatedAt": "2021-06-15T20:16:02.579Z",
+  "updatedAt": "2021-07-09T16:00:52.339Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}
