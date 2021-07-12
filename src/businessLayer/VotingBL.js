@@ -64,7 +64,6 @@ export default class VotingBL {
         }
     }
 
-
     async getVoterKeys(address) {
         return await this.votingContract.methods.getVoter().call({from: address});
     }
@@ -73,6 +72,18 @@ export default class VotingBL {
     getKeyFromCookies(address) {
         return this.getCookie(address);
     }
+
+    async tally(address) {
+        await this.votingContract.methods.computeTally().send({from: address});
+
+    }
+
+    async getTalliedResult(address) {
+        const votedYes = await this.votingContract.methods.finalTally(0).call({from: address});
+        const votedNo = (await this.votingContract.methods.finalTally(1).call({from: address})) - votedYes;
+        return {votedYes: votedYes, votedNo: votedNo};
+    }
+
 
     getCookie(cname) {
         let name = cname + "=";

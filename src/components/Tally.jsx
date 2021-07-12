@@ -41,7 +41,9 @@ class Tally extends Component {
     result2 = ['zahraa', 245];
 
     state = {
-        chartImageURI: ""
+        chartImageURI: "",
+        yes: "",
+        no: ""
     };
     BL = new VotingBL();
 
@@ -54,13 +56,28 @@ class Tally extends Component {
 
     componentDidMount = async () => {
         const proof = await this.BL.generate1outOf2Proof(this.context.account[0], 1);
-        console.log(await this.BL.submitVote(this.context.account[0], 1, proof));
-        // console.log(this.BL.getKey(this.context.account[0]));
+        // console.log(await this.BL.submitVote(this.context.account[0], 1, proof));
+
+        // use this once, el mra el tnya htedrb
+        await this.BL.tally(this.context.account[0]);
+
+        // use this 3ady
+        const result = await this.BL.getTalliedResult(this.context.account[0]);
+        this.setState({yes: result.votedYes, no: result.votedNo});
     };
+
+    // msh 3arf a3ml el button XD
+    tally = async (e) => {
+        e.preventDefault();
+
+    }
 
     render() {
         return (
             <div className="container-fluid column">
+
+                <h6>{'tally: ' + this.state.yes + " yes and " + this.state.no + " no"}</h6>
+                <input className="btn submit-button btn-lg ml-5" type="submit" value="tally"/>
                 <div className="text-center mt-5">
                     <h1>Vote Result</h1>
                 </div>
