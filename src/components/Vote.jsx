@@ -127,12 +127,12 @@ class Vote extends Component {
 
 
                 {this.state.registered && this.state.ballotValue && this.state.eligible && !this.state.timeToVote &&//shown if registered but the voting phase has not begun
-                    <div style={{ margin: 60 }}>
+                    <div>
                         <h2 className="success text-center">Registeration Successful</h2>
                         <hr />
                         <h2 className="head text-center">Voting Starts Soon<br></br>Please come again later</h2>
                         <div style={{height:"100%", width:"100%"}}>
-                        <img style={{width:"50%"}} className="center" src={voteimg} alt=""></img>
+                        <img style={{width:"130%", marginLeft:"-50px"}} className="center" src={voteimg} alt=""></img>
                         </div>
                         <br />
                     </div>
