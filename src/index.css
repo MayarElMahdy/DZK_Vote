@@ -297,13 +297,13 @@ nav{
 
 h1.words{
   font-family: 'Gill Sans', 'Gill Sans MT', 'Calibri', 'Trebuchet MS', 'sans-serif';
-  font-weight: 900;
-  margin-top: 3.5vw;
-  font-size: 3.5vw;
+  font-weight: 800;
+  margin-top: 20%;
+  font-size: 3vw;
 }
 
 h3.words{
-  font-size: 2.5vw;
+  font-size: 2vw;
   font-weight: 600;
   margin-left: 10px;
 }

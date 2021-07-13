@@ -98,7 +98,7 @@ class Vote extends Component {
                 {!this.state.ballotValue && this.state.ballotValue !== "null" &&  // shows when there is no ballot created
                     <div style={{ margin: 60 }}>
                         <h2 className="head text-center">You didn't create any ballots yet!</h2>
-                        <div>
+                        <div style={{height:"100%"}}>
                         <img style={{width: "30%"}} className="center" src={emptyimg} alt=""></img>
                         </div>
                     </div>
@@ -131,7 +131,9 @@ class Vote extends Component {
                         <h2 className="success text-center">Registeration Successful</h2>
                         <hr />
                         <h2 className="head text-center">Voting Starts Soon<br></br>Please come again later</h2>
-                        <img className="center" src={voteimg} alt=""></img>
+                        <div style={{height:"100%", width:"100%"}}>
+                        <img style={{width:"50%"}} className="center" src={voteimg} alt=""></img>
+                        </div>
                         <br />
                     </div>
                 }
