@@ -31,7 +31,7 @@ class Navigation extends Component {
             <span className="navbar-toggler-icon"></span>
           </button>
 
-          <div className="container">
+          <div id="nav-cont" className="container">
             <div className="collapse navbar-collapse ml-auto" id="navbarSupportedContent">
               <ul className="navbar-nav ml-auto mb-1 mb-lg-0">
                 <li

@@ -1,11 +1,14 @@
-import React, {Component} from "react";
-import {Web3Context} from "../web3-context";
+import React, { Component } from "react";
+import { Web3Context } from "../web3-context";
 import RegistrationBL from "../businessLayer/RegistrationBL";
 import votebutton from "./images/vote-icon.png";
 import './Vote.css';
 import CreateBallotBL from "../businessLayer/CreateBallotBL";
 import GlobalStatesBL from "../businessLayer/GlobalStatesBL";
-import {PHASE} from "../App";
+import { PHASE } from "../App";
+import voteimg from "./images/4585.jpg"
+import deniedimg from "./images/denied.png"
+import emptyimg from "./images/noballots.jpg"
 
 let vote = null;
 
@@ -23,17 +26,16 @@ class Vote extends Component {
         this.state = {
             name: "React",
             flagVote: false,
-            ballotValue: "",
+            ballotValue: "null",
             option0: "First Option",
             option1: "Second Option",
 
-            registered: false
-            , eligible: false,
-            timeToVote : false //If time for registration finished , Voting phase started
-            ,timeToReg: false
-            
-
+            registered: null
+            , eligible: null,
+            timeToVote: null //If time for registration finished , Voting phase started
+            , timeToReg: null
         }
+
         this.ballotBL.getBallotStatement().then(returnValue => {
             this.setState({ballotValue: returnValue});
         })
@@ -44,37 +46,34 @@ class Vote extends Component {
             this.setState({option1: returnValue});
         });
         this.handleClickVote = this.handleClickVote.bind(this);
-
-
     }
 
     componentDidMount = async () => {
 
         //let deposit = await this.BL.getMinimumDeposit()
-       //this.setState({registered: await this.BL.register(this.context.account[0], deposit)})
-       this.setState({registered: await this.BL.isRegistered(this.context.account[0])})
-        this.setState({eligible: await this.BL.isEligible(this.context.account[0])})
-        this.setState({timeToReg: await this.GL.inPhase(PHASE.REGISTER)})
-        this.setState({timeToVote: await this.GL.inPhase(PHASE.VOTE)})
+        //this.setState({registered: await this.BL.register(this.context.account[0], deposit)})
+        this.setState({ registered: await this.BL.isRegistered(this.context.account[0]) })
+        this.setState({ eligible: await this.BL.isEligible(this.context.account[0]) })
+        this.setState({ timeToReg: await this.GL.inPhase(PHASE.REGISTER) })
+        this.setState({ timeToVote: await this.GL.inPhase(PHASE.VOTE) })
     }
 
-    register = async(e) =>  //Function to register 
+    register = async (e) =>  //Function to register 
     {
         e.preventDefault();
         let deposit = await this.BL.getMinimumDeposit()
-        this.setState({registered: await this.BL.register(this.context.account[0], deposit)})
-        alert((this.state.registered? 'Successful registration' : 'Unsuccessful registration' ));
-        
-        //this.setState({registered:true});
-        
+        this.setState({ registered: await this.BL.register(this.context.account[0], deposit) })
+        alert((this.state.registered ? 'Successful registration' : 'Unsuccessful registration'));
 
+        //this.setState({registered:true});
     }
+
     handleClickVote(event) {  // submit vote button handler
         event.preventDefault();
         if (vote == null) {  // if no option was selected
             alert("Please make a selection!");
         } else { // an option was selected, continue to smart contract
-            this.setState({flagVote: true});
+            this.setState({ flagVote: true });
             // alert("Vote successful!");
         }
     }
@@ -85,88 +84,91 @@ class Vote extends Component {
     }
 
     render() {
-        const {flagVote} = this.state;
+
+        const { flagVote } = this.state;
+        console.log("ballot value ? " + this.state.ballotValue);
+        console.log("is registered ? " + this.state.registered);
+        console.log("is eligible ? " + this.state.eligible);
+        console.log("is voting phase ? " + this.state.timeToVote);
+        console.log("is registeration phase ? " + this.state.timeToReg);
+
         return (
 
             <div>
-                <h6>{'eligible to vote: ' + (this.state.eligible ? 'yess' : 'noo')}</h6>
-                <h6>{'did register : ' + (this.state.registered ? 'yess' : 'noo')}</h6>
-
-                <h6>{'Voting Phase begun? : ' + (this.state.timeToVote ? 'yess' : 'noo')}</h6>
-                <h6>{'Register Phase begun? : ' + (this.state.timeToReg ? 'yess' : 'noo')}</h6>
-                
-
-
-                {!this.state.ballotValue &&     // shows when there is no ballot created
-                <div style={{margin: 60}}>
-                    <h2 className="head text-center">No ballots have been created yet!</h2>
-                </div>
+                {!this.state.ballotValue && this.state.ballotValue !== "null" &&  // shows when there is no ballot created
+                    <div style={{ margin: 60 }}>
+                        <h2 className="head text-center">You didn't create any ballots yet!</h2>
+                        <div>
+                        <img style={{width: "30%"}} className="center" src={emptyimg} alt=""></img>
+                        </div>
+                    </div>
                 }
-                {!this.state.eligible && this.state.ballotValue && //not eligible to vote
-                <div style={{margin: 60}}>
-                    <h2 className="head text-center">Sorry! Ineligible members cannot register or vote.</h2>
-                    <hr/>
-                    <br/>
-                </div>
+                {!this.state.eligible && this.state.ballotValue && this.state.eligible !== null && this.state.ballotValue !== "null" &&//not eligible to vote
+                    <div style={{ margin: 60 }}>
+                        <h2 className="alert text-center">Ineligible members cannot register or vote</h2>
+                        <div>
+                        <img style={{width: "30%"}} className="center" src={deniedimg} alt=""></img>
+                        </div>
+                    </div>
                 }
                 {this.state.eligible && this.state.ballotValue && !this.state.registered &&//You are eligible to vote so please register
-                <div style={{margin: 60}} >
-                    <form onSubmit={this.register.bind(this)}>
-                    <h2 className="head text-center">Please register first.</h2>
-                    <hr/>
-                    <br/>
-                    <div className="text-center">
-                        <input className="btn submit-button btn-lg ml-5" type="submit" value="Register"/> 
+                    <div style={{ margin: 60 }} >
+                        <form onSubmit={this.register.bind(this)}>
+                            <h2 className="head text-center">Please register first</h2>
+                            <hr />
+                            <br />
+                            <div className="text-center">
+                                <input className="btn submit-button btn-lg" type="submit" value="Register" />
+                            </div>
+                        </form>
+                        <br></br>
                     </div>
-                    </form>
-                    <br></br>
-                </div>
                 }
 
 
                 {this.state.registered && this.state.ballotValue && this.state.eligible && !this.state.timeToVote &&//shown if registered but the voting phase has not begun
-                <div style={{margin: 60}}>
-                    <h2 className="head text-center">Voting Starts Soon<br></br>Please come again later</h2>
-                    <hr/>
-                    <br/>
-
-                </div>
+                    <div style={{ margin: 60 }}>
+                        <h2 className="success text-center">Registeration Successful</h2>
+                        <hr />
+                        <h2 className="head text-center">Voting Starts Soon<br></br>Please come again later</h2>
+                        <img className="center" src={voteimg} alt=""></img>
+                        <br />
+                    </div>
                 }
 
 
-                {!flagVote && this.state.ballotValue && this.state.registered && this.state.eligible && this.state.timeToVote&& //if time has begun --BUG--
-                // shows when address is registered and there is a running ballot
-                <form id="voteform">
-                    <h2 className="head">
-                        Please cast your vote: </h2>
-                    <hr/>
-                    <div>
-                        <label class="container"> {this.state.option0}
-                            <input onClick={() => this.setVote(0)} type="radio" value="0" name="vote"/>
-                            <span class="checkmark"></span>
-                        </label>
-                    </div>
-                    <br/>
-                    <div>
-                        <label class="container"> {this.state.option1}
-                            <input onClick={() => this.setVote(1)} type="radio" value="1" name="vote"/>
-                            <span class="checkmark"></span>
-                        </label>
-                    </div>
-                    <hr/>
-                    <input onClick={this.handleClickVote} className="votebutton" type="image" alt="Vote"
-                           src={votebutton}>
-                    </input>
+                {!flagVote && this.state.ballotValue && this.state.registered && this.state.eligible && this.state.timeToVote && //if time has begun --BUG--
+                    // shows when address is registered and there is a running ballot
+                    <form id="voteform">
+                        <h2 className="head">
+                            Please cast your vote: </h2>
+                        <hr />
+                        <div>
+                            <label class="container-vote"> {this.state.option0}
+                                <input onClick={() => this.setVote(0)} type="radio" value="0" name="vote" />
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                        <br />
+                        <div>
+                            <label class="container-vote"> {this.state.option1}
+                                <input onClick={() => this.setVote(1)} type="radio" value="1" name="vote" />
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                        <hr />
+                        <input onClick={this.handleClickVote} className="votebutton" type="image" alt="Vote"
+                            src={votebutton}>
+                        </input>
 
-                </form>
+                    </form>
                 }
 
                 {flagVote && //everything finished 
-                <h2 className="head text-center">
-                    Thank you for voting!
-                </h2>
+                    <h2 className="head text-center">
+                        Thank you for voting!
+                    </h2>
                 }
-
             </div>
         );
     }

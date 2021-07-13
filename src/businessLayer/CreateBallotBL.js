@@ -3,7 +3,7 @@ export default class CreateBallotBL {
     contract = window.votingContract;
 
     async creatBallot(adminAddress, ballotStatement, option1, option2, endRegistrationPhase, endVotingPhase,
-                      depositRequired, addresses) {
+        depositRequired, addresses) {
         try {
             const success = await this.contract.methods.creatBallot(
                 ballotStatement,
@@ -27,7 +27,7 @@ export default class CreateBallotBL {
                     endVotingPhase,
                     depositRequired,
                     addresses
-                ).send({from: adminAddress, gasLimit: 598716});
+                ).send({ from: adminAddress, gasLimit: 598716 });
                 return "Transaction Confirmed";
             } else {
                 return "Transaction Failed";
@@ -39,14 +39,17 @@ export default class CreateBallotBL {
     }
 
     // edit as preferred
-    async getBallotStatement() { 
+    async getBallotStatement() {
         let ballot = await this.contract.methods.ballotName().call();
-        if(!ballot) // empty
-        return "";
-        else
-        return ballot + " " + "Candidates are " + 
-            await this.contract.methods.options(0).call() + " " +
-            await this.contract.methods.options(1).call() ;
+        if (!ballot) // empty
+            return "";
+        else {
+            let op1 = await this.contract.methods.options(0).call();
+            let op2 = await this.contract.methods.options(1).call();
+            let values = [ballot, op1, op2]
+            return values;
+        }
+
     }
     async getOption1() {
         return await this.contract.methods.options(0).call();
@@ -57,9 +60,9 @@ export default class CreateBallotBL {
 
     async addEligible(adminAddress, addresses) {
         try {
-            const success = await this.contract.methods.addEligible(addresses).call({from: adminAddress});
+            const success = await this.contract.methods.addEligible(addresses).call({ from: adminAddress });
             if (success) {
-                await this.contract.methods.addEligible(addresses).send({from: adminAddress});
+                await this.contract.methods.addEligible(addresses).send({ from: adminAddress });
                 return "Transaction Successful , All addresses inserted are now elligible to vote ! ";
             } else {
                 return "Transaction Failed , Please try again";
@@ -70,10 +73,10 @@ export default class CreateBallotBL {
         }
     }
 
-    
+
 
     //Split the content of the file
-    splitArray(array){
+    splitArray(array) {
         return array.split(" ");
     }
 
