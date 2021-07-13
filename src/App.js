@@ -18,6 +18,12 @@ class App extends Component {
     }
 
     render() {
+
+        window.ethereum.on('accountsChanged', function (accounts) {
+            // Time to reload your interface with accounts[0]!
+            window.location.reload();
+        })
+
         if (!this.state.web3) {
             return (
                 <div>
@@ -41,6 +47,7 @@ class App extends Component {
                             <Route path="/vote" exact component={() => <Vote/>}/>
                             <Route path="/Tally" exact component={() => <Tally/>}/>
                         </Switch>
+                        <Footer/>
                     </Router>
                 </Web3Context.Provider>
             </div>

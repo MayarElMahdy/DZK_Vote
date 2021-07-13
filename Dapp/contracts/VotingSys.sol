@@ -331,6 +331,115 @@ contract VotingSys is Owned {
         return false;
     }
 
+    function computeTally() inState(State.VOTE) onlyOwner {
+        uint[2] memory G;
+        G[0] = Gx;
+        G[1] = Gy;
+        uint[3] memory temp;
+        uint[2] memory vote;
+        uint refund;
+
+        // Sum all votes
+        for (uint i = 0; i < totalRegistered; i++) {
+
+            // Confirm all votes have been cast...
+            if (!voteCast[voters[i].addr]) {
+                revert();
+            }
+
+            vote = voters[i].vote;
+
+            if (i == 0) {
+                temp[0] = vote[0];
+                temp[1] = vote[1];
+                temp[2] = 1;
+            } else {
+                Secp256k1._addMixedM(temp, vote);
+            }
+        }
+
+        // All votes have been accounted for...
+        // Get tally, and change state to 'Finished'
+        currentState = State.FINISH;
+
+
+        // Each vote is represented by a G.
+        // If there are no votes... then it is 0G = (0,0)...
+        if (temp[0] == 0) {
+            finalTally[0] = 0;
+            finalTally[1] = totalRegistered;
+
+            // Election Authority is responsible for calling this....
+            // He should not fail his own refund...
+            // Make sure tally is computed before refunding...
+            // TODO: Check if this is necessary
+            refund = refunds[msg.sender];
+            refunds[msg.sender] = 0;
+
+            if (!msg.sender.send(refund)) {
+                refunds[msg.sender] = refund;
+            }
+            return;
+        } else {
+
+            // There must be a vote. So lets
+            // start adding 'G' until we
+            // find the result.
+            ECCMath.toZ1(temp, pp);
+            uint[3] memory tempG;
+            tempG[0] = G[0];
+            tempG[1] = G[1];
+            tempG[2] = 1;
+
+            // Start adding 'G' and looking for a match
+            for (i = 1; i <= totalRegistered; i++) {
+
+                if (temp[0] == tempG[0]) {
+                    finalTally[0] = i;
+                    finalTally[1] = totalRegistered;
+
+                    // Election Authority is responsible for calling this....
+                    // He should not fail his own refund...
+                    // Make sure tally is computed before refunding...
+                    // TODO: Check if this is necessary
+                    // If it fails - he can use withdrawRefund()
+                    // Election cannot be reset until he is refunded.
+                    refund = refunds[msg.sender];
+                    refunds[msg.sender] = 0;
+
+                    if (!msg.sender.send(refund)) {
+                        refunds[msg.sender] = refund;
+                    }
+                    return;
+                }
+
+                // If something bad happens and we cannot find the Tally
+                // Then this 'addition' will be run 1 extra time due to how
+                // we have structured the for loop.
+                // TODO: Does it need fixes?
+                Secp256k1._addMixedM(tempG, G);
+                ECCMath.toZ1(tempG, pp);
+            }
+
+            // Something bad happened. We should never get here....
+            // This represents an error message... best telling people
+            // As we cannot recover from it anyway.
+            // TODO: Handle this better....
+            finalTally[0] = 0;
+            finalTally[1] = 0;
+
+            // Election Authority is responsible for calling this....
+            // He should not fail his own refund...
+            // TODO: Check if this is necessary
+            refund = refunds[msg.sender];
+            refunds[msg.sender] = 0;
+
+            if (!msg.sender.send(refund)) {
+                refunds[msg.sender] = refund;
+            }
+            return;
+        }
+    }
 
     // todo: fix EL SHEEE2 DA!!!!!!!!!!!!!!!!!!!!!!
     //____________________________________________________________________________

@@ -1,8 +1,9 @@
-import React, {Component} from "react";
-import {Web3Context} from "../web3-context";
+import React, { Component } from "react";
+import { Web3Context } from "../web3-context";
 import CreateBallotBL from "../businessLayer/CreateBallotBL";
 import GlobalStatesBL from "../businessLayer/GlobalStatesBL";
 import RegistrationBL from "../businessLayer/RegistrationBL";
+import denied from "./images/denied.png"
 
 //This is available only after the admin has created the ballot
 class EditBallot extends Component {
@@ -32,7 +33,7 @@ class EditBallot extends Component {
     }
 
     componentDidMount = async () => {
-        this.setState({owner: await this.GS.isOwner(this.context.account[0])});
+        this.setState({ owner: await this.GS.isOwner(this.context.account[0]) });
 
         await this.RegBL.finishRegistrationPhase(this.context.account[0]);
     }
@@ -103,23 +104,34 @@ class EditBallot extends Component {
 
     render() {
 
+        let labels = ["Ballot Name: ", "First Candidate: ", "Second Candidate: "];
 
         return (
             <div>
 
                 {!this.state.owner &&
                     <div style={{ margin: 60 }}>
-                        <h2>Only the admin can edit a ballot.</h2>
+                        <h2 className="alert text-center">Only the admin can edit a ballot</h2>
+                        <div>
+                            <img style={{ width: "30%" }} className="center" src={denied}></img>
+                        </div>
                     </div>
 
                 }
                 {this.state.value && this.state.owner &&
-                    <div>
-                        <h3 className="head text-center" style={{ margin: 60 }}>Your current ballot statement is: {this.state.value}</h3>
+                    <div className="text-center">
+                        <h3 className="head text-center" style={{ margin: 60 }}>
+                            Your current ballot statement is:  </h3>
+                        <span className="spann">
+                            {this.state.value.map((value, index) => {
+                                return <h2 className="head text-center" key={index}>{labels[index] + value}</h2>
+                            })
+                            }
+                        </span>
                         <hr></hr>
                         <form onSubmit={this.contactSubmit.bind(this)} style={{ margin: 100 }} className="form">
                             <div className="head" style={{ fontSize: "18px" }}>
-                                <label htmlFor="myfile">Please insert the text file of elligible voters :  &emsp;&emsp; </label>
+                                <label htmlFor="myfile">Please insert the new list of voters :  &emsp;&emsp; </label>
 
                                 <input type="file" id="myfile" name="myfile" onChange={this.handleChange.bind(this, "txtfile")}
                                     value={this.state.txtfile} ref={this.fileInput} />
