@@ -5,7 +5,7 @@ import {loadWeb3, Web3Context} from "./web3-context";
 import banner from "./components/images/4448.jpg"
 
 
-export const PHASE = Object.freeze({"CREATE": 0, "REGISTER": 1, "VOTE": 2, "FINISH": 3})
+export const PHASE = Object.freeze({"CREATE": 0, "REGISTER": 1, "VOTE": 2, "TALLY": 3})
 
 class App extends Component {
 
