@@ -59,7 +59,7 @@ function Home() {
               <div style={{ padding: "15px" }} className="row">
                 <div className="d-flex align-items-center select col-12">
                   <img className="float-left select-img" src={Create} alt=""></img>
-                  <h4 className="select-font center" style={{ fontSize: "6.5vw" }}>Create-ballot</h4>
+                  <h4 className="select-font center" style={{ fontSize: "6.5vw" }}>Create ballot</h4>
                 </div>
               </div>
             </Link>
@@ -137,7 +137,7 @@ function Home() {
           <Link to="/CreateBallot" style={{ textDecoration: 'none' }}>
             <div style={{ textAlign: "center" }} className="m-2 p-3 icons">
               <img className="m-2" src={Create} alt=""></img>
-              <h4 className="text-center">Create-ballot</h4>
+              <h4 className="text-center">Create ballot</h4>
             </div>
           </Link>
 

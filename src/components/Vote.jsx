@@ -37,13 +37,13 @@ class Vote extends Component {
         }
 
         this.ballotBL.getBallotStatement().then(returnValue => {
-            this.setState({ballotValue: returnValue});
+            this.setState({ ballotValue: returnValue });
         })
         this.ballotBL.getOption1().then(returnValue => {
-            this.setState({option0: returnValue});
+            this.setState({ option0: returnValue });
         })
         this.ballotBL.getOption2().then(returnValue => {
-            this.setState({option1: returnValue});
+            this.setState({ option1: returnValue });
         });
         this.handleClickVote = this.handleClickVote.bind(this);
     }
@@ -95,19 +95,19 @@ class Vote extends Component {
         return (
 
             <div>
-                {!this.state.ballotValue && this.state.ballotValue !== "null" &&  // shows when there is no ballot created
+                {!this.state.ballotValue && this.state.ballotValue !== "null" && // shows when there is no ballot created
                     <div style={{ margin: 60 }}>
-                        <h2 className="head text-center">You didn't create any ballots yet!</h2>
-                        <div style={{height:"100%"}}>
-                        <img style={{width: "30%"}} className="center" src={emptyimg} alt=""></img>
+                        <h2 className="head text-center">No election was started yet</h2>
+                        <div className="illust-wrapper">
+                            <img className="illustration center" src={emptyimg} alt=""></img>
                         </div>
                     </div>
                 }
                 {!this.state.eligible && this.state.ballotValue && this.state.eligible !== null && this.state.ballotValue !== "null" &&//not eligible to vote
                     <div style={{ margin: 60 }}>
                         <h2 className="alert text-center">Ineligible members cannot register or vote</h2>
-                        <div>
-                        <img style={{width: "30%"}} className="center" src={deniedimg} alt=""></img>
+                        <div className="illust-wrapper">
+                            <img className="center illustration" src={deniedimg} alt=""></img>
                         </div>
                     </div>
                 }
@@ -128,46 +128,42 @@ class Vote extends Component {
 
                 {this.state.registered && this.state.ballotValue && this.state.eligible && !this.state.timeToVote &&//shown if registered but the voting phase has not begun
                     <div>
-                        <h2 className="success text-center">Registeration Successful</h2>
-                        <hr />
-                        <h2 className="head text-center">Voting Starts Soon<br></br>Please come again later</h2>
-                        <div style={{height:"100%", width:"100%"}}>
-                        <img style={{width:"130%", marginLeft:"-50px"}} className="center" src={voteimg} alt=""></img>
+                        <img className="center vote-soon" src={voteimg} alt=""></img>
+                        <div>
+                            <h2 id="vote-soon" className="success text-center">Registeration Successful</h2>
+                            <hr />
+                            <h2 id="vote-soon" className="head text-center">Voting Starts Soon<br></br>Please come again later</h2>
+                            <br />
                         </div>
-                        <br />
                     </div>
                 }
 
 
                 {!flagVote && this.state.ballotValue && this.state.registered && this.state.eligible && this.state.timeToVote && //if time has begun --BUG--
                     // shows when address is registered and there is a running ballot
-                    <form id="voteform">
-                        <h2 className="head">
-                            Please cast your vote: </h2>
-                        <hr />
-                        <div>
-                            <label class="container-vote"> {this.state.option0}
-                                <input onClick={() => this.setVote(0)} type="radio" value="0" name="vote" />
-                                <span class="checkmark"></span>
-                            </label>
-                        </div>
-                        <br />
-                        <div>
-                            <label class="container-vote"> {this.state.option1}
-                                <input onClick={() => this.setVote(1)} type="radio" value="1" name="vote" />
-                                <span class="checkmark"></span>
-                            </label>
-                        </div>
-                        <hr />
-                        <input onClick={this.handleClickVote} className="votebutton" type="image" alt="Vote"
-                            src={votebutton}>
-                        </input>
+                    <div className="m-5 " >
+                        <div className="center text-center" style={{ width: "40%" }}>
+                            <h2 className="head">Please cast your vote</h2>
+                            <hr />
 
-                    </form>
+                            <input onClick={() => this.setVote(0)} style={{ visibility: "hidden" }} type="radio" className="btn-check" name="options" id="option1" autocomplete="off"></input>
+                            <label className="btn btn-block" for="option1">{this.state.option0}</label>
+
+
+                            <input onClick={() => this.setVote(1)} style={{ visibility: "hidden" }} type="radio" className="btn-check" name="options" id="option2" autocomplete="off"></input>
+                            <label className="btn btn-block" for="option2">{this.state.option1}</label>
+
+                            <hr />
+
+                            <input style={{border:"1px solid #1C437A"}} onClick={this.handleClickVote} className="m-5 votebutton" type="image" alt="Vote"
+                                src={votebutton}>
+                            </input>
+                        </div>
+                    </div>
                 }
 
                 {flagVote && //everything finished 
-                    <h2 className="head text-center">
+                    <h2 className="center success text-center">
                         Thank you for voting!
                     </h2>
                 }

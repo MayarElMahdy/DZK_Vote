@@ -36,7 +36,7 @@ class App extends Component {
             );
         }
         return (
-            <div className="App">
+            <div style={{height:"100%"}} className="App">
                 <Web3Context.Provider value={this.state.web3}>
                     <Router>
                         <Navigation/>

@@ -3,7 +3,6 @@
     color: rgb(105, 105, 105);
 }
 .votebutton {
-    margin-left: 200px;
     height: 100px;
     width: 100px;
     border-radius: 6px;
@@ -78,3 +77,26 @@
     background: white;
   }
   /* reference: w3schools */
+
+  .form-check-input{
+    /* Double-sized Checkboxes */
+  -ms-transform: scale(1.2); /* IE */
+  -moz-transform: scale(1.2); /* FF */
+  -webkit-transform: scale(1.2); /* Safari and Chrome */
+  -o-transform: scale(1.2); /* Opera */
+  transform: scale(1.2);
+  }
+
+.btn{
+  border: 1px solid #db625c;
+  color: #db625c;
+}
+
+.btn-check:hover + label{
+    background: #ff8781;
+}
+
+.btn-check:checked + label{
+    background: #db625c;
+    color: white;
+}
