@@ -87,17 +87,17 @@
   transform: scale(1.2);
   }
 
-.btn{
+.vote-btn{
   border: 1px solid #145183;
   color: #145183;
 }
 
-.btn-check:hover + label{
+.vote-btn:hover + label{
     background: #bad1b9;
     color: #145183;
 }
 
-.btn-check:checked + label{
+.vote-btn:checked + label{
     background: #9DD49A;
     color: #456443;
     border: 1px solid #7ca17a;

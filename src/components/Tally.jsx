@@ -1,7 +1,7 @@
-import React, {Component} from "react";
-import {Chart} from "react-google-charts";
+import React, { Component } from "react";
+import { Chart } from "react-google-charts";
 import VotingBL from "../businessLayer/VotingBL";
-import {Web3Context} from "../web3-context";
+import { Web3Context } from "../web3-context";
 
 const pieOptions = {
     title: "",
@@ -50,6 +50,7 @@ class Tally extends Component {
 
     constructor(props, r1, r2) {
         super(props);
+
         /*
         this.result1 = r1;
         this.result2 = r2;*/
@@ -64,29 +65,29 @@ class Tally extends Component {
 
         // use this 3ady
         const result = await this.BL.getTalliedResult(this.context.account[0]);
-        this.setState({yes: result.votedYes, no: result.votedNo});
+        this.setState({ yes: result.votedYes, no: result.votedNo });
     };
 
     // msh 3arf a3ml el button XD
     tally = async (e) => {
         e.preventDefault();
 
-    }
+    };
+
 
     render() {
         return (
             <div className="container-fluid column">
-
-                <h6>{'tally: ' + this.state.yes + " yes and " + this.state.no + " no"}</h6>
-                <input className="btn submit-button btn-lg ml-5" type="submit" value="tally"/>
-                <div className="text-center mt-5">
+                <div className="text-center mt-5 row">
+                    <h6>{'tally: ' + this.state.yes + " yes and " + this.state.no + " no"}</h6>
+                    <input className="btn submit-button btn-lg ml-5" type="submit" value="show result" />
                     <h1>Vote Result</h1>
                 </div>
                 <div className="d-flex flex-sm-column flex-row justify-content-center">
                     <div className="order-1">
                         <Chart
                             width={'auto'}
-                            height={'500px'}
+                            height={'35vw'}
                             chartType="PieChart"
                             loader={<div>Loading Chart</div>}
                             data={[
@@ -104,5 +105,6 @@ class Tally extends Component {
         );
     }
 }
+
 
 export default Tally;

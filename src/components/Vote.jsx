@@ -9,6 +9,7 @@ import GlobalStatesBL from "../businessLayer/GlobalStatesBL";
 import { PHASE } from "../App";
 import voteimg from "./images/4585.jpg"
 import deniedimg from "./images/denied.png"
+import ok from "./images/ok.png"
 import emptyimg from "./images/noballots.jpg"
 
 let vote = null;
@@ -38,7 +39,7 @@ class Vote extends Component {
             timeToVote: null //If time for registration finished , Voting phase started
             , timeToReg: null
             , voted: null
-            , proof:""
+            , proof: ""
         }
 
         this.ballotBL.getBallotStatement().then(returnValue => {
@@ -62,7 +63,7 @@ class Vote extends Component {
         this.setState({ eligible: await this.BL.isEligible(this.context.account[0]) })
         this.setState({ timeToReg: await this.GL.inPhase(PHASE.REGISTER) })
         this.setState({ timeToVote: await this.GL.inPhase(PHASE.VOTE) })
-        
+
     }
 
     register = async (e) =>  //Function to register 
@@ -75,8 +76,7 @@ class Vote extends Component {
         //this.setState({registered:true});
     }
 
-    handleClickVote = async(event) =>
-    {  // submit vote button handler
+    handleClickVote = async (event) => {  // submit vote button handler
         event.preventDefault();
         if (vote == null) {  // if no option was selected
             alert("Please make a selection!");
@@ -85,12 +85,13 @@ class Vote extends Component {
             console.log(vote)
 
             this.VoteBL.generate1outOf2Proof(this.context.account[0]
-                ,vote).then(response=> {this.setState({proof:response});console.log(response); 
-                 this.VoteBL.submitVote(this.context.account[0] , vote ,response ).then(response=> {this.setState({voted:response}); console.log(response)})
-            })
-            
+                , vote).then(response => {
+                    this.setState({ proof: response }); console.log(response);
+                    this.VoteBL.submitVote(this.context.account[0], vote, response).then(response => { this.setState({ voted: response }); console.log(response) })
+                })
+
             this.setState({ flagVote: true });
-            
+
         }
     }
 
@@ -156,33 +157,36 @@ class Vote extends Component {
                 }
 
 
-                {!flagVote && this.state.ballotValue && this.state.registered && this.state.eligible && this.state.timeToVote && !this.state.voted&&//if time has begun --BUG--
+                {!flagVote && this.state.ballotValue && this.state.registered && this.state.eligible && this.state.timeToVote && !this.state.voted &&//if time has begun --BUG--
                     // shows when address is registered and there is a running ballot
                     <div className="m-5 " >
                         <div className="center text-center" style={{ width: "40%" }}>
                             <h2 className="head">Please cast your vote</h2>
                             <hr />
 
-                            <input onClick={() => this.setVote(0)} style={{ visibility: "hidden" }} type="radio" className="btn-check" name="vote" id="option1" autocomplete="off"></input>
-                            <label onClick={() => this.setVote(0)} className="btn btn-block" for="option1">{this.state.option0}</label>
+                            <input onClick={() => this.setVote(0)} style={{ visibility: "hidden" }} type="radio" className="btn-check vote-btn" name="vote" id="option1" autocomplete="off"></input>
+                            <label onClick={() => this.setVote(0)} className="btn btn-block vote-btn" for="option1">{this.state.option0}</label>
 
 
-                            <input onClick={() => this.setVote(1)} style={{ visibility: "hidden" }} type="radio" className="btn-check" name="vote" id="option2" autocomplete="off"></input>
-                            <label onClick={() => this.setVote(1)} className="btn btn-block" for="option2">{this.state.option1}</label>
+                            <input onClick={() => this.setVote(1)} style={{ visibility: "hidden" }} type="radio" className="btn-check vote-btn" name="vote" id="option2" autocomplete="off"></input>
+                            <label onClick={() => this.setVote(1)} className="btn btn-block vote-btn" for="option2">{this.state.option1}</label>
 
                             <hr />
 
-                            <input style={{border:"1px solid #1C437A"}} onClick={this.handleClickVote} className="m-5 votebutton" type="image" alt="Vote"
+                            <input style={{ border: "1px solid #1C437A" }} onClick={this.handleClickVote} className="m-5 votebutton" type="image" alt="Vote"
                                 src={votebutton}>
                             </input>
                         </div>
                     </div>
                 }
 
-                {this.state.voted&& //everything finished 
-                    <h2 className="center success text-center">
-                        Thank you for voting!
-                    </h2>
+                {this.state.voted && //everything finished 
+                    <div style={{ margin: 30 }}>
+                        <h2 style={{ marginBottom: 30 }} className="success text-center">Thank you for voting</h2>
+                        <div className="illust-wrapper">
+                            <img className="center illustration" src={ok} alt=""></img>
+                        </div>
+                    </div>
                 }
             </div>
         );
