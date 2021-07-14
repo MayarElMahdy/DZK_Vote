@@ -88,15 +88,17 @@
   }
 
 .btn{
-  border: 1px solid #db625c;
-  color: #db625c;
+  border: 1px solid #145183;
+  color: #145183;
 }
 
 .btn-check:hover + label{
-    background: #ff8781;
+    background: #bad1b9;
+    color: #145183;
 }
 
 .btn-check:checked + label{
-    background: #db625c;
-    color: white;
+    background: #9DD49A;
+    color: #456443;
+    border: 1px solid #7ca17a;
 }

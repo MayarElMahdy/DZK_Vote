@@ -126,7 +126,7 @@ class Vote extends Component {
                 }
 
 
-                {this.state.registered && this.state.ballotValue && this.state.eligible && !this.state.timeToVote &&//shown if registered but the voting phase has not begun
+                {this.state.registered && this.state.ballotValue && this.state.eligible && !this.state.timeToVote && this.state.timeToVote !== null &&//shown if registered but the voting phase has not begun
                     <div>
                         <img className="center vote-soon" src={voteimg} alt=""></img>
                         <div>
@@ -146,12 +146,12 @@ class Vote extends Component {
                             <h2 className="head">Please cast your vote</h2>
                             <hr />
 
-                            <input onClick={() => this.setVote(0)} style={{ visibility: "hidden" }} type="radio" className="btn-check" name="options" id="option1" autocomplete="off"></input>
-                            <label className="btn btn-block" for="option1">{this.state.option0}</label>
+                            <input onClick={() => this.setVote(0)} style={{ visibility: "hidden" }} type="radio" className="btn-check" name="vote" id="option1" autocomplete="off"></input>
+                            <label onClick={() => this.setVote(0)} className="btn btn-block" for="option1">{this.state.option0}</label>
 
 
-                            <input onClick={() => this.setVote(1)} style={{ visibility: "hidden" }} type="radio" className="btn-check" name="options" id="option2" autocomplete="off"></input>
-                            <label className="btn btn-block" for="option2">{this.state.option1}</label>
+                            <input onClick={() => this.setVote(1)} style={{ visibility: "hidden" }} type="radio" className="btn-check" name="vote" id="option2" autocomplete="off"></input>
+                            <label onClick={() => this.setVote(1)} className="btn btn-block" for="option2">{this.state.option1}</label>
 
                             <hr />
 
