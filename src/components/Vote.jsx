@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Web3Context } from "../web3-context";
 import RegistrationBL from "../businessLayer/RegistrationBL";
+import VotingBL from "../businessLayer/VotingBL";
 import votebutton from "./images/vote-icon.png";
 import './Vote.css';
 import CreateBallotBL from "../businessLayer/CreateBallotBL";
@@ -19,6 +20,8 @@ class Vote extends Component {
 
     GL = new GlobalStatesBL();
 
+    VoteBL = new VotingBL();
+
 
     constructor(props) {
         super(props);
@@ -34,6 +37,8 @@ class Vote extends Component {
             , eligible: null,
             timeToVote: null //If time for registration finished , Voting phase started
             , timeToReg: null
+            , voted: null
+            , proof:""
         }
 
         this.ballotBL.getBallotStatement().then(returnValue => {
@@ -53,9 +58,11 @@ class Vote extends Component {
         //let deposit = await this.BL.getMinimumDeposit()
         //this.setState({registered: await this.BL.register(this.context.account[0], deposit)})
         this.setState({ registered: await this.BL.isRegistered(this.context.account[0]) })
+        this.setState({ voted: await this.VoteBL.hasVoted(this.context.account[0]) })
         this.setState({ eligible: await this.BL.isEligible(this.context.account[0]) })
         this.setState({ timeToReg: await this.GL.inPhase(PHASE.REGISTER) })
         this.setState({ timeToVote: await this.GL.inPhase(PHASE.VOTE) })
+        
     }
 
     register = async (e) =>  //Function to register 
@@ -68,13 +75,22 @@ class Vote extends Component {
         //this.setState({registered:true});
     }
 
-    handleClickVote(event) {  // submit vote button handler
+    handleClickVote = async(event) =>
+    {  // submit vote button handler
         event.preventDefault();
         if (vote == null) {  // if no option was selected
             alert("Please make a selection!");
         } else { // an option was selected, continue to smart contract
+            //Call business layer of voting 
+            console.log(vote)
+
+            this.VoteBL.generate1outOf2Proof(this.context.account[0]
+                ,vote).then(response=> {this.setState({proof:response});console.log(response); 
+                 this.VoteBL.submitVote(this.context.account[0] , vote ,response ).then(response=> {this.setState({voted:response}); console.log(response)})
+            })
+            
             this.setState({ flagVote: true });
-            // alert("Vote successful!");
+            
         }
     }
 
@@ -91,6 +107,7 @@ class Vote extends Component {
         console.log("is eligible ? " + this.state.eligible);
         console.log("is voting phase ? " + this.state.timeToVote);
         console.log("is registeration phase ? " + this.state.timeToReg);
+        console.log("has voted ?" + this.state.voted);
 
         return (
 
@@ -139,7 +156,7 @@ class Vote extends Component {
                 }
 
 
-                {!flagVote && this.state.ballotValue && this.state.registered && this.state.eligible && this.state.timeToVote && //if time has begun --BUG--
+                {!flagVote && this.state.ballotValue && this.state.registered && this.state.eligible && this.state.timeToVote && !this.state.voted&&//if time has begun --BUG--
                     // shows when address is registered and there is a running ballot
                     <div className="m-5 " >
                         <div className="center text-center" style={{ width: "40%" }}>
@@ -162,7 +179,7 @@ class Vote extends Component {
                     </div>
                 }
 
-                {flagVote && //everything finished 
+                {this.state.voted&& //everything finished 
                     <h2 className="center success text-center">
                         Thank you for voting!
                     </h2>

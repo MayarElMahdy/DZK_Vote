@@ -7,6 +7,10 @@ export default class VotingBL {
     votingContract = window.votingContract;
     ZkpContract = window.localZkpContract;
 
+    async hasVoted(address) {
+        return await this.votingContract.methods.voteCast(address).call()
+    }
+
     // choice is either 0 or 1
     async generate1outOf2Proof(address, choice) {
         const privKey = this.getKeyFromCookies(address);
@@ -33,7 +37,7 @@ export default class VotingBL {
     }
 
     async submitVote(address, choice, proof) {
-
+        
         const res = proof.res.map((e) => {
             e = web3.utils.numberToHex(e);
             return e;
