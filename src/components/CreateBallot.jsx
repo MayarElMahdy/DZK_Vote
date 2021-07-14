@@ -193,12 +193,12 @@ class CreateBallot extends Component {
 
         return (
 
-            <div className="m-3">
+            <div style={{ height: "100%" }} className="m-3">
                 {!this.state.owner && this.state.owner != null &&
-                    <div style={{ margin: 60 }}>
+                    <div style={{ height: "100%", margin: 60 }}>
                         <h2 className="alert text-center">Only the Admin can create ballots</h2>
-                        <div>
-                        <img style={{maxHeight:"100%" ,width: "30%"}} className="center" src={deniedimg} alt=""></img>
+                        <div className="illust-wrapper">
+                            <img className="illustration center" src={deniedimg} alt=""></img>
                         </div>
                     </div>
                 }

@@ -4,6 +4,7 @@ import CreateBallotBL from "../businessLayer/CreateBallotBL";
 import GlobalStatesBL from "../businessLayer/GlobalStatesBL";
 import RegistrationBL from "../businessLayer/RegistrationBL";
 import denied from "./images/denied.png"
+import emptyimg from "./images/noballots.jpg"
 
 //This is available only after the admin has created the ballot
 class EditBallot extends Component {
@@ -112,8 +113,8 @@ class EditBallot extends Component {
                 {!this.state.owner &&
                     <div style={{ margin: 60 }}>
                         <h2 className="alert text-center">Only the admin can edit a ballot</h2>
-                        <div>
-                            <img style={{ width: "30%" }} className="center" src={denied}></img>
+                        <div className="illust-wrapper">
+                            <img className="illustration center" src={denied}></img>
                         </div>
                     </div>
 
@@ -144,8 +145,11 @@ class EditBallot extends Component {
 
                 }
                 {!this.state.value && this.state.owner &&
-                    <div>
-                        <h4 style={{ margin: 100 }}  >No Ballot was Created .. </h4>
+                    <div style={{ margin: 60 }}>
+                        <h2 className="head text-center">You didn't create any ballots yet!</h2>
+                        <div className="illust-wrapper">
+                            <img className="illustration center" src={emptyimg}></img>
+                        </div>
                     </div>
 
                 }
