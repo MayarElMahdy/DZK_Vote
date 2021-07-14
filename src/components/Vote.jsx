@@ -37,6 +37,7 @@ class Vote extends Component {
             registered: null
             , eligible: null,
             timeToVote: null //If time for registration finished , Voting phase started
+            , tallyTime: null
             , timeToReg: null
             , voted: null
             , proof: ""
@@ -63,6 +64,7 @@ class Vote extends Component {
         this.setState({ eligible: await this.BL.isEligible(this.context.account[0]) })
         this.setState({ timeToReg: await this.GL.inPhase(PHASE.REGISTER) })
         this.setState({ timeToVote: await this.GL.inPhase(PHASE.VOTE) })
+        this.setState({ tallyTime: await this.GL.inPhase(PHASE.TALLY) })
 
     }
 
@@ -109,11 +111,12 @@ class Vote extends Component {
         console.log("is voting phase ? " + this.state.timeToVote);
         console.log("is registeration phase ? " + this.state.timeToReg);
         console.log("has voted ?" + this.state.voted);
+        console.log("tally started ?" + this.state.tallyTime);
 
         return (
 
             <div>
-                {!this.state.ballotValue && this.state.ballotValue !== "null" && // shows when there is no ballot created
+                {!this.state.ballotValue && this.state.ballotValue !== "null" &&!this.tallyTime && // shows when there is no ballot created
                     <div style={{ margin: 60 }}>
                         <h2 className="head text-center">No election was started yet</h2>
                         <div className="illust-wrapper">
@@ -121,7 +124,7 @@ class Vote extends Component {
                         </div>
                     </div>
                 }
-                {!this.state.eligible && this.state.ballotValue && this.state.eligible !== null && this.state.ballotValue !== "null" &&//not eligible to vote
+                {!this.state.eligible && this.state.ballotValue && this.state.eligible !== null && this.state.ballotValue !== "null" &&!this.tallyTime &&//not eligible to vote
                     <div style={{ margin: 60 }}>
                         <h2 className="alert text-center">Ineligible members cannot register or vote</h2>
                         <div className="illust-wrapper">
@@ -129,7 +132,7 @@ class Vote extends Component {
                         </div>
                     </div>
                 }
-                {this.state.eligible && this.state.ballotValue && !this.state.registered &&//You are eligible to vote so please register
+                {this.state.eligible && this.state.ballotValue && !this.state.registered &&!this.tallyTime &&//You are eligible to vote so please register
                     <div style={{ margin: 60 }} >
                         <form onSubmit={this.register.bind(this)}>
                             <h2 className="head text-center">Please register first</h2>
@@ -144,7 +147,7 @@ class Vote extends Component {
                 }
 
 
-                {this.state.registered && this.state.ballotValue && this.state.eligible && !this.state.timeToVote && this.state.timeToVote !== null &&//shown if registered but the voting phase has not begun
+                {this.state.registered && this.state.ballotValue && this.state.eligible && !this.state.timeToVote && this.state.timeToVote !== null &&!this.tallyTime &&//shown if registered but the voting phase has not begun
                     <div>
                         <img className="center vote-soon" src={voteimg} alt=""></img>
                         <div>
@@ -157,7 +160,7 @@ class Vote extends Component {
                 }
 
 
-                {!flagVote && this.state.ballotValue && this.state.registered && this.state.eligible && this.state.timeToVote && !this.state.voted &&//if time has begun --BUG--
+                {!flagVote && this.state.ballotValue && this.state.registered && this.state.eligible && this.state.timeToVote && !this.state.voted &&!this.tallyTime &&//if time has begun --BUG--
                     // shows when address is registered and there is a running ballot
                     <div className="m-5 " >
                         <div className="center text-center" style={{ width: "40%" }}>
@@ -180,17 +183,18 @@ class Vote extends Component {
                     </div>
                 }
 
-                {!this.state.timeToReg && !this.state.registered  &&
-                    <div>
-                        {
-                            console.log("hi")
-                        }
+                {this.state.voted && !this.tallyTime &&//everything finished 
+                    <div style={{ margin: 30 }}>
+                        <h2 style={{ marginBottom: 30 }} className="success text-center">Thank you for voting</h2>
+                        <div className="illust-wrapper">
+                            <img className="center illustration" src={ok} alt=""></img>
+                        </div>
                     </div>
                 }
 
-                {this.state.voted && //everything finished 
+                {this.tallyTime &&//Tally
                     <div style={{ margin: 30 }}>
-                        <h2 style={{ marginBottom: 30 }} className="success text-center">Thank you for voting</h2>
+                        <h2 style={{ marginBottom: 30 }} className="success text-center">Tally has started.</h2>
                         <div className="illust-wrapper">
                             <img className="center illustration" src={ok} alt=""></img>
                         </div>
