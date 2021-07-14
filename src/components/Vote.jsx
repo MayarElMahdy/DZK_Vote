@@ -180,6 +180,14 @@ class Vote extends Component {
                     </div>
                 }
 
+                {!this.state.timeToReg && !this.state.registered  &&
+                    <div>
+                        {
+                            console.log("hi")
+                        }
+                    </div>
+                }
+
                 {this.state.voted && //everything finished 
                     <div style={{ margin: 30 }}>
                         <h2 style={{ marginBottom: 30 }} className="success text-center">Thank you for voting</h2>
