@@ -38,8 +38,8 @@ class Tally extends Component {
 
     static contextType = Web3Context;
 
-    result1 = ['zahraa', 536];
-    result2 = ['zahraa', 245];
+    result1 = ['Candidate 1', 536];
+    result2 = ['Candidate 2', 245];
 
     state = {
         chartImageURI: "",
