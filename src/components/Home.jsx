@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 
 import Create from "./images/ballot(2).png";
 import Edit from "./images/ballot(3).png";
@@ -7,8 +7,6 @@ import Vote from "./images/votee.png"
 import Tally from "./images/Tally.png"
 import banner from "./images/4448.jpg"
 import bluebg from "./images/mobile.png"
-import { left } from "@popperjs/core";
-import { width } from "@material-ui/system";
 
 
 function Home() {
@@ -16,12 +14,12 @@ function Home() {
     <div>
 
       <div id="bluebg" className="banner-wrapper">
-        <img className="banner-image" src={bluebg} alt=""></img>
+        <img className="banner-image" src={bluebg} alt=""/>
         <div className="absolute-wrapper">
           <div className="container">
             <div className="row">
               <div className="col-12">
-                <h1 className="overlay-text">DZK-VS</h1>
+                <h1 className="overlay-text">DZK Vote</h1>
               </div>
             </div>
             <div className="row">
@@ -58,8 +56,8 @@ function Home() {
             <Link to="/CreateBallot" style={{ textDecoration: 'none' }}>
               <div style={{ padding: "15px" }} className="row">
                 <div className="d-flex align-items-center select col-12">
-                  <img className="float-left select-img" src={Create} alt=""></img>
-                  <h4 className="select-font center" style={{ fontSize: "6.5vw" }}>Create ballot</h4>
+                  <img className="float-left select-img" src={Create} alt=""/>
+                  <h4 className="select-font center" style={{fontSize: "6.5vw"}}>Create ballot</h4>
                 </div>
               </div>
             </Link>

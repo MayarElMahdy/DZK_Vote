@@ -13,7 +13,7 @@ contract VotingSys is Owned {
     }
 
     address[] public addresses;
-    mapping(address => uint) public addressID; // Address to Counter
+    mapping(address => uint) public addressId; // Address to Counter
     mapping(uint => Voter) public voters;
     mapping(address => bool) public eligible; // White list of addresses allowed to vote
     mapping(address => bool) public registered; // Address registered?
@@ -47,7 +47,7 @@ contract VotingSys is Owned {
     }
 
     function getVoter() public returns (uint[2] _registeredKey, uint[2] _reconstructedKey) {
-        uint index = addressID[msg.sender];
+        uint index = addressId[msg.sender];
         _registeredKey = voters[index].registeredKey;
         _reconstructedKey = voters[index].reconstructedKey;
     }
@@ -112,9 +112,6 @@ contract VotingSys is Owned {
         }
     }
 
-    // called when someone try to:
-    // regester
-    // vote
     // in order to set to correct state and reset if finished
     function deadlinePassed() public returns (bool){
         uint[2] memory empty;
@@ -137,7 +134,7 @@ contract VotingSys is Owned {
                 reconstructedKey : empty,
                 vote : empty
                 });
-                addressID[addr] = 0;
+                addressId[addr] = 0;
                 // Remove index
                 voteCast[addr] = false;
                 // Remove that vote was cast
@@ -189,7 +186,7 @@ contract VotingSys is Owned {
                 // Update voter's registration
                 refunds[msg.sender] = msg.value;
                 uint[2] memory empty;
-                addressID[msg.sender] = totalRegistered;
+                addressId[msg.sender] = totalRegistered;
                 voters[totalRegistered] = Voter({
                 addr : msg.sender,
                 registeredKey : xG,
@@ -205,7 +202,6 @@ contract VotingSys is Owned {
         }
         return false;
     }
-
 
     // Timer has expired - we want to start computing the reconstructed keys
     function finishRegistrationPhase() public inState(State.REGISTER) onlyOwner returns (bool) {
@@ -294,7 +290,7 @@ contract VotingSys is Owned {
         //            return;
         //        }
 
-        uint i = addressID[msg.sender];
+        uint i = addressId[msg.sender];
 
         uint[2] memory yG = voters[i].reconstructedKey;
         uint[2] memory xG = voters[i].registeredKey;
@@ -331,7 +327,7 @@ contract VotingSys is Owned {
         return false;
     }
 
-    function computeTally() inState(State.VOTE) onlyOwner {
+    function computeTally() public inState(State.VOTE) onlyOwner returns (bool){
         uint[2] memory G;
         G[0] = Gx;
         G[1] = Gy;
@@ -379,7 +375,7 @@ contract VotingSys is Owned {
             if (!msg.sender.send(refund)) {
                 refunds[msg.sender] = refund;
             }
-            return;
+            return true;
         } else {
 
             // There must be a vote. So lets
@@ -410,7 +406,7 @@ contract VotingSys is Owned {
                     if (!msg.sender.send(refund)) {
                         refunds[msg.sender] = refund;
                     }
-                    return;
+                    return true;
                 }
 
                 // If something bad happens and we cannot find the Tally
@@ -437,7 +433,7 @@ contract VotingSys is Owned {
             if (!msg.sender.send(refund)) {
                 refunds[msg.sender] = refund;
             }
-            return;
+            return false;
         }
     }
 

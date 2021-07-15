@@ -1,6 +1,6 @@
 import React, {Component} from "react";
-import { Link, withRouter } from "react-router-dom";
-import { Web3Context } from "../web3-context";
+import {Link, withRouter} from "react-router-dom";
+import {Web3Context} from "../web3-context";
 
 class Navigation extends Component {
 
@@ -24,10 +24,10 @@ class Navigation extends Component {
       <div className="navigation">
         <nav className="navbar navbar-expand-md navbar-dark">
           <Link className="navbar-brand nav-logo" to="/">
-            DZK
-        </Link>
+            DZK Vote
+          </Link>
           <button className="navbar-toggler" type="button" data-toggle="collapse"
-            data-target="#navbarSupportedContent">
+                  data-target="#navbarSupportedContent">
             <span className="navbar-toggler-icon"></span>
           </button>
 
@@ -61,15 +61,17 @@ class Navigation extends Component {
                 </li>
 
                 <li className="nav-item dropdown">
-                  <a className="nav-link dropdown-toggle nav-links-right" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <a className="nav-link dropdown-toggle nav-links-right" href="#" id="navbarDropdownMenuLink"
+                     role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Account
                   </a>
-                  <ul className="dropdown-menu dropdown-menu-right text-center" aria-labelledby="navbarDropdownMenuLink">
-                    <br></br>
-                    <p className="address-dropdown">
+                  <ul className="dropdown-menu dropdown-menu-right text-center"
+                      aria-labelledby="navbarDropdownMenuLink">
+                    <br/>
+                    <div className="address-dropdown">
                       <h5>Account Address</h5>
                       <h6 className="mb-4">{this.context.account.toString()}</h6>
-                    </p>
+                    </div>
                   </ul>
                 </li>
               </ul>
