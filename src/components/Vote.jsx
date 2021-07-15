@@ -1,16 +1,17 @@
-import React, {Component} from "react";
-import {Web3Context} from "../web3-context";
+import React, { Component } from "react";
+import { Web3Context } from "../web3-context";
 import RegistrationBL from "../businessLayer/RegistrationBL";
 import VotingBL from "../businessLayer/VotingBL";
 import votebutton from "./images/vote-icon.png";
 import './Vote.css';
 import CreateBallotBL from "../businessLayer/CreateBallotBL";
 import GlobalStatesBL from "../businessLayer/GlobalStatesBL";
-import {PHASE} from "../App";
+import { PHASE } from "../App";
 import voteimg from "./images/4585.jpg"
 import deniedimg from "./images/denied.png"
 import ok from "./images/ok.png"
 import emptyimg from "./images/noballots.jpg"
+import closed from "./images/lock.png"
 
 let vote = null;
 
@@ -116,7 +117,7 @@ class Vote extends Component {
         return (
 
             <div>
-                {!this.state.ballotValue && this.state.ballotValue !== "null" &&!this.state.tallyTime && // shows when there is no ballot created
+                {!this.state.ballotValue && this.state.ballotValue !== "null" && !this.state.tallyTime && // shows when there is no ballot created
                     <div style={{ margin: 60 }}>
                         <h2 className="head text-center">No election was started yet</h2>
                         <div className="illust-wrapper">
@@ -124,7 +125,7 @@ class Vote extends Component {
                         </div>
                     </div>
                 }
-                {!this.state.eligible && this.state.ballotValue && this.state.eligible !== null && this.state.ballotValue !== "null" &&!this.state.tallyTime &&//not eligible to vote
+                {!this.state.eligible && this.state.ballotValue && this.state.eligible !== null && this.state.ballotValue !== "null" && !this.state.tallyTime &&//not eligible to vote
                     <div style={{ margin: 60 }}>
                         <h2 className="alert text-center">Ineligible members cannot register or vote</h2>
                         <div className="illust-wrapper">
@@ -132,7 +133,7 @@ class Vote extends Component {
                         </div>
                     </div>
                 }
-                {this.state.eligible && this.state.ballotValue && !this.state.registered &&!this.state.tallyTime &&//You are eligible to vote so please register
+                {this.state.eligible && this.state.ballotValue && !this.state.registered && this.state.timeToReg &&//You are eligible to vote so please register
                     <div style={{ margin: 60 }} >
                         <form onSubmit={this.register.bind(this)}>
                             <h2 className="head text-center">Please register first</h2>
@@ -147,7 +148,7 @@ class Vote extends Component {
                 }
 
 
-                {this.state.registered && this.state.ballotValue && this.state.eligible && !this.state.timeToVote && this.state.timeToVote !== null &&!this.state.tallyTime &&//shown if registered but the voting phase has not begun
+                {this.state.registered && this.state.ballotValue && this.state.eligible && !this.state.timeToVote && this.state.timeToVote !== null && !this.state.tallyTime &&//shown if registered but the voting phase has not begun
                     <div>
                         <img className="center vote-soon" src={voteimg} alt=""></img>
                         <div>
@@ -160,7 +161,7 @@ class Vote extends Component {
                 }
 
 
-                {!flagVote && this.state.ballotValue && this.state.registered && this.state.eligible && this.state.timeToVote && !this.state.voted &&!this.state.tallyTime &&//if time has begun --BUG--
+                {!flagVote && this.state.ballotValue && this.state.registered && this.state.eligible && this.state.timeToVote && !this.state.voted && !this.state.tallyTime &&//if time has begun --BUG--
                     // shows when address is registered and there is a running ballot
                     <div className="m-5 " >
                         <div className="center text-center" style={{ width: "40%" }}>
@@ -190,6 +191,15 @@ class Vote extends Component {
                             <img className="center illustration" src={ok} alt=""></img>
                         </div>
                     </div>
+                }
+
+                {!this.state.timeToReg && !this.state.registered &&
+                    <div style={{ marginTop: "10%" }}>
+                    <h2 style={{ marginBottom: 30 }} className="head text-center">Registration Closed</h2>
+                    <div className="illust-wrapper m-5">
+                        <img className="center lock" src={closed} alt=""></img>
+                    </div>
+                </div>
                 }
 
                 {this.state.tallyTime &&//Tally
