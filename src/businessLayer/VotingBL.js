@@ -78,7 +78,12 @@ export default class VotingBL {
 
     async tally(address) {
         try {
-            return await this.votingContract.methods.computeTally().call({from: address});
+            const success = await this.votingContract.methods.computeTally().call({from: address});
+            if (success) {
+                return await this.votingContract.methods.computeTally().send({from: address});
+            } else {
+                return false;
+            }
         } catch (e) {
             console.log(e);
             return false;
