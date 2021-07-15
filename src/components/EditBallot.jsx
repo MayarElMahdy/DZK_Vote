@@ -5,6 +5,7 @@ import GlobalStatesBL from "../businessLayer/GlobalStatesBL";
 import RegistrationBL from "../businessLayer/RegistrationBL";
 import denied from "./images/denied.png"
 import emptyimg from "./images/noballots.jpg"
+import VotingBL from "../businessLayer/VotingBL";
 
 //This is available only after the admin has created the ballot
 class EditBallot extends Component {
@@ -13,6 +14,7 @@ class EditBallot extends Component {
     BL = new CreateBallotBL();
     GS = new GlobalStatesBL();
     regBL = new RegistrationBL(window.votingContract, window.localZkpContract);
+    BL2 = new VotingBL();
 
     constructor(props) {
         super(props);
@@ -43,6 +45,10 @@ class EditBallot extends Component {
                 this.setState({finishRegistration: true})
             }
         );
+    }
+    startTally = async() =>
+    {
+        await this.BL2.tally(this.context.account[0]);
     }
 
 
@@ -167,6 +173,22 @@ class EditBallot extends Component {
                             <div className="center text-center" style={{ width: "40%" }}>
                                 <br></br><br></br>
                                 <button onClick={() => this.finishRegistration()} type="button" class="btn btn-danger btn-block">Start Election</button>
+                                <br></br><br></br><br></br><br></br><br></br><br></br>
+                                <br></br><br></br><br></br><br></br><br></br><br></br>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 className="head">Tally settings</h3>
+                        </div>
+                        <hr></hr>
+                        <div >
+                            <div className="row">
+                                <h4 style={{ color: "red" }}>Danger Zone:&nbsp;</h4>
+                                <h4 className="head">By clicking this button Tally begins </h4>
+                            </div>
+                            <div className="center text-center" style={{ width: "40%" }}>
+                                <br></br><br></br>
+                                <button onClick={() => this.startTally()} type="button" class="btn btn-danger btn-block">Start Election</button>
                                 <br></br><br></br><br></br><br></br><br></br><br></br>
                                 <br></br><br></br><br></br><br></br><br></br><br></br>
                             </div>

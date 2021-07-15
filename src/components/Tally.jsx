@@ -38,34 +38,39 @@ class Tally extends Component {
 
     static contextType = Web3Context;
 
-    result1 = ['Candidate 1', 50];
-    result2 = ['Candidate 2', 0];
+    
 
     state = {
         chartImageURI: "",
         yes: "",
-        no: ""
+        no: "",
+        result1:null,
+        result2:null
+        
     };
     BL = new VotingBL();
 
     constructor(props, r1, r2) {
         super(props);
 
-        /*
-        this.result1 = r1;
-        this.result2 = r2;*/
+        
     }
     
     componentDidMount = async () => {
-        const proof = await this.BL.generate1outOf2Proof(this.context.account[0], 1);
+        //const proof = await this.BL.generate1outOf2Proof(this.context.account[0], 1);
         // console.log(await this.BL.submitVote(this.context.account[0], 1, proof));
         
-        //await this.BL.tally(this.context.account[0]);
+        
         
 
         // use this 3ady
         const result = await this.BL.getTalliedResult(this.context.account[0]);
+        const cand1 = await this.BL.getCand1();
+        const cand2 = await this.BL.getCand2();
+        console.log(cand1)
         this.setState({ yes: result.votedYes, no: result.votedNo });
+        this.setState({result1:[cand1, result.votedYes] , result2 :[cand2 , result.votedNo] }) ;
+        
         
     };
 
@@ -75,8 +80,8 @@ class Tally extends Component {
         return (
             <div className="container-fluid column">
                 <div className="text-center mt-5 row">
-                    <h6>{'tally: ' + this.state.yes + " yes and " + this.state.no + " no"}</h6>
-                    <input className="btn submit-button btn-lg ml-5" type="submit" value="show result" />
+                    
+                    
                     <h1>Vote Result</h1>
                 </div>
                 <div className="d-flex flex-sm-column flex-row justify-content-center">
@@ -88,8 +93,8 @@ class Tally extends Component {
                             loader={<div>Loading Chart</div>}
                             data={[
                                 ['Candidate', 'No_of_votes'],
-                                this.result1,
-                                this.result2
+                                this.state.result1,
+                                this.state.result2
                             ]}
                             options={pieOptions}
                             legend_toggle

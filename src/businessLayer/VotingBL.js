@@ -10,7 +10,15 @@ export default class VotingBL {
     async hasVoted(address) {
         return await this.votingContract.methods.voteCast(address).call()
     }
+    async getCand1()
+    {
+        return await this.votingContract.methods.options(0).call();
+    }
 
+    async getCand2()
+    {
+        return await this.votingContract.methods.options(1).call();
+    }
     // choice is either 0 or 1
     async generate1outOf2Proof(address, choice) {
         const privKey = this.getKeyFromCookies(address);
@@ -77,14 +85,12 @@ export default class VotingBL {
     }
 
     async tally(address) {
-<<<<<<< HEAD
-        return await this.votingContract.methods.computeTally().send({from: address});
-       
-=======
         try {
+            
             const success = await this.votingContract.methods.computeTally().call({from: address});
             if (success) {
                 return await this.votingContract.methods.computeTally().send({from: address});
+                
             } else {
                 return false;
             }
@@ -92,7 +98,6 @@ export default class VotingBL {
             console.log(e);
             return false;
         }
->>>>>>> 8c976c4dde29ff94331257b06e0de0d790c330dd
 
     }
 
