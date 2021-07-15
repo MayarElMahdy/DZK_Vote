@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { Web3Context } from "../web3-context";
+import React, {Component} from "react";
+import {Web3Context} from "../web3-context";
 import CreateBallotBL from "../businessLayer/CreateBallotBL";
 import GlobalStatesBL from "../businessLayer/GlobalStatesBL";
 import RegistrationBL from "../businessLayer/RegistrationBL";
@@ -12,7 +12,7 @@ class EditBallot extends Component {
     // create the businessLayer class
     BL = new CreateBallotBL();
     GS = new GlobalStatesBL();
-    RegBL = new RegistrationBL();
+    regBL = new RegistrationBL(window.votingContract, window.localZkpContract);
 
     constructor(props) {
         super(props);
@@ -21,12 +21,12 @@ class EditBallot extends Component {
             , errorsTxtfile: ""
             , value: ""
             , owner: true
+            , finishRegistration: false
 
         }
         this.BL.getBallotStatement().then(returnValue => {
-            this.setState({ value: returnValue });
+            this.setState({value: returnValue});
         })
-
 
 
         this.fileInput = React.createRef();
@@ -34,12 +34,17 @@ class EditBallot extends Component {
     }
 
     componentDidMount = async () => {
-        this.setState({ owner: await this.GS.isOwner(this.context.account[0]) });
+        this.setState({owner: await this.GS.isOwner(this.context.account[0])});
+
     }
 
-    finish_registration() {
-        this.RegBL.finishRegistrationPhase(this.context.account[0]);
+    finishRegistration() {
+        this.regBL.finishRegistrationPhase(this.context.account[0]).then(() => {
+                this.setState({finishRegistration: true})
+            }
+        );
     }
+
 
     contactSubmit(e) {
         e.preventDefault();
@@ -47,7 +52,7 @@ class EditBallot extends Component {
         if (this.handleValidation()) {
 
 
-            this.setState({ txtfile: "" });
+            this.setState({txtfile: ""});
 
 
         } else {
@@ -60,7 +65,7 @@ class EditBallot extends Component {
     handleChange(field, e) {
         let txtfile = this.state.txtfile;
         txtfile = e.target.value;
-        this.setState({ txtfile });
+        this.setState({txtfile});
     }
 
     handleValidation() {
@@ -97,7 +102,7 @@ class EditBallot extends Component {
 
         }.bind(this)
         reader.readAsText(file);
-        this.setState({ errorsTxtfile: errorsTxtfile });
+        this.setState({errorsTxtfile: errorsTxtfile});
 
         return formIsValid
     }
@@ -105,7 +110,7 @@ class EditBallot extends Component {
 
     render() {
 
-        let labels = ["Ballot Name: ", "First Candidate: ", "Second Candidate: "];
+        let labels = ["Ballot Statement: ", "First Option: ", "Second Option: "];
 
         return (
             <div>
@@ -161,7 +166,7 @@ class EditBallot extends Component {
                             </div>
                             <div className="center text-center" style={{ width: "40%" }}>
                                 <br></br><br></br>
-                                <button onClick={() => this.finish_registration()} type="button" class="btn btn-danger btn-block">Start Election</button>
+                                <button onClick={() => this.finishRegistration()} type="button" class="btn btn-danger btn-block">Start Election</button>
                                 <br></br><br></br><br></br><br></br><br></br><br></br>
                                 <br></br><br></br><br></br><br></br><br></br><br></br>
                             </div>

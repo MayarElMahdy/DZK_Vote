@@ -72,13 +72,17 @@ export default class VotingBL {
         return await this.votingContract.methods.getVoter().call({from: address});
     }
 
-
     getKeyFromCookies(address) {
         return this.getCookie(address);
     }
 
     async tally(address) {
-        await this.votingContract.methods.computeTally().send({from: address});
+        try {
+            return await this.votingContract.methods.computeTally().call({from: address});
+        } catch (e) {
+            console.log(e);
+            return false;
+        }
 
     }
 

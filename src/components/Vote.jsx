@@ -1,12 +1,12 @@
-import React, { Component } from "react";
-import { Web3Context } from "../web3-context";
+import React, {Component} from "react";
+import {Web3Context} from "../web3-context";
 import RegistrationBL from "../businessLayer/RegistrationBL";
 import VotingBL from "../businessLayer/VotingBL";
 import votebutton from "./images/vote-icon.png";
 import './Vote.css';
 import CreateBallotBL from "../businessLayer/CreateBallotBL";
 import GlobalStatesBL from "../businessLayer/GlobalStatesBL";
-import { PHASE } from "../App";
+import {PHASE} from "../App";
 import voteimg from "./images/4585.jpg"
 import deniedimg from "./images/denied.png"
 import ok from "./images/ok.png"
@@ -16,7 +16,7 @@ let vote = null;
 
 class Vote extends Component {
     static contextType = Web3Context;
-    BL = new RegistrationBL();
+    BL = new RegistrationBL(window.votingContract, window.localZkpContract);
     ballotBL = new CreateBallotBL();
 
     GL = new GlobalStatesBL();
@@ -109,7 +109,7 @@ class Vote extends Component {
         console.log("is registered ? " + this.state.registered);
         console.log("is eligible ? " + this.state.eligible);
         console.log("is voting phase ? " + this.state.timeToVote);
-        console.log("is registeration phase ? " + this.state.timeToReg);
+        console.log("is registration phase ? " + this.state.timeToReg);
         console.log("has voted ?" + this.state.voted);
         console.log("tally started ?" + this.state.tallyTime);
 
