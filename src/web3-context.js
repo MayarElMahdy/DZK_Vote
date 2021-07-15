@@ -6,7 +6,6 @@ import React from "react";
 
 export const Web3Context = React.createContext({web3: null, account: null});
 
-export let localCryptoContract = null;
 
 export async function loadWeb3() {
     try {

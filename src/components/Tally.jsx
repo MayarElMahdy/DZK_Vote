@@ -1,7 +1,7 @@
-import React, { Component } from "react";
-import { Chart } from "react-google-charts";
+import React, {Component} from "react";
+import {Chart} from "react-google-charts";
 import VotingBL from "../businessLayer/VotingBL";
-import { Web3Context } from "../web3-context";
+import {Web3Context} from "../web3-context";
 
 const pieOptions = {
     title: "",
@@ -60,7 +60,6 @@ class Tally extends Component {
         const proof = await this.BL.generate1outOf2Proof(this.context.account[0], 1);
         // console.log(await this.BL.submitVote(this.context.account[0], 1, proof));
 
-        // use this once, el mra el tnya htedrb
         await this.BL.tally(this.context.account[0]);
 
         // use this 3ady
@@ -68,11 +67,6 @@ class Tally extends Component {
         this.setState({ yes: result.votedYes, no: result.votedNo });
     };
 
-    // msh 3arf a3ml el button XD
-    tally = async (e) => {
-        e.preventDefault();
-
-    };
 
 
     render() {

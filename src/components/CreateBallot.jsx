@@ -28,6 +28,7 @@ class CreateBallot extends Component {
 
         this.fileInput = React.createRef();
     }
+
     componentDidMount = async () => {
         this.setState({ owner: await this.GS.isOwner(this.context.account[0]) });
     }

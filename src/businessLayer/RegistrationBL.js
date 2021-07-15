@@ -1,10 +1,14 @@
-import web3 from "web3";
-
+const web3 = require("web3");
 const EC = require('elliptic').ec;
 
-export default class RegistrationBL {
-    votingContract = window.votingContract;
-    ZkpContract = window.localZkpContract;
+class RegistrationBL {
+    votingContract;
+    ZkpContract;
+
+    constructor(providedVotingContract, providedZkpContract) {
+        this.votingContract = providedVotingContract;
+        this.ZkpContract = providedZkpContract;
+    }
 
     // returns boolean if user is eligible to vote or not
     async isEligible(address) {
@@ -107,3 +111,5 @@ export default class RegistrationBL {
         document.cookie = updatedCookie;
     }
 }
+
+module.exports = RegistrationBL;

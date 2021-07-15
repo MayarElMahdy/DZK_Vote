@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { Web3Context } from "../web3-context";
+import React, {Component} from "react";
+import {Web3Context} from "../web3-context";
 import CreateBallotBL from "../businessLayer/CreateBallotBL";
 import GlobalStatesBL from "../businessLayer/GlobalStatesBL";
 import RegistrationBL from "../businessLayer/RegistrationBL";
@@ -12,7 +12,7 @@ class EditBallot extends Component {
     // create the businessLayer class
     BL = new CreateBallotBL();
     GS = new GlobalStatesBL();
-    RegBL = new RegistrationBL();
+    regBL = new RegistrationBL(window.votingContract, window.localZkpContract);
 
     constructor(props) {
         super(props);
@@ -21,12 +21,12 @@ class EditBallot extends Component {
             , errorsTxtfile: ""
             , value: ""
             , owner: true
+            , finishRegistration: false
 
         }
         this.BL.getBallotStatement().then(returnValue => {
-            this.setState({ value: returnValue });
+            this.setState({value: returnValue});
         })
-
 
 
         this.fileInput = React.createRef();
@@ -34,11 +34,16 @@ class EditBallot extends Component {
     }
 
     componentDidMount = async () => {
-        this.setState({ owner: await this.GS.isOwner(this.context.account[0]) });
+        this.setState({owner: await this.GS.isOwner(this.context.account[0])});
 
-        await this.RegBL.finishRegistrationPhase(this.context.account[0]);
     }
 
+    finishRegistration() {
+        this.regBL.finishRegistrationPhase(this.context.account[0]).then(() => {
+                this.setState({finishRegistration: true})
+            }
+        );
+    }
 
 
     contactSubmit(e) {
@@ -47,7 +52,7 @@ class EditBallot extends Component {
         if (this.handleValidation()) {
 
 
-            this.setState({ txtfile: "" });
+            this.setState({txtfile: ""});
 
 
         } else {
@@ -60,7 +65,7 @@ class EditBallot extends Component {
     handleChange(field, e) {
         let txtfile = this.state.txtfile;
         txtfile = e.target.value;
-        this.setState({ txtfile });
+        this.setState({txtfile});
     }
 
     handleValidation() {
@@ -97,7 +102,7 @@ class EditBallot extends Component {
 
         }.bind(this)
         reader.readAsText(file);
-        this.setState({ errorsTxtfile: errorsTxtfile });
+        this.setState({errorsTxtfile: errorsTxtfile});
 
         return formIsValid
     }
@@ -105,7 +110,7 @@ class EditBallot extends Component {
 
     render() {
 
-        let labels = ["Ballot Name: ", "First Candidate: ", "Second Candidate: "];
+        let labels = ["Ballot Statement: ", "First Option: ", "Second Option: "];
 
         return (
             <div>
@@ -120,16 +125,23 @@ class EditBallot extends Component {
 
                 }
                 {this.state.value && this.state.owner &&
-                    <div className="text-center">
-                        <h3 className="head text-center" style={{ margin: 60 }}>
-                            Your current ballot statement is:  </h3>
-                        <span className="spann">
-                            {this.state.value.map((value, index) => {
-                                return <h2 className="head text-center" key={index}>{labels[index] + value}</h2>
-                            })
-                            }
-                        </span>
+
+                    <div className="m-5">
+
+                        <div>
+                            <h3 className="head">Ballot Settings</h3>
+                        </div>
                         <hr></hr>
+                        <div className="text-center">
+                            <h3 className="head text-center">
+                                Your current ballot is:  </h3>
+                            <span className="spann text-center">
+                                {this.state.value.map((value, index) => {
+                                    return <h2 className="head text-center" key={index}>{labels[index] + value}</h2>
+                                })
+                                }
+                            </span>
+                        </div>
                         <form onSubmit={this.contactSubmit.bind(this)} style={{ margin: 100 }} className="form">
                             <div className="head" style={{ fontSize: "18px" }}>
                                 <label htmlFor="myfile">Please insert the new list of voters :  &emsp;&emsp; </label>
@@ -141,6 +153,24 @@ class EditBallot extends Component {
                             <br></br> <br></br>
                             <input className="btn submit-button" type="submit" value="Add Voters" />
                         </form>
+                        <br></br><br></br><br></br><br></br><br></br><br></br>
+
+                        <div>
+                            <h3 className="head">Election settings</h3>
+                        </div>
+                        <hr></hr>
+                        <div >
+                            <div className="row">
+                                <h4 style={{ color: "red" }}>Danger Zone:&nbsp;</h4>
+                                <h4 className="head">By clicking this button registration phase closes and the voting phase begins </h4>
+                            </div>
+                            <div className="center text-center" style={{ width: "40%" }}>
+                                <br></br><br></br>
+                                <button onClick={() => this.finishRegistration()} type="button" class="btn btn-danger btn-block">Start Election</button>
+                                <br></br><br></br><br></br><br></br><br></br><br></br>
+                                <br></br><br></br><br></br><br></br><br></br><br></br>
+                            </div>
+                        </div>
                     </div>
 
                 }
