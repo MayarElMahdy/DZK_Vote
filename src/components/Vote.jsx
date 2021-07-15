@@ -65,7 +65,7 @@ class Vote extends Component {
         this.setState({ eligible: await this.BL.isEligible(this.context.account[0]) })
         this.setState({ timeToReg: await this.GL.inPhase(PHASE.REGISTER) })
         this.setState({ timeToVote: await this.GL.inPhase(PHASE.VOTE) })
-        this.setState({ tallyTime: await this.GL.inPhase(PHASE.TALLY) })
+        this.setState({ tallyTime: await this.GL.inPhase(PHASE.FINISH) })
 
     }
 

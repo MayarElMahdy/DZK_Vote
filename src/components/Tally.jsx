@@ -38,8 +38,8 @@ class Tally extends Component {
 
     static contextType = Web3Context;
 
-    result1 = ['Candidate 1', 536];
-    result2 = ['Candidate 2', 245];
+    result1 = ['Candidate 1', 50];
+    result2 = ['Candidate 2', 0];
 
     state = {
         chartImageURI: "",
@@ -55,16 +55,18 @@ class Tally extends Component {
         this.result1 = r1;
         this.result2 = r2;*/
     }
-
+    
     componentDidMount = async () => {
         const proof = await this.BL.generate1outOf2Proof(this.context.account[0], 1);
         // console.log(await this.BL.submitVote(this.context.account[0], 1, proof));
-
-        await this.BL.tally(this.context.account[0]);
+        
+        //await this.BL.tally(this.context.account[0]);
+        
 
         // use this 3ady
         const result = await this.BL.getTalliedResult(this.context.account[0]);
         this.setState({ yes: result.votedYes, no: result.votedNo });
+        
     };
 
 
