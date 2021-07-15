@@ -7,11 +7,11 @@ import Vote from "./images/votee.png"
 import Tally from "./images/Tally.png"
 import banner from "./images/4448.jpg"
 import bluebg from "./images/mobile.png"
-import { left } from "@popperjs/core";
-import { width } from "@material-ui/system";
 import { Web3Context } from "../web3-context";
 import CreateBallotBL from "../businessLayer/CreateBallotBL";
 import GlobalStatesBL from "../businessLayer/GlobalStatesBL";
+import { left } from "@popperjs/core";
+import { width } from "@material-ui/system";
 
 
 class Home extends Component {
