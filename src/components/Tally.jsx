@@ -54,6 +54,7 @@ class Tally extends Component {
         /*
         this.result1 = r1;
         this.result2 = r2;*/
+
     }
 
     componentDidMount = async () => {
@@ -66,7 +67,7 @@ class Tally extends Component {
         const result = await this.BL.getTalliedResult(this.context.account[0]);
         this.setState({ yes: result.votedYes, no: result.votedNo });
     };
-    
+
 
     render() {
         return (
