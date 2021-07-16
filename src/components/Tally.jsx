@@ -66,8 +66,7 @@ class Tally extends Component {
         const result = await this.BL.getTalliedResult(this.context.account[0]);
         this.setState({ yes: result.votedYes, no: result.votedNo });
     };
-
-
+    
 
     render() {
         return (

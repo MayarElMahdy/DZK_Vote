@@ -20,8 +20,8 @@ class EditBallot extends Component {
             txtfile: ""
             , errorsTxtfile: ""
             , value: ""
-            , owner: true
-            , finishRegistration: false
+            , owner: null
+            , finishRegistration: null
 
         }
         this.BL.getBallotStatement().then(returnValue => {

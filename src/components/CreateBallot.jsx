@@ -190,6 +190,7 @@ class CreateBallot extends Component {
         console.log("is eligible " + this.state.eligible);
         console.log("transaction " + this.state.transaction);
         console.log("owner " + this.state.owner);
+        console.log("is ballot " + this.state.b);
         let labels = ["Ballot Name: ", "First Candidate: ", "Second Candidate: "];
 
         return (
@@ -275,7 +276,7 @@ class CreateBallot extends Component {
                     </div>
                 }
 
-                {this.state.value && this.state.owner && this.state.transaction !== "Transaction Failed" &&// when creation is complete
+                {this.state.value && this.state.owner && this.state.transaction !== "Transaction Failed" && this.state.value !== [] &&// when creation is complete
                     <div className="text-center">
                         <br></br>
                         <h2 className="success text-center"> Ballot Successfully Created</h2>
