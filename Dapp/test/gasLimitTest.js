@@ -4,7 +4,7 @@ const EC = require('elliptic').ec;
 
 let totalGasUsed = 0;
 let privKeys = [];
-let totalTesting = 50;
+let totalTesting = 30;
 
 let yesVotes = 0;
 let noVotes = 0;
