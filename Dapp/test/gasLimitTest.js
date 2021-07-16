@@ -4,14 +4,25 @@ const EC = require('elliptic').ec;
 
 let totalGasUsed = 0;
 let privKeys = [];
-let totalTesting = 50;
+let totalTesting = 25;
 
 let yesVotes = 0;
 let noVotes = 0;
 
 contract("Gas limits testing", async accounts => {
+
+    it("transfer ownership", async () => {
+        const votingContract = await VotingContract.deployed();
+        const res = await votingContract.transferOwnership(accounts[1], {from: accounts[0]})
+        const gasUsed = res.receipt.gasUsed
+        console.log("gas used to transfer ownership: " + gasUsed);
+        totalGasUsed += gasUsed;
+    })
+
+
     it("Create ballot", async () => {
         const votingContract = await VotingContract.deployed();
+        const eligibleAccounts = accounts.slice(0, totalTesting);
         const res = await votingContract.creatBallot(
             "ballotStatement",
             "option1",
@@ -19,11 +30,11 @@ contract("Gas limits testing", async accounts => {
             1626865294,
             1626975294,
             12345,
-            accounts
+            eligibleAccounts
             , {
-                from: accounts[0]
+                from: accounts[1]
             })
-        const gasUsed = res.receipt.gasUsed
+        const gasUsed = res.receipt.cumulativeGasUsed
         console.log("gas used to create ballot: " + gasUsed);
         totalGasUsed += gasUsed;
         const currPhase = (await votingContract.currentState()).toString();
@@ -74,7 +85,7 @@ contract("Gas limits testing", async accounts => {
 
     it("Finish registration phase", async () => {
         const votingContract = await VotingContract.deployed();
-        const res = await votingContract.finishRegistrationPhase({from: accounts[0]});
+        const res = await votingContract.finishRegistrationPhase({from: accounts[1]});
         const gasUsed = res.receipt.cumulativeGasUsed
         console.log("gas used to finish registration: " + gasUsed);
         totalGasUsed += gasUsed;
@@ -103,7 +114,7 @@ contract("Gas limits testing", async accounts => {
     it("tally results", async () => {
         console.log("Total gas used in voting: " + votingTotalGas);
         const votingContract = await VotingContract.deployed();
-        const res = await votingContract.computeTally({from: accounts[0]});
+        const res = await votingContract.computeTally({from: accounts[1]});
         const gasUsed = res.receipt.cumulativeGasUsed
         console.log("gas used to tally results: " + gasUsed);
         totalGasUsed += gasUsed;
@@ -113,7 +124,7 @@ contract("Gas limits testing", async accounts => {
 
         assert.equal(votedYes, yesVotes, "votes doesn't match");
         assert.equal(votedNo, noVotes, "votes doesn't match");
-        console.log("total gas used for the whole process" + totalGasUsed);
+        console.log("total gas used for the whole process: " + totalGasUsed);
 
     });
 
