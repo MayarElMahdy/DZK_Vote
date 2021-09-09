@@ -193,7 +193,7 @@ class Vote extends Component {
                     </div>
                 }
 
-                {!this.state.timeToReg && !this.state.registered &&
+                {!this.state.timeToReg && !this.state.registered && this.state.timeToReg !== null && this.state.registered !== null &&
                     <div style={{ marginTop: "10%" }}>
                     <h2 style={{ marginBottom: 30 }} className="head text-center">Registration Closed</h2>
                     <div className="illust-wrapper m-5">

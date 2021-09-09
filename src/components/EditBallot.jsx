@@ -1,5 +1,5 @@
-import React, {Component} from "react";
-import {Web3Context} from "../web3-context";
+import React, { Component } from "react";
+import { Web3Context } from "../web3-context";
 import CreateBallotBL from "../businessLayer/CreateBallotBL";
 import GlobalStatesBL from "../businessLayer/GlobalStatesBL";
 import RegistrationBL from "../businessLayer/RegistrationBL";
@@ -24,10 +24,11 @@ class EditBallot extends Component {
             , value: ""
             , owner: null
             , finishRegistration: null
+            , isTally: null
 
         }
         this.BL.getBallotStatement().then(returnValue => {
-            this.setState({value: returnValue});
+            this.setState({ value: returnValue });
         })
 
 
@@ -36,19 +37,24 @@ class EditBallot extends Component {
     }
 
     componentDidMount = async () => {
-        this.setState({owner: await this.GS.isOwner(this.context.account[0])});
+        this.setState({ owner: await this.GS.isOwner(this.context.account[0]) });
 
     }
 
     finishRegistration() {
         this.regBL.finishRegistrationPhase(this.context.account[0]).then(() => {
-                this.setState({finishRegistration: true})
-            }
+            this.setState({ finishRegistration: true })
+        }
         );
     }
-    startTally = async() =>
-    {
-        await this.BL2.tally(this.context.account[0]);
+
+    startTally = async () => {
+        if (!this.state.isTally || !this.state.isTally === null) {
+            await this.BL2.tally(this.context.account[0]);
+            this.setState({ isTally: true });
+        } else {
+            console.log("Tally already began!!");
+        }
     }
 
 
@@ -58,7 +64,7 @@ class EditBallot extends Component {
         if (this.handleValidation()) {
 
 
-            this.setState({txtfile: ""});
+            this.setState({ txtfile: "" });
 
 
         } else {
@@ -71,7 +77,7 @@ class EditBallot extends Component {
     handleChange(field, e) {
         let txtfile = this.state.txtfile;
         txtfile = e.target.value;
-        this.setState({txtfile});
+        this.setState({ txtfile });
     }
 
     handleValidation() {
@@ -108,7 +114,7 @@ class EditBallot extends Component {
 
         }.bind(this)
         reader.readAsText(file);
-        this.setState({errorsTxtfile: errorsTxtfile});
+        this.setState({ errorsTxtfile: errorsTxtfile });
 
         return formIsValid
     }
@@ -172,7 +178,7 @@ class EditBallot extends Component {
                             </div>
                             <div className="center text-center" style={{ width: "40%" }}>
                                 <br></br><br></br>
-                                <button onClick={() => this.finishRegistration()} type="button" class="btn btn-danger btn-block">Start Election</button>
+                                <button onClick={() => this.finishRegistration()} type="button" className="btn btn-danger btn-block">Start Election</button>
                                 <br></br><br></br><br></br><br></br><br></br><br></br>
                                 <br></br><br></br><br></br><br></br><br></br><br></br>
                             </div>
@@ -188,7 +194,7 @@ class EditBallot extends Component {
                             </div>
                             <div className="center text-center" style={{ width: "40%" }}>
                                 <br></br><br></br>
-                                <button onClick={() => this.startTally()} type="button" class="btn btn-danger btn-block">Start Election</button>
+                                <button onClick={() => this.startTally()} type="button" class="btn btn-danger btn-block">Tally</button>
                                 <br></br><br></br><br></br><br></br><br></br><br></br>
                                 <br></br><br></br><br></br><br></br><br></br><br></br>
                             </div>
